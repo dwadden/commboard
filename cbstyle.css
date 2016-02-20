@@ -1,0 +1,107 @@
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
+div.serif{font-family:"Times New Roman",Times,serif;}
+div.sansserif{font-family:Arial,Helvetica,sans-serif;}
+
+div#testButton {visibility:hidden; display: none;}
+div#debug {font:60%; color:gray; }
+//div#debug {visibility:hidden; display:none; }
+.ding { autoplay; controls; preload:auto;
+  loop:false; visibility:hidden; display:none;}
+div.audioclass { autoplay; visibility:hidden; display:none; }
+
+div#container {width:100%;}
+div#content { width:100%; clear:both; }
+div#header {width:100%; clear: both;}
+div#timeDisplay {
+    float:left;
+    color:royalblue; font: bold 'trebuchet ms',helvetica,sans-serif;}
+
+div#clientTxt {
+    float:left;
+    color:darkblue; font: bold 400% 'trebuchet ms',helvetica,sans-serif;}
+
+div#logo {color:#FFA500; float:right; display:
+    table-cell; vertical-align: middle;
+    margin-top: 4px;
+    text-align: right}
+div#footer { color:#FFA500; float:right}
+/*div.content {background-color:#EEEEEE;height:800px;width:600px;float:left;}
+*/
+div.menu {
+    float: right;
+    color: royalblue;
+}
+
+div#slider-value {
+    color: gray; font: bold 80% 'trebuchet ms',helvetica,sans-serif;
+}
+
+div#slider {
+  style=" width: 250px";
+}
+
+div.rowOn  { float:left;
+    width: 100%;
+    height: 14%;
+    color: yellow;
+    background-color: yellowgreen;
+}
+div.rowOff { float:left;
+    width: 100%;
+    height: 14%;
+    background-color: transparent;
+}
+
+.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+    float:left;
+    margin: 0.5%;
+    border-color: yellow;
+    background-color: yellow;
+    // width: 15.6%; height: 70px;
+    width: 11.5%; height: 70px;
+}
+
+.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+    float:left;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    // width: 15.6%; height: 70px;
+    width: 11.5%; height: 70px;
+}
+input#setupButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    float:right;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+input#pauseButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    float:right;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+input#selectButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    float:right;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+input#soundButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    float:right;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+
+/* DW additions */
+
+h1 { font-family:Arial,Helvetica,sans-serif; color:#136713; }
