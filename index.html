@@ -13,15 +13,60 @@
   </head>
   <body>
     <h1>Main Menu</h1>
-    <div class="rowOff id="container">
-      <input type="button" class="btnOff" id="request" value="Request">
-      <input type="button" class="btnOff" id="compose" value="Compose">
-      <input type="button" class="btnOff" id="email" value="Email">
-      <input type="button" class="btnOff" id="togglePause" value="Pause">
+    <div id="grid">
+      <div class="rowOff">
+        <input type="button"  class="btnOff" value="1">
+        <input type="button"  class="btnOff" value="a">
+        <input type="button"  class="btnOff" value="b">
+        <input type="button"  class="btnOff" value="c">
+        <input type="button"  class="btnOff" value="d">
+        <input type="button"  class="btnOff" value="e">
+        <input type="button"  class="btnOff" value="f">
+        <input type="button"  class="btnOff" value="g">
+      </div>
+      <div class="rowOff">
+        <input type="button"  class="btnOff" value="2">
+        <input type="button"  class="btnOff" value="h">
+        <input type="button"  class="btnOff" value="i">
+        <input type="button"  class="btnOff" value="j">
+        <input type="button"  class="btnOff" value="k">
+        <input type="button"  class="btnOff" value="l">
+        <input type="button"  class="btnOff" value="m">
+        <input type="button"  class="btnOff" value="n">
+      </div>
+      <div class="rowOff">
+        <input type="button"  class="btnOff" value="3">
+        <input type="button"  class="btnOff" value="o">
+        <input type="button"  class="btnOff" value="p">
+        <input type="button"  class="btnOff" value="q">
+        <input type="button"  class="btnOff" value="r">
+        <input type="button"  class="btnOff" value="s">
+        <input type="button"  class="btnOff" value="t">
+        <input type="button"  class="btnOff" value="space">
+      </div>
+      <div class="rowOff">
+        <input type="button"  class="btnOff" value="4">
+        <input type="button"  class="btnOff" value="u">
+        <input type="button"  class="btnOff" value="v">
+        <input type="button"  class="btnOff" value="w">
+        <input type="button"  class="btnOff" value="x">
+        <input type="button"  class="btnOff" value="y">
+        <input type="button"  class="btnOff" value="z">
+        <input type="button"  class="btnOff" value="delete">
+      </div>
     </div>
-    <div style="float:left">
-      <div id="slider-value">2000</div>
-      <div id="slider" style=" width: 250px"></div>
+    <div id="menu">
+      <input type='button' id="pauseButton" value="START"></input>
+      <input type='button' id="soundButton" value="SOUND ON"></input>
+      <input type='button' id="selectButton" value="SELECT"></input>
+      <input type='button' id="setupButton" value="SETUP""></input>
+      <div style="float:right">
+        <div id="slider-value">2000</div>
+        <div id="slider" style=" width: 250px"></div>
+      </div>
+    </div>
+    <div id="textBuffer">
+      <p></p>
     </div>
   </body>
 </html>
