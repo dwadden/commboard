@@ -20,7 +20,7 @@ div#timeDisplay {
     float:left;
     color:royalblue; font: bold 'trebuchet ms',helvetica,sans-serif;}
 
-div#clientTxt {
+div#textBuffer {
     float:left;
     color:darkblue; font: bold 400% 'trebuchet ms',helvetica,sans-serif;}
 

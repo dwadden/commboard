@@ -6,9 +6,10 @@
 // The driver loop
 var driverLoop = function() {
     setupSlider();
-    var g = makeGrid();
-    registerKeyPress(g);
-    g.scan();
+    var buffer = makeBuffer();
+    var grid = makeGrid(buffer);
+    registerKeyPress(grid);
+    grid.scan();
 };
 
 // when a key is pressed, dispatch it to the grid
@@ -28,10 +29,15 @@ var setupSlider = function() {
 };
 
 // grid constructor
-var makeGrid = function() {
-    var g = $("#grid");
-    var rowElems = g.children(".rowOff");
-    var rows = rowElems.map(makeRow);
+var makeGrid = function(inputBuffer) {
+    var gridElem = $("#grid");
+    var rowElems = gridElem.find(".rowOff");
+    var buffer = inputBuffer;             // a passed-in buffer object
+    var initRows = function(rowElems) {
+        var curried = curry(makeRow, inputBuffer);
+        return rowElems.toArray().map(curried); // jquery's map is wrong; us the ES5 version
+    };
+    var rows = initRows(rowElems);
     var rowIx = 0;         // index of current highlighted row
     var timeout = null;
     var nRows = function() {
@@ -64,7 +70,6 @@ var makeGrid = function() {
         };
         timeout = setTimeout(callback, 1000);
     };
-
     var action = function(event) {
         resetTimeout();
         var currentRow = rows[rowIx];
@@ -96,10 +101,15 @@ var makeGrid = function() {
 };
 
 // row constructor
-var makeRow = function(ix, rowInput) {
+var makeRow = function(inputBuffer, rowInput) {
     var rowElem = rowInput;
-    var buttonElems = $(rowElem).children(".btnOff");
-    var buttons = buttonElems.map(makeCommButton);
+    var buttonElems = $(rowElem).find(".btnOff");
+    var buffer = inputBuffer;
+    var makeButtons = function(buttonElems) {
+        var curried = curry(makeCommButton, buffer);
+        return buttonElems.toArray().map(curried); // as above, jquery map() is wrong
+    };
+    var buttons = makeButtons(buttonElems);
     var buttonIx = 0;      // index of current highlighted button
     var timeout = null;
     var getIdButton = function() {
@@ -153,7 +163,7 @@ var makeRow = function(ix, rowInput) {
         resetTimeout();
         var currentButton = getCommandButtons()[buttonIx];
         var callback1 = function() {
-            currentButton.say();
+            currentButton.action();
             var callback2 = function() {
                 currentButton.toggle();
                 resetButton();
@@ -168,10 +178,10 @@ var makeRow = function(ix, rowInput) {
 };
 
 // console button constructor
-var makeCommButton = function(ix, buttonInput) {
-    var buttonIx = ix;
+var makeCommButton = function(inputBuffer, buttonInput) {
     var buttonElem = buttonInput;
     var buttonText = buttonElem.value;
+    var buffer = inputBuffer;
     var say = function() {
         var utterance = new window.SpeechSynthesisUtterance(buttonText);
         utterance.lang = "en-US";
@@ -193,7 +203,11 @@ var makeCommButton = function(ix, buttonInput) {
     var getText = function() {
         return buttonText;
     };
-    return Object.freeze({say, toggle, getText});
+    var action = function() {
+        say();
+        buffer.push(buttonText);
+    };
+    return Object.freeze({say, toggle, getText, action});
 };
 
 // menu constructor
@@ -203,7 +217,28 @@ var makeMenu = function() {
 
 // buffer constructor
 var makeBuffer = function() {
-
+    var bufferElem = $("#textBuffer");
+    var textElem = bufferElem.find("p");
+    var bufferText = "";
+    var getContents = function() {
+        return bufferText;
+    };
+    var update = function() {
+        textElem.text(bufferText);
+    };
+    var push = function(character) {
+        bufferText += character;
+        update();
+    };
+    var backspace = function() {
+        bufferText = bufferText.slice(0, -1);
+        update();
+    };
+    var clear = function() {
+        bufferText = "";
+        update();
+    };
+    return Object.freeze({getContents, push, backspace, clear});
 };
 
 var setupGrid = function() {
@@ -248,4 +283,11 @@ var setupGrid = function() {
     // Register handler to clear grid timeout
     $(document)[0].onkeypress = function(event) { grid.delegate(event); };
     return grid;
+};
+
+// Helper functions
+function curry(func, ...first) {
+    return function(...second) {
+        return func(...first, ...second);
+    };
 };
