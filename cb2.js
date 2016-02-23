@@ -10,8 +10,9 @@
 function driverLoop() {
     var buffer = makeBuffer();
     var grid = makeGrid(buffer);
+    var colorDetector = makeColorDetector();
+    colorDetector.setup();
     registerKeyPress(grid);
-    registerColorDetector();
     grid.scan();
 }
 
@@ -233,22 +234,69 @@ function makeBuffer() {
 // Using web camera to trigger events
 // This is a very simple detector. It just looks for yellow objects in the
 // frame. Bigger is better. I've just been holding up a big yellow book.
-function registerColorDetector() {
-    // TODO: Make the frame rate slower. We don't need it to update super
-    // quickly
-    var colors = new tracking.ColorTracker(['yellow']);
+// TODO: This is hackish. Fix it once I know it works.
+function makeColorDetector() {
+    // TODO: Make frame rate slower. We don't need super-fast updates
+    var stateEnum = { off: 0, on: 1 };
+    var state = stateEnum.off;
+    var nchanged = 0;           // The number of consecutive events that have indicated a state change
 
-     colors.on('track', function(event) {
-         if (event.data.length === 0) {
-             // No colors were detected in this frame.
-             console.log("Nothing happened.");
-         } else {
-             event.data.forEach(function(rect) {
-                 console.log(rect.x, rect.y, rect.height, rect.width, rect.color);
-             });
-         }
-     });
-    tracking.track('#webcamFeed', colors, {camera: true});
+    // This not the correct way to do pass comments to the grid. But first I
+    // just want to get it working.
+    function fireKeyboardEvent() {
+        var keyboardEvent = document.createEvent("KeyboardEvent");
+        var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+        keyboardEvent[initMethod](
+            "keypress", // event type : keydown, keyup, keypress
+            true, // bubbles
+            true, // cancelable
+            window, // viewArg: should be window
+            false, // ctrlKeyArg
+            false, // altKeyArg
+            false, // shiftKeyArg
+            false, // metaKeyArg
+            40, // keyCodeArg : unsigned long the virtual key code, else 0
+            0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+        );
+        document.dispatchEvent(keyboardEvent);
+    }
+
+    function detection(event) {
+        if (state == stateEnum.off) {
+            nchanged++;
+            if (nchanged >= 10) {// TODO: This number should not be hard-coded
+                state = stateEnum.on;
+                fireKeyboardEvent(); // TODO: This is wrong. Do this the right way.
+            }
+        } else {
+            nchanged = 0;
+        }
+    }
+
+    function noDetection(event) {
+        if (state== stateEnum.on) {
+            nchanged++;
+            if (nchanged >= 10) { // TODO: don't hard code
+                state = stateEnum.off;
+            }
+        } else {
+            nchanged = 0;
+        }
+    }
+
+    function setup() {
+        var colors = new tracking.ColorTracker(['yellow']);
+        colors.on('track', function(event) {
+            if (event.data.length === 0) {
+                // No colors were detected in this frame.
+                noDetection();
+            } else {
+                detection();
+            }
+        });
+        tracking.track('#webcamFeed', colors, {camera: true});
+    }
+    return Object.freeze({setup});
 }
 
 // Helper functions
