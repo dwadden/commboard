@@ -11,7 +11,7 @@ function driverLoop() {
     var buffer = makeBuffer();
     var grid = makeGrid(buffer);
     registerKeyPress(grid);
-    registerCamera();
+    registerColorDetector();
     grid.scan();
 }
 
@@ -230,24 +230,25 @@ function makeBuffer() {
     return Object.freeze({getContents, push, pop, clear});
 }
 
-// Getting access to the video camera
-function registerCamera() {
-    // This is not supported across platforms at all. For the way to do it on Firefox, see:
-    // Code from https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-    // I'm using Chrome. The way to do it on Chrome is as below.
-    var errorCallback = function(e) {
-        console.log("Rejected.", e);
-    };
-    navigator.webkitGetUserMedia({ video: true }, function(localMediaStream) {
-        var video = $("video")[0];
-        video.src = window.URL.createObjectURL(localMediaStream);
+// Using web camera to trigger events
+// This is a very simple detector. It just looks for yellow objects in the
+// frame. Bigger is better. I've just been holding up a big yellow book.
+function registerColorDetector() {
+    // TODO: Make the frame rate slower. We don't need it to update super
+    // quickly
+    var colors = new tracking.ColorTracker(['yellow']);
 
-        // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-        // See crbug.com/110938.
-        video.onloadedmetadata = function(e) {
-            // Ready to go. Do some stuff.
-        };
-    }, errorCallback);
+     colors.on('track', function(event) {
+         if (event.data.length === 0) {
+             // No colors were detected in this frame.
+             console.log("Nothing happened.");
+         } else {
+             event.data.forEach(function(rect) {
+                 console.log(rect.x, rect.y, rect.height, rect.width, rect.color);
+             });
+         }
+     });
+    tracking.track('#webcamFeed', colors, {camera: true});
 }
 
 // Helper functions
