@@ -1,3 +1,4 @@
 .tern-port
 scratch.*
 node_modules
+*.pem
