@@ -8,9 +8,9 @@
 
 // The driver loop
 function driverLoop() {
-    var buffer = makeBuffer();
-    var grid = makeGrid(buffer);
-    var colorDetector = makeColorDetector();
+    let buffer = makeBuffer();
+    let grid = makeGrid(buffer);
+    let colorDetector = makeColorDetector();
     colorDetector.setup();
     registerKeyPress(grid);
     grid.scan();
@@ -24,16 +24,16 @@ function registerKeyPress(grid) {
 // grid constructor
 // TODO: Accept an initializer object instead of an argument.
 function makeGrid(inputBuffer) {
-    var gridElem = $("#grid");
-    var rowElems = gridElem.find(".rowOff");
-    var buffer = inputBuffer;             // a passed-in buffer object
+    let gridElem = $("#grid");
+    let rowElems = gridElem.find(".rowOff");
+    let buffer = inputBuffer;             // a passed-in buffer object
     function initRows(rowElems) {
-        var curried = curry(makeRow, inputBuffer);
+        let curried = curry(makeRow, inputBuffer);
         return rowElems.toArray().map(curried); // jquery's map is wrong; us the ES5 version
     }
-    var rows = initRows(rowElems);
-    var rowIx = 0;         // index of current highlighted row
-    var timeout = null;
+    let rows = initRows(rowElems);
+    let rowIx = 0;         // index of current highlighted row
+    let timeout = null;
     function nRows() { return rows.length; }
     function getRows() { return rows; }
     function nextRow() { rowIx = (rowIx + 1) % nRows(); }
@@ -43,9 +43,9 @@ function makeGrid(inputBuffer) {
         timeout = null;
     }
     function scan() {     // scan the rows
-        var currentRow = rows[rowIx];
+        let currentRow = rows[rowIx];
         currentRow.toggle();
-        var currentButton = currentRow.getIdButton();
+        let currentButton = currentRow.getIdButton();
         currentButton.toggle();
         currentButton.say();
         function callback() {
@@ -58,7 +58,7 @@ function makeGrid(inputBuffer) {
     }
     function action(event) {
         resetTimeout();
-        var currentRow = rows[rowIx];
+        let currentRow = rows[rowIx];
         function onReturnNoSelection() {
             currentRow.toggle();
             nextRow();
@@ -73,7 +73,7 @@ function makeGrid(inputBuffer) {
             scan();
         }
         function callback1() {
-            var idButton = currentRow.getIdButton();
+            let idButton = currentRow.getIdButton();
             idButton.say();
             function callback2() {
                 idButton.toggle();
@@ -90,25 +90,25 @@ function makeGrid(inputBuffer) {
 // row constructor
 // TODO: Accept an initializer object the place of inputBuffer
 function makeRow(inputBuffer, rowInput) {
-    var rowElem = rowInput;
-    var buttonElems = $(rowElem).find(".btnOff");
-    var buffer = inputBuffer;
+    let rowElem = rowInput;
+    let buttonElems = $(rowElem).find(".btnOff");
+    let buffer = inputBuffer;
     // TODO: abstract this pattern?
     function makeButtons(buttonElems) {
-        var curried = curry(makeCommButton, buffer);
+        let curried = curry(makeCommButton, buffer);
         return buttonElems.toArray().map(curried); // as above, jquery map() is wrong
     }
-    var buttons = makeButtons(buttonElems);
-    var buttonIx = 0;      // index of current highlighted button
-    var timeout = null;
+    let buttons = makeButtons(buttonElems);
+    let buttonIx = 0;      // index of current highlighted button
+    let timeout = null;
     function getIdButton() { return buttons[0]; }
     function getCommandButtons() { return buttons.slice(1); }
     function nCommandButtons() { return getCommandButtons().length; }
     function nextButton() { buttonIx = (buttonIx + 1) % nCommandButtons(); }
     function resetButton() { buttonIx = 0; }
     function toggle() {
-        var toAdd, toRemove;
-        var rowq = $(rowElem);
+        let toAdd, toRemove;
+        let rowq = $(rowElem);
         if (rowq.attr("class") === "rowOff") {
             toAdd = "rowOn";
             toRemove = "rowOff";
@@ -120,11 +120,11 @@ function makeRow(inputBuffer, rowInput) {
         rowq.removeClass(toRemove);
     }
     function scan(fromCaller) {
-        var currentButton = getCommandButtons()[buttonIx];
+        let currentButton = getCommandButtons()[buttonIx];
         currentButton.toggle();
         currentButton.say();
         function callback() {
-            var tailCall = ((buttonIx < nCommandButtons() - 1) ?
+            let tailCall = ((buttonIx < nCommandButtons() - 1) ?
                             function () { scan(fromCaller); } :
                             fromCaller);
             currentButton.toggle();
@@ -139,7 +139,7 @@ function makeRow(inputBuffer, rowInput) {
     }
     function action(event, fromCaller) {
         resetTimeout();
-        var currentButton = getCommandButtons()[buttonIx];
+        let currentButton = getCommandButtons()[buttonIx];
         function callback1() {
             currentButton.action();
             function callback2() {
@@ -158,18 +158,18 @@ function makeRow(inputBuffer, rowInput) {
 // console button constructor
 // TODO: Accept an initializer object in the place of the input buffer
 function makeCommButton(inputBuffer, buttonInput) {
-    var buttonElem = buttonInput;
-    var buttonText = buttonElem.value;
-    var buffer = inputBuffer;
+    let buttonElem = buttonInput;
+    let buttonText = buttonElem.value;
+    let buffer = inputBuffer;
     function say() {
-        var utterance = new window.SpeechSynthesisUtterance(buttonText);
+        let utterance = new window.SpeechSynthesisUtterance(buttonText);
         utterance.lang = "en-US";
         window.speechSynthesis.speak(utterance);
     }
     // TODO: refactor this. it's redundant
     function toggle() {
-        var toAdd, toRemove;
-        var buttonq = $(buttonElem);
+        let toAdd, toRemove;
+        let buttonq = $(buttonElem);
         if (buttonq.attr("class") === "btnOff") {
             toAdd = "btnOn";
             toRemove = "btnOff";
@@ -198,8 +198,8 @@ function makeMenuButton() {
 }
 
 function makeSlider() {
-    var sliderElem = $("#slider");
-    var sliderValue = $("#slider-value");
+    let sliderElem = $("#slider");
+    let sliderValue = $("#slider-value");
     function stop(event) {
         $("#slider-value")[0].innerText = $(this).slider("value");
     }
@@ -211,9 +211,9 @@ function makeSlider() {
 
 // buffer constructor
 function makeBuffer() {
-    var bufferElem = $("#textBuffer");
-    var textElem = bufferElem.find("p");
-    var bufferText = "";
+    let bufferElem = $("#textBuffer");
+    let textElem = bufferElem.find("p");
+    let bufferText = "";
     function getContents() { return bufferText; }
     function update() { textElem.text(bufferText); }
     function push(character) {
@@ -237,15 +237,15 @@ function makeBuffer() {
 // TODO: This is hackish. Fix it once I know it works.
 function makeColorDetector() {
     // TODO: Make frame rate slower. We don't need super-fast updates
-    var stateEnum = { off: 0, on: 1 };
-    var state = stateEnum.off;
-    var nchanged = 0;           // The number of consecutive events that have indicated a state change
+    let stateEnum = { off: 0, on: 1 };
+    let state = stateEnum.off;
+    let nchanged = 0;           // The number of consecutive events that have indicated a state change
 
     // This not the correct way to do pass comments to the grid. But first I
     // just want to get it working.
     function fireKeyboardEvent() {
-        var keyboardEvent = document.createEvent("KeyboardEvent");
-        var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+        let keyboardEvent = document.createEvent("KeyboardEvent");
+        let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
         keyboardEvent[initMethod](
             "keypress", // event type : keydown, keyup, keypress
             true, // bubbles
@@ -285,7 +285,7 @@ function makeColorDetector() {
     }
 
     function setup() {
-        var colors = new tracking.ColorTracker(['yellow']);
+        let colors = new tracking.ColorTracker(['yellow']);
         colors.on('track', function(event) {
             if (event.data.length === 0) {
                 // No colors were detected in this frame.
