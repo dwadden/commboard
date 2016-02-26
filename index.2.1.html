@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Commboard</title>
+    <meta charset="utf-8" />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="cbstyle.2.1.css" type="text/css">
+  </head>
+  <body>
+    <div id="wrapper" class="sansserif">
+      <div id="main" class="container">
+        <h1>Main Menu</h1>
+        <table><tbody>
+          <tr>
+            <td><input type="button" class="buttonOff" value="Start"></td>
+            <td><input type="button" class="buttonOff" value="Request"></td>
+            <td><input type="button" class="buttonOff" value="Compose"></td>
+            <td><input type="button" class="buttonOff" value="Email"></td>
+            <td colspan="4"></td>
+          </tr>
+        </tbody></table>
+      </div>
+
+      <div id="request" class="container">
+        <h1>Request</h1>
+        <table><tbody>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="Cold"></td>
+            <td><input type="button" class="buttonOff" value="Hot"></td>
+            <td><input type="button" class="buttonOff" value="Menu"></td>
+            <td colspan="5"></td> <!-- Pad button table with empty entries -->
+          </tr>
+        </tbody></table>
+      </div>
+
+      <!-- This is just a placeholder for now -->
+      <div id="email" class="container">
+        <h1>Email</h1>
+        <table><tbody>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="Check"></td>
+            <td><input type="button" class="buttonOff" value="Respond"></td>
+            <td><input type="button" class="buttonOff" value="Compose"></td>
+            <td colspan="5"></td> <!-- Pad button table with empty entries -->
+          </tr>
+        </tbody></table>
+      </div>
+
+      <div id="compose" class="container">
+        <h1>Compose</h1>
+        <table><tbody>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="Guess" data-rowid="guess"></td>
+            <td><input type="button" class="buttonOff" value="guess1"></td>
+            <td><input type="button" class="buttonOff" value="guess2"></td>
+            <td><input type="button" class="buttonOff" value="guess3"></td>
+            <td><input type="button" class="buttonOff" value="guess4"></td>
+            <td><input type="button" class="buttonOff" value="guess5"></td>
+            <td><input type="button" class="buttonOff" value="guess6"></td>
+            <td><input type="button" class="buttonOff" value="guess7"></td>
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="1" data-rowid="1"></td>
+            <td><input type="button" class="buttonOff" value="A"></td>
+            <td><input type="button" class="buttonOff" value="B"></td>
+            <td><input type="button" class="buttonOff" value="C"></td>
+            <td><input type="button" class="buttonOff" value="D"></td>
+            <td><input type="button" class="buttonOff" value="E"></td>
+            <td><input type="button" class="buttonOff" value="F"></td>
+            <td><input type="button" class="buttonOff" value="G"></td>
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="2" data-rowid="2"></td>
+            <td><input type="button" class="buttonOff" value="H"></td>
+            <td><input type="button" class="buttonOff" value="I"></td>
+            <td><input type="button" class="buttonOff" value="J"></td>
+            <td><input type="button" class="buttonOff" value="K"></td>
+            <td><input type="button" class="buttonOff" value="L"></td>
+            <td><input type="button" class="buttonOff" value="M"></td>
+            <td><input type="button" class="buttonOff" value="N"></td>
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="3" data-rowid="3"></td>
+            <td><input type="button" class="buttonOff" value="O"></td>
+            <td><input type="button" class="buttonOff" value="P"></td>
+            <td><input type="button" class="buttonOff" value="Q"></td>
+            <td><input type="button" class="buttonOff" value="R"></td>
+            <td><input type="button" class="buttonOff" value="S"></td>
+            <td><input type="button" class="buttonOff" value="T"></td>
+            <td></td> <!-- Pad empty entries; etc below. -->
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="4" data-rowid="4"></td>
+            <td><input type="button" class="buttonOff" value="U"></td>
+            <td><input type="button" class="buttonOff" value="V"></td>
+            <td><input type="button" class="buttonOff" value="W"></td>
+            <td><input type="button" class="buttonOff" value="X"></td>
+            <td><input type="button" class="buttonOff" value="Y"></td>
+            <td><input type="button" class="buttonOff" value="Z"></td>
+            <td></td>
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="5" data-rowid="5"></td>
+            <td><input type="button" class="buttonOff" value="Space"></td>
+            <td><input type="button" class="buttonOff" value="Delete"></td>
+            <td><input type="button" class="buttonOff" value="."></td>
+            <td><input type="button" class="buttonOff" value="?"></td>
+            <td><input type="button" class="buttonOff" value="!"></td>
+            <td><input type="button" class="buttonOff" value="@"></td>
+            <td></td>
+          </tr>
+          <tr class="rowOff">
+            <td><input type="button" class="buttonOff" value="6" data-rowid="6"></td>
+            <td><input type="button" class="buttonOff" value="Read"></td>
+            <td><input type="button" class="buttonOff" value="Clear"></td>
+            <td><input type="button" class="buttonOff" value="Load"></td>
+            <td><input type="button" class="buttonOff" value="Save"></td>
+            <td><input type="button" class="buttonOff" value="Erase"></td>
+            <td><input type="button" class="buttonOff" value="Return"></td>
+            <td><input type="button" class="buttonOff" value="Menu"></td>
+            <td rowspan="2"></td>
+          </tr>
+        </tbody></table>
+      </div>
+
+      <div id="util" class="container">
+        <div id="buffer">
+          <p id="bufferText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+
+        <div id="widgetContainer">
+          <div id="camContainer">
+            <video id="cam" class="roundedBorder" preload autoplay loop muted></video>
+          </div>
+
+          <div id ="subContainer">
+            <div id="clockContainer">
+              <p class="floatRight">
+                Mon 9/28 5:00
+              </p>
+            </div>
+
+            <div id="lastContainer">
+              <div id="sliderContainer">
+                <div id="sliderValue">10</div>
+                <div id="slider"></div>
+              </div>
+
+              <div id="resetContainer">
+                <input type="button" id="resetButton" value="Reset">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scripts go here -->
+      <!-- JQuery and JQuery UI, hosted by Google -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+      <!-- Computer vision library -->
+      <script src="bower_components/tracking/build/tracking-min.js"></script>
+      <!-- Commboard script -->
+      <script src="cb2.1.js"></script>
+
+
+  </body>
+</html>

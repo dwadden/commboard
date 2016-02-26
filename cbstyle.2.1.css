@@ -1,0 +1,177 @@
+/* Document-level styling */
+html, body { /* Body takes up full window */
+  height: 100%;
+  margin: 0px auto;
+  padding: 0px auto;
+}
+div#wrapper { /* Wrapper takes up full window */
+  width: 100%
+  height: 100%;
+  overflow-y: scroll;
+}
+h1 {
+  color: firebrick;
+  margin: 5px;
+}
+
+/* Class styles */
+.sansserif { /* Default fonts */
+  font-family: Arial,Helvetica,sans-serif;
+}
+.container { /* Containrs centered within wrapper div */
+  width: 97.5%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.padded {
+  padding: 5px;
+}
+.roundedBorder {
+  border-style: solid;
+  border-color: darkGreen;
+  border-radius: 10px;
+}
+.floatLeft {
+  float: left;
+}
+.floatRight {
+  float: right;
+}
+
+/* Dimensions of page sections, by element id */
+#main {
+  height: 125px;
+}
+#request {
+  height: 125px;
+}
+#compose {
+  height: 550px;
+}
+#buffer {
+  position: absolute;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  color: black;
+  font-size: 150%;
+}
+#bufferText {
+  top: 0;
+  margin-top: 0%;
+  margin-right: 5%;
+}
+#config {
+  height: 350px;
+}
+
+/* Table styling. Tables serve as containers for buttons. */
+table {
+  table-layout: fixed; /* All buttons have same width */
+  width: 100%; /* Table fills element */
+}
+td {
+  padding: 3px; /* Space between buttons */
+  height: 60px;
+}
+.rowOn { /* Styling when a menu is not currently active */
+  color: yellow;
+  background-color: yellowgreen;
+}
+.rowOff { /* Styling when a menu is active */
+  background-color: transparent;
+}
+
+/* Button styling */
+input[type=button] {
+  width: 100%; /* Fill bounding <td> element */
+  height: 100%;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-size: 150%;
+  font-weight: bold;
+}
+.buttonOn { /* Styling when button is active */
+  color:darkred;
+  border-color: yellow;
+  background-color: yellow;
+}
+.buttonOff { /* Styling when button is inactive */
+  color:darkblue;
+  border-color: ghostwhite;
+  background-color:ghostwhite;
+}
+
+/* Styling for config elements  */
+#util {
+  position: relative;
+  height: 400px;
+}
+
+#widgetContainer {
+  float: right;
+  width: 40%;
+  height: 100%;
+}
+#sliderContainer {
+  position: absolute;
+  left: 0%;
+  width: 50%;
+  height: 100%
+}
+
+#lastContainer {
+  position: relative;
+  height: 65%;
+  width: 100%;
+}
+
+#slider {
+  width: 100%;
+}
+#sliderValue {
+  color: gray;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-weight: bold;
+}
+#clock {
+  float: left;
+}
+
+#subContainer {
+  height: 40%;
+}
+
+/* TODO: figure out a better way to do this. */
+#resetContainer {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+}
+#resetButton {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  right: 5%;
+  bottom: 5%;
+  color: firebrick;
+  border-color: ghostwhite;
+  background-color: ghostwhite;
+
+}
+#camContainer {
+  height: 60%
+}
+#cam {
+  float: right;
+  max-width: 100%;
+  max-height: 100%;
+ }
+#clockContainer { /* TODO: factor the font family stuff */
+  height: 35%;
+  width: 100%;
+  color: royalblue;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-size: 150%;
+  font-weight: bold;
+}

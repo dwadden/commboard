@@ -294,7 +294,7 @@ function makeColorDetector() {
                 detection();
             }
         });
-        tracking.track('#webcamFeed', colors, {camera: true});
+        tracking.track('#cam', colors, {camera: true});
     }
     return Object.freeze({setup});
 }
