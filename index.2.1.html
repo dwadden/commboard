@@ -58,8 +58,7 @@
       <div id="compose" class="container">
         <h1>Compose</h1>
         <table><tbody>
-          <!-- Word guesses. -->
-          <tr class="rowOff">
+          <tr class="rowOff"> <!-- Container for various other controls. -->
             <td><input type="button" class="buttonOff" value="Guess" data-rowid="guess"></td>
             <td><input type="button" class="buttonOff" value="guess1"></td>
             <td><input type="button" class="buttonOff" value="guess2"></td>
@@ -69,8 +68,7 @@
             <td><input type="button" class="buttonOff" value="guess6"></td>
             <td><input type="button" class="buttonOff" value="guess7"></td>
           </tr>
-          <!-- Letters. This and the next 3 rows. -->
-          <tr class="rowOff">
+          <tr class="rowOff"> <!-- Letters. This and the next 3 rows. -->
             <td><input type="button" class="buttonOff" value="1" data-rowid="1"></td>
             <td><input type="button" class="buttonOff" value="A"></td>
             <td><input type="button" class="buttonOff" value="B"></td>
@@ -110,8 +108,7 @@
             <td><input type="button" class="buttonOff" value="Z"></td>
             <td></td>
           </tr>
-          <!-- Punctuation. -->
-          <tr class="rowOff">
+          <tr class="rowOff"> <!-- Punctuation. -->
             <td><input type="button" class="buttonOff" value="5" data-rowid="5"></td>
             <td><input type="button" class="buttonOff" value="Space"></td>
             <td><input type="button" class="buttonOff" value="Delete"></td>
@@ -121,8 +118,7 @@
             <td><input type="button" class="buttonOff" value="@"></td>
             <td></td>
           </tr>
-          <!-- Actions. Read text, load saved text, etc. -->
-          <tr class="rowOff">
+          <tr class="rowOff"> <!-- Actions. Read text, load saved text, etc. -->
             <td><input type="button" class="buttonOff" value="6" data-rowid="6"></td>
             <td><input type="button" class="buttonOff" value="Read"></td>
             <td><input type="button" class="buttonOff" value="Clear"></td>
@@ -136,8 +132,7 @@
       </div>
       <!-- Utilities. Text buffer on left, controls on right. -->
       <div id="util" class="container">
-        <!-- The user's text. -->
-        <div id="buffer">
+        <div id="buffer"> <!-- The user's text. -->
           <p id="bufferText">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -148,29 +143,22 @@
             culpa qui officia deserunt mollit anim id est laborum.
           </p>
         </div>
-        <!-- Container for various other controls. -->
-        <div id="settings">
-          <!-- Camera feed. -->
-          <div id="camContainer">
+        <div id="settings">  <!-- Container for various other controls. -->
+          <div id="camContainer"> <!-- Camera feed. -->
             <video id="cam" preload autoplay loop muted></video>
           </div>
-          <!-- Sub-container, situated below camera. -->
-          <div id ="subSettings">
-            <!-- Clock. -->
-            <div id="clockContainer">
+          <div id ="subSettings"> <!-- Sub-container, situated below camera. -->
+            <div id="clockContainer"> <!-- Clock. -->
               <p class="floatRight">
                 Mon 9/28 5:00
               </p>
             </div>
-            <!-- Sub-container, situated below the clock. -->
-            <div id="controls">
-              <!-- Slider, to control scan rate. -->
-              <div id="sliderContainer">
+            <div id="controls"> <!-- Sub-container, situated below the clock. -->
+              <div id="sliderContainer"> <!-- Slider, to control scan rate. -->
                 <div id="sliderValue">10</div>
                 <div id="slider"></div>
               </div>
-              <!-- Reset button. Stop program and return to main menu. -->
-              <div id="resetContainer">
+              <div id="resetContainer"> <!-- Reset button. Stop program and return to main menu. -->
                 <input type="button" id="resetButton" value="Reset">
               </div>
             </div>
