@@ -118,6 +118,7 @@ function detector() {
     return that;
 }
 
+// Constructor for buffer object.
 function buffer() {
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
@@ -148,11 +149,25 @@ function buffer() {
     return { push, pop, read, clear };
 }
 
-// Procedure to speak text out loud
-function speak(text) {
-    let utterance = new window.SpeechSynthesisUtterance(text);
-    utterance.lang = LANG;
-    window.speechSynthesis.speak(utterance);
+// Constructor for clock object.
+function clock() {
+    const INTERVAL = 1000;      // Update each second
+    let clockElem = document.getElementById("clockContainer");
+    let textElem = clockElem.querySelector("p");
+    let iv;                     // Handle for the interval
+    function tick() {           // Clock ticks every second once started.
+        let m = moment(new Date());
+        textElem.textContent = m.format("dddd, h:mm:ss a");
+    }
+    function start() {
+        iv = setInterval(tick, INTERVAL);
+    }
+    function stop() {
+        clearInterval(iv);
+    }
+    // Start the clock and return the method.
+    start();
+    return { start, stop };
 }
 
 function notImplemented () {
