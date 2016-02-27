@@ -33,25 +33,89 @@ function makeButton() {
 }
 
 // Temporary function so I'll see what the color tracker looks like on screen
-function setupCam() {
-    let colors = new tracking.ColorTracker(['yellow']);
-    colors.on('track', function(event) {
-        if (event.data.length === 0) {
-            // No colors were detected in this frame.
-            noDetection();
+
+// Constructor for detector object. Inherits from EventEmitter.
+function detector() {
+    let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
+
+    // Constants and magic numbers. Can be changed depending on client needs.
+    const ON = Symbol("on");
+    const OFF = Symbol("off");
+    const GAZE_TIME = 100;      // duration (s) for which gaze must be held
+    const EXTENDED_GAZE_TIME = 2000; // duration (s) for extended gaze; triggers reset
+    const MIN_N_CHANGED = 10;          // if in "off" state, need 10 consecutive
+    const TRACKER_COLOR = "yellow";    // detections to switch to "on", and vice versa
+    // Function-level variables
+    let startTime = null;              // start time for most recent upward gaze
+    let state = OFF;
+    let nChanged = 0;           // # consecutive detections that state has changed
+
+    function time() { return new Date().getTime(); }
+
+    // Function to call if there is a detection in the current frame.
+    function detection() {
+        if (state === OFF) {
+            nChanged += 1;
+            if (nChanged >= MIN_N_CHANGED) {
+                gazeOn();
+            }
         } else {
-            detection();
+            nChanged = 0;
         }
-    });
-    tracking.track('#cam', colors, {camera: true});
-}
+    }
+    // Function to call for no detection.
+    function noDetection() {
+        if (state === ON) {
+            nChanged += 1;
+            if (nChanged >= MIN_N_CHANGED) {
+                gazeOff();
+            }
+        } else {
+            nChanged = 0;
+        }
+    }
+    // Gaze has changed state from off to on
+    function gazeOn() {
+        state = ON;
+        startTime = time();     // Start the gaze timer.
+    }
+    // Gaze has changed state from on to off
+    function gazeOff() {
+        state = OFF;
+        let elapsed = time() - startTime; // How long did the user gaze last
+        let dispatch = ((elapsed < GAZE_TIME) ? function() { ; } :
+                        ((elapsed < EXTENDED_GAZE_TIME) ?
+                         emitGaze : emitExtendedGaze));
+        dispatch();
+        startTime = null;
+    }
+    // Emit a gaze event for listeners
+    function emitGaze() {
+        that.emitEvent("gaze");
+    }
+    // Emit an extended gaze event for listeners
+    function emitExtendedGaze() {
+        that.emitEvent("extendedGaze");
+    } // Emit extended gaze event
 
-function noDetection() {
-    ;
-}
+    // Setup up tracking.
+    // TODO: Ideally, this is the only function that will need to change when we
+    // switch from color tracking to eye tracking.
+    function setupTracking() {
+        let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
+        tracker.on("track", function(event) {
+            if (event.data.length === 0) { // No colors
+                noDetection();
+            } else {                      // Colors found
+                detection();
+            }
+        });
+        tracking.track("#cam", tracker, {camera: true});
+    }
 
-function detection() {
-    ;
+    // Start camera and return event emitter
+    setupTracking();
+    return that;
 }
 
 // Temporary function so I'll see what the slider looks like

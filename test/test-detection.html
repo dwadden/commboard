@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- Simple web page to check if gesture detection is working as expected. -->
+    <title>Detection test</title>
+    <meta charset="utf-8" />
+    <script src="../bower_components/tracking/build/tracking-min.js"></script> <!-- Computer vision. -->
+    <script src="../bower_components/eventEmitter/EventEmitter.min.js"></script> <!-- Event handling -->
+    <script src="../cb2.1.js"></script>
+  </head>
+  <body>
+    <video id="cam" preload autoplay loop muted></video>
+    <script>
+     let d = detector();
+     d.addListener("gaze", function() { console.log("Gaze!"); });
+     d.addListener("extendedGaze", function() { console.log("Extended gaze!"); });
+    </script>
+  </body>
+</html>
