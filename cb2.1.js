@@ -118,6 +118,47 @@ function detector() {
     return that;
 }
 
+function buffer() {
+    let bufferElem = document.getElementById("buffer");
+    let textElem = bufferElem.querySelector("p");
+    let bufferText = "";
+    // Update element text to match text stored in JS variable
+    function update() {
+        textElem.textContent = bufferText;
+    };
+    // Push to buffer
+    function push(char) {
+        bufferText += char;
+        update();
+    }
+    // Pop off end of buffer
+    function pop() {
+        bufferText = bufferText.slice(0, -1);
+        update();
+    }
+    // Read buffer contents out loud
+    function read() {
+        speak(bufferText);
+    }
+    // Clear the buffer.
+    function clear() {
+        bufferText = "";
+        update();
+    }
+    return { push, pop, read, clear };
+}
+
+// Procedure to speak text out loud
+function speak(text) {
+    let utterance = new window.SpeechSynthesisUtterance(text);
+    utterance.lang = LANG;
+    window.speechSynthesis.speak(utterance);
+}
+
+function notImplemented () {
+    throw new Error("Not implemented.");
+}
+
 // Temporary function so I'll see what the slider looks like
 function makeSlider() {
     let sliderElem = $("#slider");
