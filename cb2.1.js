@@ -207,22 +207,6 @@ function resetButton() {
     notImplemented();
 }
 
-// Temporary function so I'll see what the slider looks like
-function makeSlider() {
-    let sliderElem = $("#slider");
-    let sliderValue = $("#sliderValue");
-    // function stop(event) {
-    //     $("#slider-value")[0].innerText = $(this).slider("value");
-    // }
-    function stop(event) {
-        ;
-    }
-    sliderElem.slider({ min: 0,
-                        max: 50,
-                        value: 20,
-                        stop: stop});
-}
-
 // Procedure to speak text out loud
 function speak(text) {
     let utterance = new window.SpeechSynthesisUtterance(text);
