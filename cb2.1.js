@@ -37,7 +37,7 @@ function makeButton() {
 // Temporary function so I'll see what the color tracker looks like on screen
 
 // Constructor for detector object. Inherits from EventEmitter.
-function detector() {
+function makeDetector() {
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
 
     // Constants and magic numbers. Can be changed depending on client needs.
@@ -121,7 +121,7 @@ function detector() {
 }
 
 // Constructor for buffer object.
-function buffer() {
+function makeBuffer() {
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = "";
@@ -152,7 +152,7 @@ function buffer() {
 }
 
 // Constructor for clock object.
-function clock() {
+function makeClock() {
     const INTERVAL = 1000;      // Update each second
     let clockElem = document.getElementById("clockContainer");
     let textElem = clockElem.querySelector("p");
@@ -173,7 +173,7 @@ function clock() {
 }
 
 // constructor for slider object
-function slider() {
+function makeSlider() {
     // Magic numbers that may be adjusted as desired.
     const VMIN = 0;
     const VMAX = 3;
@@ -205,7 +205,7 @@ function slider() {
 }
 
 // Constructor for reset button
-function resetButton() {
+function makeResetButton() {
     notImplemented();
 }
 
