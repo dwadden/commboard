@@ -11,9 +11,11 @@
   <body>
     <video id="cam" preload autoplay loop muted></video>
     <script>
-     let d = detector();
-     d.addListener("gaze", function() { console.log("Gaze!"); });
-     d.addListener("extendedGaze", function() { console.log("Extended gaze!"); });
+     let d = makeDetector();
+     // d.addListener("gaze", function() { console.log("Gaze!"); });
+     // d.addListener("extendedGaze", function() { console.log("Extended gaze!"); });
+     d.addGazeListener(function() { console.log("Gaze!"); });
+     d.addExtendedGazeListener(function() { console.log("Extended gaze!"); });
     </script>
   </body>
 </html>

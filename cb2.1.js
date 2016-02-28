@@ -115,6 +115,23 @@ function makeDetector() {
         tracking.track("#cam", tracker, {camera: true});
     }
 
+
+    // TODO: These methods are only make visible for development. Remove them
+    // when I've got things working.
+    that.emitGaze = emitGaze;
+    that.emitExtendedGaze = emitExtendedGaze;
+
+    // Methods to add listeners for the relevant events.
+    // These should not be removed.
+    function addGazeListener(listener) {
+        that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
+    }
+    function addExtendedGazeListener(listener) {
+        that.addListener("extendedGaze", listener);
+    }
+    that.addGazeListener = addGazeListener;
+    that.addExtendedGazeListener = addExtendedGazeListener;
+
     // Start camera and return event emitter
     setupTracking();
     return that;
@@ -218,4 +235,11 @@ function speak(text) {
 
 function notImplemented () {
     throw new Error("Not implemented.");
+}
+
+// Helper functions
+function curry(func, ...first) {
+    return function(...second) {
+        return func(...first, ...second);
+    };
 }
