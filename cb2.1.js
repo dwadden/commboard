@@ -4,6 +4,8 @@
 // the main menu. Equivalent to triggering the reset button.
 
 
+// Global variables
+const LANG = "en-US";            // Dialect for speech synthesis
 
 function makeMenu(spec) {
     let buttons = makeButtons();
