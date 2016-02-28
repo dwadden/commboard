@@ -202,6 +202,11 @@ function slider() {
     return { getValue };
 }
 
+// Constructor for reset button
+function resetButton() {
+    notImplemented();
+}
+
 // Temporary function so I'll see what the slider looks like
 function makeSlider() {
     let sliderElem = $("#slider");
