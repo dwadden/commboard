@@ -23,10 +23,10 @@
         <h1>Main Menu</h1>
         <table><tbody>
           <tr>
-            <td><input type="button" class="buttonOff" value="Start" data-buttonType="menuAction"></td>
-            <td><input type="button" class="buttonOff" value="Request" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="Compose" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="Email" data-buttonType="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="Start" data-button-type="start"></td>
+            <td><input type="button" class="buttonOff" value="Request" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="Compose" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="Email" data-button-type="subMenu"></td>
             <td colspan="4"></td>
           </tr>
         </tbody></table>
@@ -36,9 +36,9 @@
         <h1>Request</h1>
         <table><tbody>
           <tr class="rowOff">
-            <td><input type="button" class="buttonOff" value="Cold" data-buttonType="request"></td>
-            <td><input type="button" class="buttonOff" value="Hot" data-buttonType="request"></td>
-            <td><input type="button" class="buttonOff" value="Return" data-buttonType="return"></td>
+            <td><input type="button" class="buttonOff" value="Cold" data-button-type="request"></td>
+            <td><input type="button" class="buttonOff" value="Hot" data-button-type="request"></td>
+            <td><input type="button" class="buttonOff" value="Return" data-button-type="return"></td>
             <td colspan="5"></td> <!-- Pad button table with empty entries -->
           </tr>
         </tbody></table>
@@ -61,73 +61,73 @@
         <h1>Compose</h1>
         <table><tbody>
           <tr class="rowOff"> <!-- Container for various other controls. -->
-            <td><input type="button" class="buttonOff" value="Guess" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="0"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="1"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="2"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="3"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="4"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="5"></td>
-            <td><input type="button" class="buttonOff" value="" data-buttonType="guess" data-guessId="6"></td>
+            <td><input type="button" class="buttonOff" value="Guess" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="0"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="1"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="2"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="3"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="4"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="5"></td>
+            <td><input type="button" class="buttonOff" value="" data-button-type="guess" data-guess-id="6"></td>
           </tr>
           <tr class="rowOff"> <!-- Letters. This and the next 3 rows. -->
-            <td><input type="button" class="buttonOff" value="1" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="A" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="B" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="C" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="D" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="E" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="F" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="G" data-buttonType="text"></td>
+            <td><input type="button" class="buttonOff" value="1" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="A" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="B" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="C" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="D" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="E" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="F" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="G" data-button-type="text"></td>
           </tr>
           <tr class="rowOff">
-            <td><input type="button" class="buttonOff" value="2" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="H" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="I" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="J" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="K" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="L" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="M" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="N" data-buttonType="text"></td>
+            <td><input type="button" class="buttonOff" value="2" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="H" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="I" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="J" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="K" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="L" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="M" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="N" data-button-type="text"></td>
           </tr>
           <tr class="rowOff">
-            <td><input type="button" class="buttonOff" value="3" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="O" data-buttonType="text""></td>
-            <td><input type="button" class="buttonOff" value="P" data-buttonType="text""></td>
-            <td><input type="button" class="buttonOff" value="Q" data-buttonType="text""></td>
-            <td><input type="button" class="buttonOff" value="R" data-buttonType="text""></td>
-            <td><input type="button" class="buttonOff" value="S" data-buttonType="text""></td>
-            <td><input type="button" class="buttonOff" value="T" data-buttonType="text""></td>
+            <td><input type="button" class="buttonOff" value="3" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="O" data-button-type="text""></td>
+            <td><input type="button" class="buttonOff" value="P" data-button-type="text""></td>
+            <td><input type="button" class="buttonOff" value="Q" data-button-type="text""></td>
+            <td><input type="button" class="buttonOff" value="R" data-button-type="text""></td>
+            <td><input type="button" class="buttonOff" value="S" data-button-type="text""></td>
+            <td><input type="button" class="buttonOff" value="T" data-button-type="text""></td>
             <td></td>
           </tr>
           <tr class="rowOff">
-            <td><input type="button" class="buttonOff" value="4" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="U" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="V" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="W" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="X" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="Y" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="Z" data-buttonType="text"></td>
+            <td><input type="button" class="buttonOff" value="4" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="U" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="V" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="W" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="X" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="Y" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="Z" data-button-type="text"></td>
             <td></td>
           </tr>
           <tr class="rowOff"> <!-- Punctuation. -->
-            <td><input type="button" class="buttonOff" value="5" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="Space" data-buttonType="textAlias"></td>
-            <td><input type="button" class="buttonOff" value="Delete" data-buttonType="textAlias"></td>
-            <td><input type="button" class="buttonOff" value="." data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="?" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="!" data-buttonType="text"></td>
-            <td><input type="button" class="buttonOff" value="@" data-buttonType="text"></td>
+            <td><input type="button" class="buttonOff" value="5" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="Space" data-button-type="textAlias"></td>
+            <td><input type="button" class="buttonOff" value="Delete" data-button-type="textAlias"></td>
+            <td><input type="button" class="buttonOff" value="." data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="?" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="!" data-button-type="text"></td>
+            <td><input type="button" class="buttonOff" value="@" data-button-type="text"></td>
             <td></td>
           </tr>
           <tr class="rowOff"> <!-- Actions. Read text, load saved text, etc. -->
-            <td><input type="button" class="buttonOff" value="6" data-buttonType="subMenu"></td>
-            <td><input type="button" class="buttonOff" value="Read" data-buttonType="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Clear" data-buttonType="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Load" data-buttonType="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Save" data-buttonType="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Erase" data-buttonType="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Return" data-buttonType="return"></td>
+            <td><input type="button" class="buttonOff" value="6" data-button-type="subMenu"></td>
+            <td><input type="button" class="buttonOff" value="Read" data-button-type="bufferAction"></td>
+            <td><input type="button" class="buttonOff" value="Clear" data-button-type="bufferAction"></td>
+            <td><input type="button" class="buttonOff" value="Load" data-button-type="bufferAction"></td>
+            <td><input type="button" class="buttonOff" value="Save" data-button-type="bufferAction"></td>
+            <td><input type="button" class="buttonOff" value="Erase" data-button-type="bufferAction"></td>
+            <td><input type="button" class="buttonOff" value="Return" data-button-type="return"></td>
             <td></td>
           </tr>
         </tbody></table>
