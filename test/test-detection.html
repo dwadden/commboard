@@ -12,10 +12,22 @@
     <video id="cam" preload autoplay loop muted></video>
     <script>
      let d = makeDetector();
-     // d.addListener("gaze", function() { console.log("Gaze!"); });
-     // d.addListener("extendedGaze", function() { console.log("Extended gaze!"); });
-     d.addGazeListener(function() { console.log("Gaze!"); });
-     d.addExtendedGazeListener(function() { console.log("Extended gaze!"); });
+     function gaze() {
+         console.log("Gaze!");
+     }
+     function extendedGaze() {
+         console.log("Extended gaze!");
+     }
+     // Call this, and make sure all gazes are reported to console.
+     function listenOn() {
+         d.addGazeListener(gaze);
+         d.addExtendedGazeListener(extendedGaze);
+     }
+     // Call this, and make sure they stop being reported.
+     function listenOff() {
+         d.removeGazeListener(gaze);
+         d.removeExtendedGazeListener(extendedGaze);
+     }
     </script>
   </body>
 </html>

@@ -115,22 +115,35 @@ function makeDetector() {
         tracking.track("#cam", tracker, {camera: true});
     }
 
+    // Methods to add and remove listeners for relevant events.
+    // These should not be removed.
+    // TODO: Need to test these camera instead of keys.
+    that.addGazeListener = function(listener) {
+        that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
+    };
+    that.addExtendedGazeListener = function(listener) {
+        that.addListener("extendedGaze", listener);
+    };
+    that.removeGazeListener = function(listener) {
+        that.removeListener("gaze", listener);
+    };
+    that.removeExtendedGazeListener = function(listener) {
+        that.removeListener("extendedGaze", listener);
+    };
 
     // TODO: These methods are only make visible for development. Remove them
     // when I've got things working.
     that.emitGaze = emitGaze;
     that.emitExtendedGaze = emitExtendedGaze;
 
-    // Methods to add listeners for the relevant events.
-    // These should not be removed.
-    function addGazeListener(listener) {
-        that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
+    // TODO: This stuff is just for debugging. Remove it.
+    document.addEventListener("keypress", dispatchKeypress);
+    function dispatchKeypress(event) {
+        let dispatch = new Map([[103, emitGaze], // 103 is "g" for gaze
+                                [101, emitExtendedGaze]]); // 101 is "e" for extended
+        let f = dispatch.get(event.keyCode) || function() { ; };
+        f();
     }
-    function addExtendedGazeListener(listener) {
-        that.addListener("extendedGaze", listener);
-    }
-    that.addGazeListener = addGazeListener;
-    that.addExtendedGazeListener = addExtendedGazeListener;
 
     // Start camera and return event emitter
     setupTracking();
