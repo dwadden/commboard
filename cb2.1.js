@@ -33,9 +33,6 @@ function makeButton() {
     }
 
 }
-
-// Temporary function so I'll see what the color tracker looks like on screen
-
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
