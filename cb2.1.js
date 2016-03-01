@@ -114,7 +114,6 @@ function makeDetector() {
 
     // Methods to add and remove listeners for relevant events.
     // These should not be removed.
-    // TODO: Need to test these camera instead of keys.
     that.addGazeListener = function(listener) {
         that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
     };
