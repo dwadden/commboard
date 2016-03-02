@@ -12,9 +12,55 @@ const BEEP_DURATION = 1000;  // Length in ms of request beep
 const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
 const AFTER_BUFFER_READ = 1000; // After reading the buffer, wait a second before restart
 
-// The spec is an object with three fields:
+// Top-level function to set up the menus and return main menu
+function setup() {
+    // Generate utility objects
+    const detector = makeDetector();
+    const buffer = makeBuffer();
+    const clock = makeClock();
+    const slider = makeSlider();
+
+    function makeSpec(menuName) {
+        return { detector, buffer, slider, menuName };
+    }
+    function makeLeaf(menuName) {
+        return makeLeafMenu(makeSpec(menuName));
+    }
+    function makeBranch(menuName) {
+        return makeBranchMenu(makeSpec(menuName));
+    }
+
+    // submenus representing the rows of the compose menu
+    function makeComposeSubmenus() {
+        return new Map([["guess",   makeLeaf("composeGuess")],
+                        ["1",       makeLeaf("compose1")],
+                        ["2",       makeLeaf("compose2")],
+                        ["3",       makeLeaf("compose3")],
+                        ["4",       makeLeaf("compose4")],
+                        ["5",       makeLeaf("compose5")],
+                        ["actions", makeLeaf("composeActions")]]);
+    }
+
+    // Create menus
+    const main = makeBranch("main");
+    const request = makeLeaf("request");
+    const email = makeBranch("email");
+    const compose = makeBranch("composeMain");
+    const composeSubmenus = makeComposeSubmenus();
+
+    // Add children
+    main.addChildren(new Map([["request", request],
+                              ["compose", compose],
+                              ["email",   email]]));
+    compose.addChildren(composeSubmenus);
+
+    return main;
+}
+
+// The spec is an object with four fields:
 // detector: the detector object
 // slider: the slider object
+// buffer: the buffer object. Left unused by many buttons.
 // menuId: the id of the DOM element corresponding to the menu
 function makeMenu(spec, my) {
     my = my || {};
