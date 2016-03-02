@@ -10,6 +10,7 @@ const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to 
 const PRESS_WAIT = 350;     // After button is pressed, wait this many ms before its action
 const BEEP_DURATION = 1000;  // Length in ms of request beep
 const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
+const AFTER_BUFFER_READ = 1000; // After reading the buffer, wait a second before restart
 
 // The spec is an object with three fields:
 // detector: the detector object
@@ -290,8 +291,7 @@ function makeBufferActionButton(spec, my) {
                             ["Clear", "clear"]]);
     that.action = function(cbpressed) {
         let methodName = dispatch.get(my.buttonValue);
-        my.buffer[methodName]();
-        cbpressed();
+        my.buffer[methodName](cbpressed); // Pass the callback along to the buffer method
     };
     return that;
 }
@@ -446,20 +446,25 @@ function makeBuffer() {
         update();
     }
     // Pop off end of buffer
-    function pop() {
+    function pop(cb) {
         bufferText = bufferText.slice(0, -1);
         update();
+        cb();
     }
     // Read buffer contents out loud
-    function read() {
-        // TODO: This procedure will need to take a callback, and fire the event
-        // when speech is finished. Similar to the action for requestButtons.
-        speak(bufferText);
+    function read(cb) {
+        function afterRead() {  // Allow a short pause after reading finishes
+            setTimeout(cb, AFTER_BUFFER_READ);
+        }
+        let utterance = speak(bufferText);
+        utterance.onend = afterRead;       // Read the utterance, then continue the program
+        bufferElem.utterance = utterance; // So the utterance won't go out of scope
     }
     // Clear the buffer.
-    function clear() {
+    function clear(cb) {
         bufferText = "";
         update();
+        cb();
     }
     return { push, pop, read, clear };
 }
