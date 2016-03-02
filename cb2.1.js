@@ -52,19 +52,12 @@ function makeMenu(spec, my) {
     }
 
     function initButton(spec) {
-        // let dispatch = { bufferAction: makeBufferActionButton,
-        //                  guess: makeGuessButton,
-        //                  menuAction: makeMenuActionButton,
-        //                  reqest: makeRequestButton,
-        //                  return: makeReturnButton,
-        //                  menuSelector: makeMenuSelectorButton,
-        //                  text: makeTextButton,
-        //                  textAlias: makeTextAliasButton
-        //                };
         let dispatch = new Map([["menuSelector", makeMenuSelectorButton],
                                 ["start", makeStartButton],
                                 ["request", makeRequestButton],
-                                ["text", makeTextButton]]);
+                                ["text", makeTextButton],
+                                ["textAlias", makeTextAliasButton],
+                                ["bufferAction", makeBufferActionButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
     }
@@ -254,14 +247,40 @@ function makeTextButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
     my.buffer = spec.buffer;
-
+    my.text = my.buttonValue.toLowerCase();
     that.action = function(cbpressed) {
-        my.buffer.push(my.buttonValue);
+        my.buffer.push(my.text);
         cbpressed();
     };
     return that;
 }
 
+// This is just a text button, but with the value of the button changed
+// appropriately.
+function makeTextAliasButton(spec, my) {
+    my = my || {};
+    let that = makeTextButton(spec, my);
+    let valueMap = new Map([["Space", " "]]); // can add more to this list
+    my.text = valueMap.get(my.buttonValue);   // replace the button text appropriately
+    return that;
+}
+
+// Actions on the buffer
+function makeBufferActionButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+    my.buffer = spec.buffer;
+
+    let dispatch = new Map([["Delete", "pop"],
+                            ["Read", "read"],
+                            ["Clear", "clear"]]);
+    that.action = function(cbpressed) {
+        let methodName = dispatch.get(my.buttonValue);
+        my.buffer[methodName]();
+        cbpressed();
+    };
+    return that;
+}
 
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
