@@ -222,12 +222,14 @@ function makeSlider() {
         let stringValue = sliderValue.toString();
         valueElem.textContent = `${stringValue} s`;
     }
-    function getValue() {
-        return sliderValue;
+
+    // The slider time in milliseconds
+    function getms() {
+        return sliderValue * 1000;
     }
     // Initialize and return. Clients can retrieve the value of the slider.
     updateValue();
-    return { getValue };
+    return { getms };
 }
 
 // Constructor for reset button
