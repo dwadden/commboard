@@ -1,0 +1,18 @@
+An informal list of issues, or explanations of potentially confusing points in
+the code that warranted a longer explanation than a comment.
+
+* 1.
+Speech synthesis does not wait until completion before returning. For long
+phrases, it is necessary to begin the utterance, then attach a callback to it so
+that the program will proceed when the utterance is finished. This is
+accomplished in the afterWait and afterSpeech procedures.
+
+One additional wrinkle: as shown in the function, we attach a callback to the
+speech utterance by setting my.utterance.onend. It would be cleaner to declare
+utterance as a local variable rather than storing it on "my". That was what I
+tried first, but when I did it that way the callback was never invoked. Here's
+what I think happened. The procedure afterWait() completed, and utterance went
+out of scope. Since there were no references to it elsewhere in the program, it
+was garbage collected and the event handler on it forgotten. I'm not sure
+whether it's correct for objects with active event handlers to be garbage
+collected. In any case, the solution is to store it on a persistent object.
