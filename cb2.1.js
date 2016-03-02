@@ -475,9 +475,10 @@ function makeSlider() {
     // Magic numbers that may be adjusted as desired.
     const VMIN = 0;
     const VMAX = 3;
+    const V0 = 1;               // Initial value
     const SCALE = 10;
     // Initial slider value
-    let sliderValue = VMIN + VMAX / 2;
+    let sliderValue = V0;
     // Document elements
     let containerElem = document.getElementById("sliderContainer");
     let sliderElem = containerElem.querySelector("#slider");
