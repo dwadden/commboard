@@ -272,6 +272,8 @@ function makeTextPunctuationButton(spec, my) {
     let m = new Map([[".", "period"],
                      ["?", "question"],
                      ["!", "exclamation"],
+                     ["'", "apostrophe"],
+                     ['"', "quote"],
                      ["@", "at"]]);
     my.announcementText = m.get(my.buttonValue);
     return that;
