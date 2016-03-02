@@ -6,33 +6,205 @@
 
 // Global variables
 const LANG = "en-US";            // Dialect for speech synthesis
+const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
+const PRESS_WAIT = 350;     // After button is pressed, wait this many ms before its action
 
-function makeMenu(spec) {
-    let buttons = makeButtons();
+// const menus = { main: makeMainMenu() };
 
-    function scan() {
-        for (let button of buttons) {
-            // do stuff
+function makeMenu(spec, my) {
+    my = my || {};
+    let that = {};
+    my.parent = spec.parent;    // The parent menu of this menu
+    my.detector = spec.detector;
+    my.slider = spec.slider;
+    my.menuElem = document.getElementById(spec.menuId);
+    my.menuRow = my.menuElem.querySelector("tr");
+    my.buttonElems = my.menuRow.querySelectorAll("input[type=button]");
+    my.buttons = initButtons();
+    my.nButtons = my.buttons.length;
+
+    function initButtons() {
+        function mapped(buttonElem) {
+            return { elem: buttonElem,
+                     menu: that,
+                     detector: my.detector,
+                     slider: my.slider
+                   };
         }
+        let specs = Array.prototype.map.call(my.buttonElems, mapped);
+        return specs.map(initButton);
     }
 
-}
-
-function makeButton() {
-
-    function say() {
-        ;
+    function initButton(spec) {
+        // let dispatch = { bufferAction: makeBufferActionButton,
+        //                  guess: makeGuessButton,
+        //                  menuAction: makeMenuActionButton,
+        //                  reqest: makeRequestButton,
+        //                  return: makeReturnButton,
+        //                  menuSelector: makeMenuSelectorButton,
+        //                  text: makeTextButton,
+        //                  textAlias: makeTextAliasButton
+        //                };
+        let dispatch = { menuSelector: makeMenuSelectorButton,
+                         start: makeStartButton };
+        let maker = dispatch[spec.elem.dataset.buttonType];
+        return maker(spec);
     }
 
     function toggle() {
         ;
     }
 
-    function action() {
-        ;
+    function nextButton(ix) {
+        return (ix + 1) % my.nButtons;
+    }
+    my.nextButton = nextButton;
+
+    function isLastButton(buttonIx) {
+        return buttonIx === my.nButtons - 1;
     }
 
+    return that;
 }
+
+function makeBranchMenu(spec, my) {
+    my = my || {};
+    let that = makeMenu(spec, my);
+
+    function scanAt(buttonIx) {
+        let cbpassed = function() { scanAt(my.nextButton(buttonIx)); };
+        let cbpressed = that.scan;
+        let button = my.buttons[buttonIx];
+        button.scan(cbpassed, cbpressed);
+    }
+
+    that.scan = function() {
+        scanAt(0);
+    };
+
+    return that;
+}
+
+function makeLeafMenu(spec, my) {
+    my = my || {};
+    my.loopIx = 0;
+    let that = makeMenu(spec, my);
+
+    my.isLastLoop = function(loopIx) {
+        return loopIx === LEAF_LOOPS - 1;
+    };
+
+    my.nextLoop = function(buttonIx, loopIx) {
+        return my.isLastButton(buttonIx) ? loopIx + 1 : loopIx;
+    };
+
+    function scanAt(buttonIx, loopIx) {
+        let cbpressed = my.parent.scan;
+        let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
+                        cbpressed :
+                        function() { scanAt(my.nextButton(buttonIx),
+                                            my.nextLoop(buttonIx, loopIx)); });
+        let button = my.buttons[buttonIx];
+        button.scan(cbpassed, cbpressed);
+    };
+
+    that.scan = function() {
+        scanAt(0, 0);
+    };
+    return that;
+
+}
+
+// The spec for this guy is just the detector and the slider
+function makeMainMenu(spec) {
+    let my = {};
+    spec.menuId = "main";
+    let that = makeBranchMenu(spec, my);
+    return that;
+}
+
+function makeButton(spec, my) {
+    my = my || {};
+    my.buttonElem = spec.elem;
+    my.buttonValue = my.buttonElem.value;
+    my.detector = spec.detector;
+    my.slider = spec.slider;
+    my.menu = spec.menu;
+    my.timeout = null;
+
+    function announce() {
+        speak(my.buttonValue);
+    }
+
+    function toggle() {
+        my.buttonElem.classList.toggle("buttonOn");
+        my.buttonElem.classList.toggle("buttonOff");
+    }
+
+    // abstract
+    my.action = function(cbpressed) {
+        ;
+    };
+
+    // Here's the difference. If it's not a menu button, nextPressed is invoked
+    // immediately. If it is a menu button, then nextPressed is passed into the
+    // next menu.
+
+    function scan(cbpassed, cbpressed) {
+        toggle();
+        announce();
+        my.detector.addGazeListener(onPress);
+        let timeout = setTimeout(onTimeout, my.slider.getms());
+
+        function onPress() {
+            // To be executed if the button is pressed
+            function afterPress() {
+                announce();
+                function afterAnnouncement() {
+                    toggle();
+                    my.action(cbpressed);
+                }
+                setTimeout(afterAnnouncement, my.slider.getms());
+            }
+            my.detector.removeGazeListener(onPress);
+            clearTimeout(timeout);
+            setTimeout(afterPress, PRESS_WAIT);
+        }
+        function onTimeout() {
+            // To be executed if button is not pressed
+            toggle();
+            my.detector.removeGazeListener(onPress);
+            cbpassed();
+        }
+    }
+    return { scan };
+}
+
+function makeMenuSelectorButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    my.action = function(cbpressed) {
+        console.log("Menu selector button pressed");
+        cbpressed();
+    };
+    return that;
+}
+
+function makeStartButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    my.action = function(cbpressed) {
+        console.log("Start button pressed");
+        cbpressed();
+    };
+    return that;
+}
+
+
+
+
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
