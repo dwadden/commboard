@@ -22,8 +22,11 @@ function makeMenu(spec, my) {
     let that = {};
     my.detector = spec.detector;
     my.slider = spec.slider;
+    my.buffer = spec.buffer;
     let query = `input[type=button][data-menu="${spec.menuName}"]`;
     my.buttonElems = document.querySelectorAll(query);
+    that.buttons = initButtons();
+    that.nButtons = that.buttons.length;
 
     // The input is an object containing the menus that are children of this
     // menu
@@ -40,14 +43,13 @@ function makeMenu(spec, my) {
             return { elem: buttonElem,
                      menu: that,
                      detector: my.detector,
-                     slider: my.slider
+                     slider: my.slider,
+                     buffer: my.buffer
                    };
         }
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
-        that.buttons = specs.map(initButton);
-        that.nButtons = that.buttons.length;
+        return specs.map(initButton);
     }
-    that.initButtons = initButtons;
 
     function initButton(spec) {
         // let dispatch = { bufferAction: makeBufferActionButton,
@@ -61,7 +63,8 @@ function makeMenu(spec, my) {
         //                };
         let dispatch = new Map([["menuSelector", makeMenuSelectorButton],
                                 ["start", makeStartButton],
-                                ["request", makeRequestButton]]);
+                                ["request", makeRequestButton],
+                                ["text", makeTextButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
     }
@@ -140,6 +143,8 @@ function makeButton(spec, my) {
     my.menu = spec.menu;
     my.timeout = null;
 
+    let that = {};
+
     function announce() {
         speak(my.buttonValue);
     }
@@ -150,7 +155,7 @@ function makeButton(spec, my) {
     }
 
     // abstract
-    my.action = function(cbpressed) {
+    that.action = function(cbpressed) {
         ;
     };
 
@@ -158,7 +163,7 @@ function makeButton(spec, my) {
     // immediately. If it is a menu button, then nextPressed is passed into the
     // next menu.
 
-    function scan(cbpassed, cbpressed) {
+    that.scan = function(cbpassed, cbpressed) {
         toggle();
         announce();
         my.detector.addGazeListener(onPress);
@@ -170,7 +175,7 @@ function makeButton(spec, my) {
                 announce();
                 function afterAnnouncement() {
                     toggle();
-                    my.action(cbpressed);
+                    that.action(cbpressed);
                 }
                 setTimeout(afterAnnouncement, my.slider.getms());
             }
@@ -184,15 +189,15 @@ function makeButton(spec, my) {
             my.detector.removeGazeListener(onPress);
             cbpassed();
         }
-    }
-    return { scan };
+    };
+    return that;
 }
 
 function makeMenuSelectorButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
-    my.action = function(cbpressed) {
+    that.action = function(cbpressed) {
         let nextMenuName = my.buttonValue.toLowerCase();
         let nextMenu = my.menu.children.get(nextMenuName);
         nextMenu.scan();
@@ -204,7 +209,7 @@ function makeStartButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
-    my.action = function(cbpressed) {
+    that.action = function(cbpressed) {
         console.log("Start button pressed");
         cbpressed();
     };
@@ -230,7 +235,7 @@ function makeRequestButton(spec, my) {
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     }
 
-    my.action = function(cbpressed) {
+    that.action = function(cbpressed) {
         function afterBeep() {
             // See issue 1.
             function afterSpeech() {
@@ -241,6 +246,18 @@ function makeRequestButton(spec, my) {
         }
         beep();
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
+    };
+    return that;
+}
+
+function makeTextButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+    my.buffer = spec.buffer;
+
+    that.action = function(cbpressed) {
+        my.buffer.push(my.buttonValue);
+        cbpressed();
     };
     return that;
 }
