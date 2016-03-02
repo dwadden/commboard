@@ -8,6 +8,8 @@
 const LANG = "en-US";            // Dialect for speech synthesis
 const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
 const PRESS_WAIT = 350;     // After button is pressed, wait this many ms before its action
+const BEEP_DURATION = 1000;  // Length in ms of request beep
+const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
 
 // const menus = { main: makeMainMenu() };
 
@@ -46,7 +48,8 @@ function makeMenu(spec, my) {
         //                  textAlias: makeTextAliasButton
         //                };
         let dispatch = { menuSelector: makeMenuSelectorButton,
-                         start: makeStartButton };
+                         start: makeStartButton,
+                         request: makeRequestButton };
         let maker = dispatch[spec.elem.dataset.buttonType];
         return maker(spec);
     }
@@ -63,6 +66,7 @@ function makeMenu(spec, my) {
     function isLastButton(buttonIx) {
         return buttonIx === my.nButtons - 1;
     }
+    my.isLastButton = isLastButton;
 
     return that;
 }
@@ -87,7 +91,6 @@ function makeBranchMenu(spec, my) {
 
 function makeLeafMenu(spec, my) {
     my = my || {};
-    my.loopIx = 0;
     let that = makeMenu(spec, my);
 
     my.isLastLoop = function(loopIx) {
@@ -120,6 +123,14 @@ function makeMainMenu(spec) {
     let my = {};
     spec.menuId = "main";
     let that = makeBranchMenu(spec, my);
+    return that;
+}
+
+// Spec for this guy is the slider, detector, and parent menu
+function makeRequestMenu(spec) {
+    let my = {};
+    spec.menuId = "request";
+    let that = makeLeafMenu(spec, my);
     return that;
 }
 
@@ -202,7 +213,39 @@ function makeStartButton(spec, my) {
     return that;
 }
 
+function makeRequestButton(spec, my) {
+    my = my || {};
+    my.utterance = null;
+    let that = makeButton(spec, my);
 
+    let messages = { Cold: "I am cold.",
+                     Hot: "I am hot.",
+                     Company: "I'd like some company." };
+    let message = messages[my.buttonValue];
+
+    function beep() {
+        var context = new window.AudioContext();
+        var oscillator = context.createOscillator();
+        oscillator.frequency.value = 400;
+        oscillator.connect(context.destination);
+        oscillator.start();
+        setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
+    }
+
+    my.action = function(cbpressed) {
+        function afterBeep() {
+            // See issue 1.
+            function afterSpeech() {
+                setTimeout(cbpressed, my.slider.getms());
+            }
+            my.utterance = speak(message);
+            my.utterance.onend = afterSpeech;
+        }
+        beep();
+        setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
+    };
+    return that;
+}
 
 
 // Constructor for detector object. Inherits from EventEmitter.
@@ -339,6 +382,8 @@ function makeBuffer() {
     }
     // Read buffer contents out loud
     function read() {
+        // TODO: This procedure will need to take a callback, and fire the event
+        // when speech is finished. Similar to the action for requestButtons.
         speak(bufferText);
     }
     // Clear the buffer.
@@ -414,6 +459,7 @@ function speak(text) {
     let utterance = new window.SpeechSynthesisUtterance(text);
     utterance.lang = LANG;
     window.speechSynthesis.speak(utterance);
+    return utterance;
 }
 
 function notImplemented () {
