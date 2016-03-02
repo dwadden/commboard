@@ -58,7 +58,8 @@ function makeMenu(spec, my) {
                                 ["textAlias", makeTextAliasButton],
                                 ["textPunctuation", makeTextPunctuationButton],
                                 ["bufferAction", makeBufferActionButton],
-                                ["return", makeReturnButton]]);
+                                ["return", makeReturnButton],
+                                ["notImplemented", makeNotImplementedButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
     }
@@ -314,6 +315,23 @@ function makeReturnButton(spec, my) {
     that.action = function(cbpressed) {
         let returnMenu = getReturnMenu(my.menu, my.depth);
         returnMenu.scan();
+    };
+    return that;
+}
+
+function makeNotImplementedButton(spec, my) {
+    const PAUSE = 500;
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    // Inform the user that the button isn't yet implemented
+    that.action = function(cbpressed) {
+        function afterRead() {
+            setTimeout(cbpressed, PAUSE);
+        }
+        let utterance = speak("Not implemented");
+        utterance.onend = afterRead;
+        my.buttonElem.utternce = utterance;
     };
     return that;
 }
