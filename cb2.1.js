@@ -229,12 +229,12 @@ function makeRequestButton(spec, my) {
 
     that.action = function(cbpressed) {
         function afterBeep() {
-            // See issue 1.
             function afterSpeech() {
                 setTimeout(cbpressed, my.slider.getms());
             }
-            my.utterance = speak(message);
-            my.utterance.onend = afterSpeech;
+            let utterance = speak(message);
+            utterance.onend = afterSpeech;
+            my.buttonElem.utterance = utterance; // Not extraneous, but subtle. See issue 1.
         }
         beep();
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
