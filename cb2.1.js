@@ -11,8 +11,6 @@ const PRESS_WAIT = 350;     // After button is pressed, wait this many ms before
 const BEEP_DURATION = 1000;  // Length in ms of request beep
 const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
 
-// const menus = { main: makeMainMenu() };
-
 // The spec is an object with three fields:
 // detector: the detector object
 // slider: the slider object
@@ -57,7 +55,8 @@ function makeMenu(spec, my) {
                                 ["request", makeRequestButton],
                                 ["text", makeTextButton],
                                 ["textAlias", makeTextAliasButton],
-                                ["bufferAction", makeBufferActionButton]]);
+                                ["bufferAction", makeBufferActionButton],
+                                ["return", makeReturnButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
     }
@@ -282,6 +281,28 @@ function makeBufferActionButton(spec, my) {
     return that;
 }
 
+// Return to calling menu
+function makeReturnButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+    my.depth = parseInt(my.buttonElem.dataset.returnDepth); // number of levels to return
+
+    // Ignore the callback and return to calling menu
+    function getReturnMenu(menu, depth) {
+        if (depth === 0) {
+            return menu;
+        } else {
+            return getReturnMenu(menu.parent, depth - 1);
+        }
+    }
+
+    that.action = function(cbpressed) {
+        let returnMenu = getReturnMenu(my.menu, my.depth);
+        returnMenu.scan();
+    };
+    return that;
+}
+
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
@@ -292,7 +313,7 @@ function makeDetector() {
     const GAZE_TIME = 100;      // duration (s) for which gaze must be held
     const EXTENDED_GAZE_TIME = 2000; // duration (s) for extended gaze; triggers reset
     const MIN_N_CHANGED = 10;          // if in "off" state, need 10 consecutive
-    const TRACKER_COLOR = "yellow";    // detections to switch to "on", and vice versa
+    const TRACKER_COLOR = "magenta";    // detections to switch to "on", and vice versa
     // Function-level variables
     let startTime = null;              // start time for most recent upward gaze
     let state = OFF;
