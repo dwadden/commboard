@@ -55,6 +55,7 @@ function makeMenu(spec, my) {
                                 ["request", makeRequestButton],
                                 ["text", makeTextButton],
                                 ["textAlias", makeTextAliasButton],
+                                ["textPunctuation", makeTextPunctuationButton],
                                 ["bufferAction", makeBufferActionButton],
                                 ["return", makeReturnButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
@@ -130,6 +131,7 @@ function makeButton(spec, my) {
     my = my || {};
     my.buttonElem = spec.elem;
     my.buttonValue = my.buttonElem.value;
+    my.announcementText = my.buttonValue; // By default, announce the button text
     my.detector = spec.detector;
     my.slider = spec.slider;
     my.menu = spec.menu;
@@ -138,7 +140,7 @@ function makeButton(spec, my) {
     let that = {};
 
     function announce() {
-        speak(my.buttonValue);
+        speak(my.announcementText);
     }
 
     function toggle() {
@@ -259,8 +261,19 @@ function makeTextButton(spec, my) {
 function makeTextAliasButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
-    let valueMap = new Map([["Space", " "]]); // can add more to this list
-    my.text = valueMap.get(my.buttonValue);   // replace the button text appropriately
+    let m = new Map([["Space", " "]]); // can add more to this list
+    my.text = m.get(my.buttonValue);   // replace the button text appropriately
+    return that;
+}
+
+function makeTextPunctuationButton(spec, my) {
+    my = my || {};
+    let that = makeTextButton(spec, my);
+    let m = new Map([[".", "period"],
+                     ["?", "question"],
+                     ["!", "exclamation"],
+                     ["@", "at"]]);
+    my.announcementText = m.get(my.buttonValue);
     return that;
 }
 
