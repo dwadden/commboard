@@ -13,17 +13,27 @@ const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
 
 // const menus = { main: makeMainMenu() };
 
+// The spec is an object with three fields:
+// detector: the detector object
+// slider: the slider object
+// menuId: the id of the DOM element corresponding to the menu
 function makeMenu(spec, my) {
     my = my || {};
     let that = {};
-    my.parent = spec.parent;    // The parent menu of this menu
     my.detector = spec.detector;
     my.slider = spec.slider;
-    my.menuElem = document.getElementById(spec.menuId);
-    my.menuRow = my.menuElem.querySelector("tr");
-    my.buttonElems = my.menuRow.querySelectorAll("input[type=button]");
-    my.buttons = initButtons();
-    my.nButtons = my.buttons.length;
+    let query = `input[type=button][data-menu="${spec.menuName}"]`;
+    my.buttonElems = document.querySelectorAll(query);
+
+    // The input is an object containing the menus that are children of this
+    // menu
+    that.addChildren = function(children) {
+        that.children = children;
+        function addParent(child) {
+            child.parent = that;
+        }
+        children.forEach(addParent);
+    };
 
     function initButtons() {
         function mapped(buttonElem) {
@@ -34,8 +44,10 @@ function makeMenu(spec, my) {
                    };
         }
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
-        return specs.map(initButton);
+        that.buttons = specs.map(initButton);
+        that.nButtons = that.buttons.length;
     }
+    that.initButtons = initButtons;
 
     function initButton(spec) {
         // let dispatch = { bufferAction: makeBufferActionButton,
@@ -47,10 +59,10 @@ function makeMenu(spec, my) {
         //                  text: makeTextButton,
         //                  textAlias: makeTextAliasButton
         //                };
-        let dispatch = { menuSelector: makeMenuSelectorButton,
-                         start: makeStartButton,
-                         request: makeRequestButton };
-        let maker = dispatch[spec.elem.dataset.buttonType];
+        let dispatch = new Map([["menuSelector", makeMenuSelectorButton],
+                                ["start", makeStartButton],
+                                ["request", makeRequestButton]]);
+        let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
     }
 
@@ -59,18 +71,19 @@ function makeMenu(spec, my) {
     }
 
     function nextButton(ix) {
-        return (ix + 1) % my.nButtons;
+        return (ix + 1) % that.nButtons;
     }
     my.nextButton = nextButton;
 
     function isLastButton(buttonIx) {
-        return buttonIx === my.nButtons - 1;
+        return buttonIx === that.nButtons - 1;
     }
     my.isLastButton = isLastButton;
 
     return that;
 }
 
+// The spec is an object
 function makeBranchMenu(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
@@ -78,7 +91,7 @@ function makeBranchMenu(spec, my) {
     function scanAt(buttonIx) {
         let cbpassed = function() { scanAt(my.nextButton(buttonIx)); };
         let cbpressed = that.scan;
-        let button = my.buttons[buttonIx];
+        let button = that.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
     }
 
@@ -102,12 +115,12 @@ function makeLeafMenu(spec, my) {
     };
 
     function scanAt(buttonIx, loopIx) {
-        let cbpressed = my.parent.scan;
+        let cbpressed = that.parent.scan;
         let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
                         cbpressed :
                         function() { scanAt(my.nextButton(buttonIx),
                                             my.nextLoop(buttonIx, loopIx)); });
-        let button = my.buttons[buttonIx];
+        let button = that.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
@@ -116,22 +129,6 @@ function makeLeafMenu(spec, my) {
     };
     return that;
 
-}
-
-// The spec for this guy is just the detector and the slider
-function makeMainMenu(spec) {
-    let my = {};
-    spec.menuId = "main";
-    let that = makeBranchMenu(spec, my);
-    return that;
-}
-
-// Spec for this guy is the slider, detector, and parent menu
-function makeRequestMenu(spec) {
-    let my = {};
-    spec.menuId = "request";
-    let that = makeLeafMenu(spec, my);
-    return that;
 }
 
 function makeButton(spec, my) {
@@ -196,8 +193,9 @@ function makeMenuSelectorButton(spec, my) {
     let that = makeButton(spec, my);
 
     my.action = function(cbpressed) {
-        console.log("Menu selector button pressed");
-        cbpressed();
+        let nextMenuName = my.buttonValue.toLowerCase();
+        let nextMenu = my.menu.children.get(nextMenuName);
+        nextMenu.scan();
     };
     return that;
 }
