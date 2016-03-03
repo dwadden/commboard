@@ -45,9 +45,10 @@ function setup() {
 
     // Create menus
     const main = makeBranch("main");
+    main.slideDown();
     const request = makeLeaf("request");
     const email = makeBranch("email");
-    const compose = makeBranch("composeMain");
+    const compose = makeBranch("compose");
     const composeSubmenus = makeComposeSubmenus();
 
     // Add children
@@ -69,6 +70,7 @@ function makeMenu(spec, my) {
     my.slider = spec.slider;
     my.buffer = spec.buffer;
     let query = `input[type=button][data-menu="${spec.menuName}"]`;
+    my.divElem = document.querySelector(`div#${spec.menuName}`);
     my.buttonElems = document.querySelectorAll(query);
     that.buttons = initButtons();
     that.nButtons = that.buttons.length;
@@ -110,9 +112,22 @@ function makeMenu(spec, my) {
         return maker(spec);
     }
 
-    function toggle() {
-        ;
-    }
+    // Slide menus up and down. Only do this for menus with a div element
+    // associated with them. Those are the "major" menus.
+    // TODO: Is there a cleaner way to do this?
+    that.slideUp = function() {
+        if (my.divElem !== undefined) {
+            jQuery(my.divElem).slideUp();
+        }
+    };
+
+    that.slideDown = function() {
+        if (my.divElem !== undefined) {
+            jQuery(my.divElem).slideDown();
+        }
+    };
+
+    that.slideUp();
 
     function nextButton(ix) {
         return (ix + 1) % that.nButtons;
@@ -124,6 +139,11 @@ function makeMenu(spec, my) {
     }
     my.isLastButton = isLastButton;
 
+    that.scan = function() {
+        that.slideDown();
+        my.scanAt(0, 0);
+    };
+
     return that;
 }
 
@@ -132,15 +152,11 @@ function makeBranchMenu(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
-    function scanAt(buttonIx) {
-        let cbpassed = function() { scanAt(my.nextButton(buttonIx)); };
+    my.scanAt = function(buttonIx) {
+        let cbpassed = function() { my.scanAt(my.nextButton(buttonIx)); };
         let cbpressed = that.scan;
         let button = that.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
-    }
-
-    that.scan = function() {
-        scanAt(0);
     };
 
     return that;
@@ -158,21 +174,20 @@ function makeLeafMenu(spec, my) {
         return my.isLastButton(buttonIx) ? loopIx + 1 : loopIx;
     };
 
-    function scanAt(buttonIx, loopIx) {
-        let cbpressed = that.parent.scan;
+    my.scanAt = function(buttonIx, loopIx) {
+        function cbpressed() {
+            that.slideUp();
+            that.parent.scan();
+        }
         let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
                         cbpressed :
-                        function() { scanAt(my.nextButton(buttonIx),
-                                            my.nextLoop(buttonIx, loopIx)); });
+                        function() { my.scanAt(my.nextButton(buttonIx),
+                                               my.nextLoop(buttonIx, loopIx)); });
         let button = that.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
-    that.scan = function() {
-        scanAt(0, 0);
-    };
     return that;
-
 }
 
 function makeButton(spec, my) {
@@ -238,10 +253,14 @@ function makeButton(spec, my) {
 function makeMenuSelectorButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+    my.slide = JSON.parse(my.buttonElem.dataset.slide); // converts to boolean
 
     that.action = function(cbpressed) {
         let nextMenuName = my.buttonValue.toLowerCase();
         let nextMenu = my.menu.children.get(nextMenuName);
+        if (my.slide) {
+            my.menu.slideUp();
+        }
         nextMenu.scan();
     };
     return that;
@@ -373,6 +392,8 @@ function makeReturnButton(spec, my) {
 
     that.action = function(cbpressed) {
         let returnMenu = getReturnMenu(my.menu, my.depth);
+        let majorMenu = getReturnMenu(my.menu, my.depth - 1);
+        majorMenu.slideUp();
         returnMenu.scan();
     };
     return that;
