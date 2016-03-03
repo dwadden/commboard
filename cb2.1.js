@@ -12,6 +12,8 @@ const BEEP_DURATION = 1000;  // Length in ms of request beep
 const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
 const AFTER_BUFFER_READ = 1000; // After reading the buffer, wait a second before restart
 
+window.onload = setup;
+
 // Top-level function to set up the menus and return main menu
 function setup() {
     // Generate utility objects
@@ -53,8 +55,6 @@ function setup() {
                               ["compose", compose],
                               ["email",   email]]));
     compose.addChildren(composeSubmenus);
-
-    return main;
 }
 
 // The spec is an object with four fields:
@@ -191,10 +191,10 @@ function makeButton(spec, my) {
         speak(my.announcementText);
     }
 
-    function toggle() {
+    that.toggle = function() {
         my.buttonElem.classList.toggle("buttonOn");
         my.buttonElem.classList.toggle("buttonOff");
-    }
+    };
 
     // abstract
     that.action = function(cbpressed) {
@@ -206,7 +206,7 @@ function makeButton(spec, my) {
     // next menu.
 
     that.scan = function(cbpassed, cbpressed) {
-        toggle();
+        that.toggle();
         announce();
         my.detector.addGazeListener(onPress);
         let timeout = setTimeout(onTimeout, my.slider.getms());
@@ -216,7 +216,7 @@ function makeButton(spec, my) {
             function afterPress() {
                 announce();
                 function afterAnnouncement() {
-                    toggle();
+                    that.toggle();
                     that.action(cbpressed);
                 }
                 setTimeout(afterAnnouncement, my.slider.getms());
@@ -227,7 +227,7 @@ function makeButton(spec, my) {
         }
         function onTimeout() {
             // To be executed if button is not pressed
-            toggle();
+            that.toggle();
             my.detector.removeGazeListener(onPress);
             cbpassed();
         }
@@ -251,9 +251,22 @@ function makeStartButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
+    that.toggle();
+    my.detector.addExtendedGazeListener(start);
+
+    // Kick off the process
+    function start() {
+        my.detector.removeExtendedGazeListener(start);
+        my.buttonValue = my.announcementText = my.buttonElem.value = "Stop";
+        my.menu.scan();
+        that.toggle();
+    }
+
     that.action = function(cbpressed) {
-        console.log("Start button pressed");
-        cbpressed();
+        my.detector.addExtendedGazeListener(start);
+        my.buttonValue = my.announcementText = my.buttonElem.value = "Start";
+        my.buttonElem.value = my.buttonValue;
+        that.toggle();
     };
     return that;
 }
@@ -392,7 +405,7 @@ function makeDetector() {
     const GAZE_TIME = 100;      // duration (s) for which gaze must be held
     const EXTENDED_GAZE_TIME = 2000; // duration (s) for extended gaze; triggers reset
     const MIN_N_CHANGED = 10;          // if in "off" state, need 10 consecutive
-    const TRACKER_COLOR = "magenta";    // detections to switch to "on", and vice versa
+    const TRACKER_COLOR = "yellow";    // detections to switch to "on", and vice versa
     // Function-level variables
     let startTime = null;              // start time for most recent upward gaze
     let state = OFF;
