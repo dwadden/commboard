@@ -1,107 +1,162 @@
-.invisible {
-    display: none;
-    visibility: hidden;
+/* Style sheet for commboard. Most of the styles here are devoted to the layout
+of the bottom, always-showing section of the commboard. This contains the text
+buffer, camera feed, date and time, and controls to change the scan speed and
+restart the program. The rest of the layout is straightforward. */
+
+/* Document-level classes and styles */
+html, body { /* Body takes up full window */
+  height: 100%;
+  margin: 0px auto;
+  padding: 0px auto;
+}
+#wrapper { /* Wrapper takes up full window */
+  width: 100%
+  height: 100%;
+  overflow-y: scroll;
+}
+h1 {
+  font-family: Arial,Helvetica,sans-serif;
+  color: firebrick;
+  margin: 5px;
+}
+.container { /* Containers centered within wrapper div */
+  width: 97.5%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.floatRight {
+  float: right;
+}
+.singleRowMenu {
+  height: 125px;
 }
 
-div.serif{font-family:"Times New Roman",Times,serif;}
-div.sansserif{font-family:Arial,Helvetica,sans-serif;}
-
-div#testButton {visibility:hidden; display: none;}
-div#debug {font:60%; color:gray; }
-//div#debug {visibility:hidden; display:none; }
-.ding { autoplay; controls; preload:auto;
-  loop:false; visibility:hidden; display:none;}
-div.audioclass { autoplay; visibility:hidden; display:none; }
-
-div#container {width:100%;}
-div#content { width:100%; clear:both; }
-div#header {width:100%; clear: both;}
-div#timeDisplay {
-    float:left;
-    color:royalblue; font: bold 'trebuchet ms',helvetica,sans-serif;}
-
-div#textBuffer {
-    float:left;
-    color:darkblue; font: bold 400% 'trebuchet ms',helvetica,sans-serif;}
-
-div#logo {color:#FFA500; float:right; display:
-    table-cell; vertical-align: middle;
-    margin-top: 4px;
-    text-align: right}
-div#footer { color:#FFA500; float:right}
-/*div.content {background-color:#EEEEEE;height:800px;width:600px;float:left;}
-*/
-div.menu {
-    float: right;
-    color: royalblue;
+/* Table styling. Tables serve as containers for buttons. */
+table {
+  table-layout: fixed; /* All buttons have same width */
+  width: 100%; /* Table fills element */
+}
+td {
+  padding: 3px; /* Space between buttons */
+  height: 60px;
+}
+.rowOn { /* Styling when a menu is not currently active */
+  color: yellow;
+  background-color: yellowgreen;
+}
+.rowOff { /* Styling when a menu is active */
+  background-color: transparent;
 }
 
-div#slider-value {
-    color: gray; font: bold 80% 'trebuchet ms',helvetica,sans-serif;
+/* Button styling */
+input[type=button] { /* Input buttons. */
+  width: 100%; /* Fill bounding <td> element. */
+  height: 100%;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-size: 150%;
+  font-weight: bold;
+}
+.buttonOn { /* Active button. */
+  color: darkred;
+  border-color: yellow;
+  background-color: yellow;
+}
+.buttonOff { /* Inactive button. */
+  color: darkblue;
+  border-color: ghostwhite;
+  background-color: ghostwhite;
 }
 
-div#slider {
-  style=" width: 250px";
+/* Styling and layout for specific elements.  */
+#compose { /* Compose text. */
+  height: 550px;
 }
-
-div.rowOn  { float:left;
-    width: 100%;
-    height: 14%;
-    color: yellow;
-    background-color: yellowgreen;
+/* Utility elements at bottom of page. */
+#util { /* Container for all util elements. */
+  position: relative;
+  height: 400px;
 }
-div.rowOff { float:left;
-    width: 100%;
-    height: 14%;
-    background-color: transparent;
+/* Text buffer. Side-by-side with settings. */
+#buffer { /* Layout. */
+  position: absolute;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  color: black;
+  font-size: 150%;
 }
-
-.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
-    float:left;
-    margin: 0.5%;
-    border-color: yellow;
-    background-color: yellow;
-    // width: 15.6%; height: 70px;
-    width: 11.5%; height: 70px;
+#bufferText { /* Text element. */
+  top: 0;
+  margin-top: 0%;
+  margin-right: 5%;
 }
-
-.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
-    float:left;
-    margin: 0.5%;
-    border-color: ghostwhite;
-    background-color:ghostwhite;
-    // width: 15.6%; height: 70px;
-    width: 11.5%; height: 70px;
+/* Settings. Holds the camera, clock, slider, and reset button. Side-by-side
+with text. */
+#settings {
+  float: right;
+  width: 40%;
+  height: 100%;
 }
-input#setupButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
-    float:right;
-    margin: 0.5%;
-    border-color: ghostwhite;
-    background-color:ghostwhite;
-    width: 95px; height:30px;
+/* Camera. Above the rest of the settings elements. */
+#camContainer { /* Layout. */
+  height: 60%
 }
-input#pauseButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
-    float:right;
-    margin: 0.5%;
-    border-color: ghostwhite;
-    background-color:ghostwhite;
-    width: 95px; height:30px;
+#cam { /* Camera feed. */
+  float: right;
+  max-width: 100%;
+  max-height: 100%;
+  border-style: solid;
+  border-color: darkGreen;
+  border-radius: 10px;
 }
-input#selectButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
-    float:right;
-    margin: 0.5%;
-    border-color: ghostwhite;
-    background-color:ghostwhite;
-    width: 95px; height:30px;
+/* Sub-settings. The clock, slider, and reset. Below the camera. */
+#subSettings {
+  height: 40%;
 }
-input#soundButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
-    float:right;
-    margin: 0.5%;
-    border-color: ghostwhite;
-    background-color:ghostwhite;
-    width: 95px; height:30px;
+/* The clock. */
+#clockContainer {
+  height: 35%;
+  width: 100%;
+  color: royalblue;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-size: 150%;
+  font-weight: bold;
 }
-
-/* DW additions */
-
-h1 { font-family:Arial,Helvetica,sans-serif; color:#136713; }
+/* Controls. Below the clock. */
+#controls {
+  position: relative;
+  height: 65%;
+  width: 100%;
+}
+/* Slider. On the left. */
+#sliderContainer { /* Layout */
+  position: absolute;
+  left: 0%;
+  width: 50%;
+  height: 100%
+}
+#slider { /* The slider itself */
+  width: 100%;
+}
+#sliderValue { /* Its value. */
+  color: gray;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-weight: bold;
+}
+/* Reset button. On the right. */
+#resetContainer { /* Layout. */
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+}
+#resetButton { /* The button. */
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  right: 5%;
+  bottom: 5%;
+  color: firebrick;
+  border-color: ghostwhite;
+  background-color: ghostwhite;
+}

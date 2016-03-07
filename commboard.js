@@ -107,6 +107,7 @@ function makeMenu(spec, my) {
                                 ["textPunctuation", makeTextPunctuationButton],
                                 ["bufferAction", makeBufferActionButton],
                                 ["return", makeReturnButton],
+                                ["guess", makeGuessButton],
                                 ["notImplemented", makeNotImplementedButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
@@ -399,6 +400,13 @@ function makeReturnButton(spec, my) {
     return that;
 }
 
+// Word guesses
+function makeGuessButton(spec, my) {
+    my = my || {};
+    let that = makeButton(spec, my);
+    return that;
+}
+
 function makeNotImplementedButton(spec, my) {
     const PAUSE = 500;
     my = my || {};
@@ -534,6 +542,9 @@ function makeBuffer() {
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = "";
+    // Booleans to indicate whether we are at the start of a new word and new sentence
+    let wordStart = true;       // If true, guess full words
+    let sentenceStart = true;   // If true, capitalize the next letter.
     // Update element text to match text stored in JS variable
     function update() {
         textElem.textContent = bufferText;
@@ -563,6 +574,10 @@ function makeBuffer() {
         bufferText = "";
         update();
         cb();
+    }
+    // retrieve guesses for next word
+    function guess() {
+
     }
     return { push, pop, read, clear };
 }
