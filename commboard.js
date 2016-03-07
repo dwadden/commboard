@@ -105,7 +105,8 @@ function makeMenu(spec, my) {
                                 ["request", makeRequestButton],
                                 ["letter", makeLetterButton],
                                 ["space", makeSpaceButton],
-                                ["punctuation", makePunctuationButton],
+                                ["terminalPunctuation", makeTerminalPunctuationButton],
+                                ["nonTerminalPunctuation", makeNonTerminalPunctuationButton],
                                 ["bufferAction", makeBufferActionButton],
                                 ["return", makeReturnButton],
                                 ["guess", makeGuessButton],
@@ -329,6 +330,7 @@ function makeRequestButton(spec, my) {
 function makeTextButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+    my.textCategory = null;     // Set by subclasses
     my.buffer = spec.buffer;
     my.text = my.buttonValue.toLowerCase();
     that.action = function(cbpressed) {
@@ -341,6 +343,7 @@ function makeTextButton(spec, my) {
 function makeLetterButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
+    my.textCategory = "letter";
     return that;
 }
 
@@ -349,6 +352,7 @@ function makeLetterButton(spec, my) {
 function makeSpaceButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
+    my.textCategory = "space";
     my.text = " ";   // Button text is just " "
     return that;
 }
@@ -363,6 +367,21 @@ function makePunctuationButton(spec, my) {
                      ['"', "quote"],
                      ["@", "at"]]);
     my.announcementText = m.get(my.buttonValue);
+    return that;
+}
+
+function makeNonTerminalPunctuationButton(spec, my) {
+    my = my || {};
+    let that = makePunctuationButton(spec, my);
+    my.textCategory = "nonTerminalPunctuation";
+    return that;
+}
+
+// A puncutation button that signals the end of a setnence
+function makeTerminalPunctuationButton(spec, my) {
+    my = my || {};
+    let that = makePunctuationButton(spec, my);
+    my.textCategory = "terminalPunctuation";
     return that;
 }
 
