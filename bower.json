@@ -1,0 +1,24 @@
+{
+  "name": "commboard",
+  "description": "",
+  "main": "commboard.js",
+  "authors": [
+    "David Wadden <dave.wadden@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/dwadden/commboard",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eventEmitter": "^4.3.0",
+    "moment": "^2.11.2",
+    "tracking": "^1.1.2"
+  }
+}
