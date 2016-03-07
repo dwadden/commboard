@@ -334,7 +334,7 @@ function makeTextButton(spec, my) {
     my.buffer = spec.buffer;
     my.text = my.buttonValue.toLowerCase();
     that.action = function(cbpressed) {
-        my.buffer.push(my.text);
+        my.buffer.write(my.text, my.textCategory);
         cbpressed();
     };
     return that;
@@ -562,6 +562,7 @@ function makeDetector() {
 
 // Constructor for buffer object.
 function makeBuffer() {
+    const CURSOR = "_";          // Cursor character. Could be |, for instance
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = "";
@@ -572,16 +573,61 @@ function makeBuffer() {
     function update() {
         textElem.textContent = bufferText;
     };
+    // Write text to buffer. Dispatch based on text category.
+    function write(text, textCategory) {
+        let dispatch = new Map([["letter", writeLetter],
+                                ["space", writeSpace],
+                                ["nonTerminalPunctuation", writeNonTerminalPunctuation],
+                                ["terminalPunctuation", writeTerminalPunctuation]]);
+        let writer = dispatch.get(textCategory);
+        writer(text);
+    }
+    // Generic function to write to buffer
+    function writeText(text) {
+        pop();                  // Get cursor out of the way
+        push(text);
+        push(CURSOR);           // Add the cursor back
+    }
+    // For letters, capitalize if at beginning of sentence
+    function writeLetter(text) {
+        let toWrite = sentenceStart ? text.toUpperCase() : text;
+        writeText(toWrite);
+        wordStart = false;
+        sentenceStart = false;
+    }
+    // For spaces, write a space and switch wordStart to true
+    function writeSpace() {
+        writeText(" ");
+        wordStart = true;
+    }
+
+    // Just writes the text.
+    function writeNonTerminalPunctuation(text) {
+        writeText(text);
+    }
+
+    function writeTerminalPunctuation(text) {
+        writeText(text);
+        sentenceStart = true;
+        writeSpace();           // Add space to start new word
+    }
+
     // Push to buffer
     function push(char) {
         bufferText += char;
         update();
     }
     // Pop off end of buffer
+    // TODO: Right now, pop may be invoked with a callback or without. This
+    // isn't really correct. Probably pop should be private, and things that
+    // call it (like delete) should do so through an exposed method that handles
+    // the callback. For later.
     function pop(cb) {
         bufferText = bufferText.slice(0, -1);
         update();
-        cb();
+        if (cb !== undefined) {
+            cb();
+        }
     }
     // Read buffer contents out loud
     function read(cb) {
@@ -602,7 +648,7 @@ function makeBuffer() {
     function guess() {
 
     }
-    return { push, pop, read, clear };
+    return { push, pop, write, read, clear };
 }
 
 // Constructor for clock object.
