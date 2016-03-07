@@ -18,6 +18,7 @@ window.onload = setup;
 function setup() {
     // Generate utility objects
     const detector = makeDetector();
+    detector.setupTracking();
     const buffer = makeBuffer();
     const clock = makeClock();
     const slider = makeSlider();
@@ -491,7 +492,7 @@ function makeDetector() {
     // Setup up tracking.
     // TODO: Ideally, this is the only function that will need to change when we
     // switch from color tracking to eye tracking.
-    function setupTracking() {
+    that.setupTracking = function() {
         let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
         tracker.on("track", function(event) {
             if (event.data.length === 0) { // No colors
@@ -501,7 +502,7 @@ function makeDetector() {
             }
         });
         tracking.track("#cam", tracker, {camera: true});
-    }
+    };
 
     // Methods to add and remove listeners for relevant events.
     // These should not be removed.
@@ -532,8 +533,6 @@ function makeDetector() {
         f();
     }
 
-    // Start camera and return event emitter
-    setupTracking();
     return that;
 }
 
