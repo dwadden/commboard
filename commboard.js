@@ -103,9 +103,9 @@ function makeMenu(spec, my) {
         let dispatch = new Map([["menuSelector", makeMenuSelectorButton],
                                 ["start", makeStartButton],
                                 ["request", makeRequestButton],
-                                ["text", makeTextButton],
-                                ["textAlias", makeTextAliasButton],
-                                ["textPunctuation", makeTextPunctuationButton],
+                                ["letter", makeLetterButton],
+                                ["space", makeSpaceButton],
+                                ["punctuation", makePunctuationButton],
                                 ["bufferAction", makeBufferActionButton],
                                 ["return", makeReturnButton],
                                 ["guess", makeGuessButton],
@@ -338,17 +338,22 @@ function makeTextButton(spec, my) {
     return that;
 }
 
-// This is just a text button, but with the value of the button changed
-// appropriately.
-function makeTextAliasButton(spec, my) {
+function makeLetterButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
-    let m = new Map([["Space", " "]]); // can add more to this list
-    my.text = m.get(my.buttonValue);   // replace the button text appropriately
     return that;
 }
 
-function makeTextPunctuationButton(spec, my) {
+// This is just a text button, but with the value of the button changed
+// appropriately.
+function makeSpaceButton(spec, my) {
+    my = my || {};
+    let that = makeTextButton(spec, my);
+    my.text = " ";   // Button text is just " "
+    return that;
+}
+
+function makePunctuationButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
     let m = new Map([[".", "period"],
