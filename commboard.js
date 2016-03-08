@@ -446,13 +446,10 @@ function makeBufferActionButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
     my.buffer = spec.buffer;
+    my.actionName = my.buttonValue.toLowerCase();
 
-    let dispatch = new Map([["Delete", "pop"],
-                            ["Read", "read"],
-                            ["Clear", "clear"]]);
     that.action = function(cbpressed) {
-        let methodName = dispatch.get(my.buttonValue);
-        my.buffer[methodName](cbpressed); // Pass the callback along to the buffer method
+        my.buffer.executeAction(my.actionName, cbpressed); // Pass the callback along to the buffer method
     };
     return that;
 }
@@ -667,6 +664,10 @@ function makeBuffer() {
         sentenceStart = true;
         writeSpace();           // Add space to start new word
     }
+
+    that.executeAction = function(actionName, cb) {
+        ;                       // in next commit
+    };
 
     // Push to buffer
     function push(char) {
