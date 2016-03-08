@@ -35,7 +35,7 @@ function setup() {
 
     // submenus representing the rows of the compose menu
     function makeComposeSubmenus() {
-        return new Map([["guess",   makeLeaf("composeGuess")],
+        return new Map([["guess",   makeGuessMenu(makeSpec("composeGuess"))],
                         ["1",       makeLeaf("compose1")],
                         ["2",       makeLeaf("compose2")],
                         ["3",       makeLeaf("compose3")],
@@ -191,6 +191,61 @@ function makeLeafMenu(spec, my) {
     };
 
     return that;
+}
+
+// The guess menu is like a leaf menu, but also listens to buffer updates and
+// updates its buttons accordingly
+function makeGuessMenu(spec, my) {
+    my = my || {};
+    let that = makeLeafMenu(spec, my);
+
+    // Update word guesses based on changes to buffer
+    function update() {
+
+    }
+
+    // TODO: Need to deal with the fact that the wordnik api is accessed via http
+    // not https.
+    // This function is passed a callback, which tells it what to do once the the
+    // word guesses have been returned from the server
+    function guessWord(inputText, cb) {
+        const N_GUESSES = 7;        // Number of guesses to be offered to user
+        const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
+        let text = inputText.split(" ").slice(-1)[0].toLowerCase();
+        if (text === "") {          // If no text, no guesses.
+            cb(repeat("", N_GUESSES));
+        }
+        wordnik(text, success, failure);
+
+        function success(data, status) {
+            let guesses = (data.searchResults.slice(1).
+                           map(function(o) { return o.word; }));
+            let padded = pad(guesses, "", N_GUESSES); // Pad with proper number of guesses
+            cb(padded);
+        }
+
+        // TODO: Figure out how to handle this properly
+        function failure(data, status) {
+            debugger;
+        }
+        // get completions from wordnik. Provide success and failure callbacks.
+        // TODO: It's probably wrong to hard-code the api key. User will have to get
+        // his own. Deal with this later.
+        function wordnik(text, success, failure) {
+            let queryURL = "http:api.wordnik.com:80/v4/words.json/search/" + text;
+            jQuery.ajax({
+                url: queryURL,
+                data: { minCorpusCount: MIN_COUNT,
+                        api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
+                        caseSensitive: false,
+                        limit: N_GUESSES },
+                type: "GET",
+                dataType: "json",
+                success: success,
+                error: failure
+            });
+        }
+    }
 }
 
 function makeButton(spec, my) {
@@ -644,50 +699,6 @@ function makeBuffer() {
         update();
         cb();
     }
-    return { push, pop, write, read, clear };
-}
-
-// TODO: Need to deal with the fact that the wordnik api is accessed via http
-// not https.
-// This function is passed a callback, which tells it what to do once the the
-// word guesses have been returned from the server
-function guessWord(inputText, cb) {
-    const N_GUESSES = 7;        // Number of guesses to be offered to user
-    const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
-    let text = inputText.split(" ").slice(-1)[0].toLowerCase();
-    if (text === "") {          // If no text, no guesses.
-        cb(repeat("", N_GUESSES));
-    }
-    wordnik(text, success, failure);
-
-    function success(data, status) {
-        let guesses = (data.searchResults.slice(1).
-                       map(function(o) { return o.word; }));
-        let padded = pad(guesses, "", N_GUESSES); // Pad with proper number of guesses
-        cb(padded);
-    }
-
-    function failure(data, status) {
-        debugger;
-    }
-    // get completions from wordnik. Provide success and failure callbacks.
-    // TODO: It's probably wrong to hard-code the api key. User will have to get
-    // his own. Deal with this later.
-    function wordnik(text, success, failure) {
-        let queryURL = "http:api.wordnik.com:80/v4/words.json/search/" + text;
-        jQuery.ajax({
-            url: queryURL,
-            data: { minCorpusCount: MIN_COUNT,
-                    api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
-                    caseSensitive: false,
-                    limit: N_GUESSES },
-            type: "GET",
-            dataType: "json",
-            success: success,
-            error: failure
-        });
-    }
-}
 
 
 
