@@ -730,3 +730,21 @@ function curry(func, ...first) {
         return func(...first, ...second);
     };
 }
+
+// Return an array consisting of element x repeated n times.
+function repeat(x, n) {
+    let xs = new Array(n);
+    xs.fill(x);
+    return xs;
+}
+
+// Pad (on right) array xs with value fill, such that the returned array has
+// length "len"
+function pad(xs, fillVal, len) {
+    if (xs.length >= len) {
+        return xs.slice(0, len);
+    }
+    let nMissing = len - xs.length;
+    let padding = repeat(fillVal, nMissing);
+    return xs.concat(padding);
+}
