@@ -618,10 +618,15 @@ function makeBuffer() {
     const CURSOR = "_";          // Cursor character. Could be |, for instance
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
-    let bufferText = "";
+    let bufferText = CURSOR;
     // Booleans to indicate whether we are at the start of a new word and new sentence
     let wordStart = true;       // If true, guess full words
     let sentenceStart = true;   // If true, capitalize the next letter.
+
+    // To actually get the text, don't return the cursor at the end
+    function getText() {
+        return bufferText.slice(0, -1);
+    }
     // Update element text to match text stored in JS variable
     function update() {
         textElem.textContent = bufferText;
@@ -665,9 +670,37 @@ function makeBuffer() {
         writeSpace();           // Add space to start new word
     }
 
-    that.executeAction = function(actionName, cb) {
-        ;                       // in next commit
-    };
+    function executeAction(actionName, cbpressed) {
+        let dispatch = new Map([["delete", deleteText],
+                                ["read", read],
+                                ["clear", clear]]);
+        let action = dispatch.get(actionName);
+        action(cbpressed);
+    }
+
+    function deleteText(cb) {
+        pop();                  // Need to pop the cursor and the last letter
+        pop();
+        push(CURSOR);           // Then add the cursor back
+        cb();
+    }
+
+    // Read buffer contents out loud
+    function read(cb) {
+        function afterRead() {  // Allow a short pause after reading finishes
+            setTimeout(cb, AFTER_BUFFER_READ);
+        }
+        let utterance = speak(getText());
+        utterance.onend = afterRead;       // Read the utterance, then continue the program
+        bufferElem.utterance = utterance; // So the utterance won't go out of scope
+    }
+
+    // Clear the buffer.
+    function clear(cb) {
+        bufferText = CURSOR;;
+        update();
+        cb();
+    }
 
     // Push to buffer
     function push(char) {
@@ -675,32 +708,14 @@ function makeBuffer() {
         update();
     }
     // Pop off end of buffer
-    // TODO: Right now, pop may be invoked with a callback or without. This
-    // isn't really correct. Probably pop should be private, and things that
-    // call it (like delete) should do so through an exposed method that handles
-    // the callback. For later.
     function pop(cb) {
         bufferText = bufferText.slice(0, -1);
         update();
-        if (cb !== undefined) {
-            cb();
-        }
     }
-    // Read buffer contents out loud
-    function read(cb) {
-        function afterRead() {  // Allow a short pause after reading finishes
-            setTimeout(cb, AFTER_BUFFER_READ);
-        }
-        let utterance = speak(bufferText);
-        utterance.onend = afterRead;       // Read the utterance, then continue the program
-        bufferElem.utterance = utterance; // So the utterance won't go out of scope
-    }
-    // Clear the buffer.
-    function clear(cb) {
-        bufferText = "";
-        update();
-        cb();
-    }
+
+    update();                   // Display cursor in DOM
+    return { write, executeAction, getText };
+
 }
 
 // Constructor for clock object.
