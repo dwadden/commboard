@@ -615,6 +615,7 @@ function makeDetector() {
 
 // Constructor for buffer object.
 function makeBuffer() {
+    let that = Object.create(EventEmitter.prototype); // Emit events detected by word guesser
     const CURSOR = "_";          // Cursor character. Could be |, for instance
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
@@ -713,9 +714,26 @@ function makeBuffer() {
         update();
     }
 
-    update();                   // Display cursor in DOM
-    return { write, executeAction, getText };
+    // To be fired when buffer changes
+    that.emitChange = function() {
+        that.emitEvent("bufferChange");
+    };
 
+    // Add a listener (the guess menu)
+    that.addChangeListener = function(listener) {
+        that.addListener("bufferChange", listener);
+    };
+
+    // Remove listener
+    that.removeChangeListener = function(listener) {
+        that.removeListener("bufferChange", listener);
+    };
+    that.write = write;
+    that.executeAction = executeAction;
+    that.getText = getText;
+
+    update();                   // Display cursor in DOM
+    return that;
 }
 
 // Constructor for clock object.
