@@ -246,6 +246,7 @@ function makeGuessMenu(spec, my) {
             });
         }
     }
+    return that;
 }
 
 function makeButton(spec, my) {
@@ -699,10 +700,7 @@ function makeBuffer() {
         update();
         cb();
     }
-
-
-
-
+}
 
 // Constructor for clock object.
 function makeClock() {
