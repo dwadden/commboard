@@ -1,40 +1,28 @@
 "use strict";
 
-// TODO: If she keeps her eyes up long enough, stop the program and return to
-// the main menu. Equivalent to triggering the reset button.
-
-
 // Global variables
 const LANG = "en-US";            // Dialect for speech synthesis
 const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
-const PRESS_WAIT = 350;     // After button is pressed, wait this many ms before its action
-const BEEP_DURATION = 1000;  // Length in ms of request beep
-const AFTER_BEEP_WAIT = 500; // Wait this long after beep before making request
-const AFTER_BUFFER_READ = 1000; // After reading the buffer, wait a second before restart
+const PRESS_WAIT = 350;          // After button is pressed, wait this many ms before its action
+const BEEP_DURATION = 1000;      // Length in ms of request beep
+const AFTER_BEEP_WAIT = 500;     // Wait this long after beep before making request
+const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second before restart
 
-window.onload = setup;
+// *****************************************************************************
 
-// Top-level function to set up the menus and return main menu
-function setup() {
-    // Generate utility objects
-    const detector = makeDetector();
-    detector.setupTracking();
-    const buffer = makeBuffer();
-    const clock = makeClock();
-    const slider = makeSlider();
-
-    function makeSpec(menuName) {
+// Setup, to be invoked on page load
+const setup = function() {
+    // Initialization procedures
+    const makeSpec = function(menuName) {
         return { detector, buffer, slider, menuName };
-    }
-    function makeLeaf(menuName) {
+    };
+    const makeLeaf = function(menuName) {
         return makeLeafMenu(makeSpec(menuName));
-    }
-    function makeBranch(menuName) {
+    };
+    const makeBranch = function(menuName) {
         return makeBranchMenu(makeSpec(menuName));
-    }
-
-    // submenus representing the rows of the compose menu
-    function makeComposeSubmenus() {
+    };
+    const makeComposeSubmenus = function() {
         return new Map([["guess",   makeGuessMenu(makeSpec("composeGuess"))],
                         ["1",       makeLeaf("compose1")],
                         ["2",       makeLeaf("compose2")],
@@ -42,22 +30,35 @@ function setup() {
                         ["4",       makeLeaf("compose4")],
                         ["5",       makeLeaf("compose5")],
                         ["actions", makeLeaf("composeActions")]]);
-    }
+    };
+
+    // Create utility objects
+    const detector = makeDetector();
+    const buffer = makeBuffer();
+    const clock = makeClock();
+    const slider = makeSlider();
 
     // Create menus
     const main = makeBranch("main");
-    main.slideDown();
     const request = makeLeaf("request");
     const email = makeBranch("email");
     const compose = makeBranch("compose");
     const composeSubmenus = makeComposeSubmenus();
 
-    // Add children
+    // Add children to menus
     main.addChildren(new Map([["request", request],
                               ["compose", compose],
                               ["email",   email]]));
     compose.addChildren(composeSubmenus);
-}
+
+    // Final actions
+    detector.setupTracking();
+    main.slideDown();
+};
+
+window.onload = setup;
+
+// *****************************************************************************
 
 // The spec is an object with four fields:
 // detector: the detector object
