@@ -263,65 +263,65 @@ let makeGuessMenu = function(spec, my) {
     return that;
 };
 
-function makeButton(spec, my) {
+// *****************************************************************************
+
+// Buttons
+
+let makeButton = function(spec, my) {
     my = my || {};
+    let that = {};
+
+    // Private data
     my.buttonElem = spec.elem;
     my.buttonValue = my.buttonElem.value;
     my.announcementText = my.buttonValue; // By default, announce the button text
     my.detector = spec.detector;
     my.slider = spec.slider;
     my.menu = spec.menu;
-    my.timeout = null;
 
-    let that = {};
-
-    function announce() {
+    // Public methods
+    that.getButtonElem = function() {
+        return my.buttonElem;
+    };
+    that.getButtonValue = function() {
+        return my.buttonValue;
+    };
+    that.announce = function() {
         speak(my.announcementText);
-    }
-
+    };
     that.toggle = function() {
         my.buttonElem.classList.toggle("buttonOn");
         my.buttonElem.classList.toggle("buttonOff");
     };
-
-    // abstract
-    that.action = function(cbpressed) {
-        ;
-    };
-
-    // Here's the difference. If it's not a menu button, nextPressed is invoked
-    // immediately. If it is a menu button, then nextPressed is passed into the
-    // next menu.
-
     that.scan = function(cbpassed, cbpressed) {
-        that.toggle();
-        announce();
-        my.detector.addGazeListener(onPress);
-        let timeout = setTimeout(onTimeout, my.slider.getms());
-
-        function onPress() {
+        let onPress = function() {
             // To be executed if the button is pressed
-            function afterPress() {
-                announce();
-                function afterAnnouncement() {
+            let afterPress = function() {
+                that.announce();
+                let afterAnnouncement = function() {
                     that.toggle();
                     that.action(cbpressed);
-                }
+                };
                 setTimeout(afterAnnouncement, my.slider.getms());
-            }
+            };
             my.detector.removeGazeListener(onPress);
             clearTimeout(timeout);
             setTimeout(afterPress, PRESS_WAIT);
-        }
-        function onTimeout() {
+        };
+        let onTimeout = function() {
             // To be executed if button is not pressed
             that.toggle();
             my.detector.removeGazeListener(onPress);
             cbpassed();
-        }
+        };
+
+        that.toggle();
+        that.announce();
+        my.detector.addGazeListener(onPress);
+        let timeout = setTimeout(onTimeout, my.slider.getms());
     };
     return that;
-}
+};
 
 function makeMenuSelectorButton(spec, my) {
     my = my || {};
