@@ -404,39 +404,47 @@ let makeRequestButton = function(spec, my) {
     return that;
 };
 
-function makeTextButton(spec, my) {
+let makeTextButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+
+    // Private data
     my.textCategory = null;     // Set by subclasses
     my.buffer = spec.buffer;
     my.text = my.buttonValue.toLowerCase();
+
+    // Public methods
     that.action = function(cbpressed) {
         my.buffer.write(my.text, my.textCategory);
         cbpressed();
     };
-    return that;
-}
 
-function makeLetterButton(spec, my) {
+    return that;
+};
+
+let makeLetterButton = function(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
+
     my.textCategory = "letter";
-    return that;
-}
 
-// This is just a text button, but with the value of the button changed
-// appropriately.
-function makeSpaceButton(spec, my) {
+    return that;
+};
+
+let makeSpaceButton = function(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
+
     my.textCategory = "space";
     my.text = " ";   // Button text is just " "
-    return that;
-}
 
-function makePunctuationButton(spec, my) {
+    return that;
+};
+
+let makePunctuationButton = function(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
+
     let m = new Map([[".", "period"],
                      ["?", "question"],
                      ["!", "exclamation"],
@@ -444,87 +452,103 @@ function makePunctuationButton(spec, my) {
                      ['"', "quote"],
                      ["@", "at"]]);
     my.announcementText = m.get(my.buttonValue);
-    return that;
-}
 
-function makeNonTerminalPunctuationButton(spec, my) {
+    return that;
+};
+
+let makeNonTerminalPunctuationButton = function(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
+
     my.textCategory = "nonTerminalPunctuation";
+
     return that;
-}
+};
 
 // A puncutation button that signals the end of a setnence
-function makeTerminalPunctuationButton(spec, my) {
+let makeTerminalPunctuationButton = function(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
+
     my.textCategory = "terminalPunctuation";
+
     return that;
-}
+};
 
 // Actions on the buffer
-function makeBufferActionButton(spec, my) {
+let makeBufferActionButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+
     my.buffer = spec.buffer;
     my.actionName = my.buttonValue.toLowerCase();
 
     that.action = function(cbpressed) {
         my.buffer.executeAction(my.actionName, cbpressed); // Pass the callback along to the buffer method
     };
+
     return that;
-}
+};
 
 // Return to calling menu
-function makeReturnButton(spec, my) {
+// TODO: Replace this with a gesture to do the return
+let makeReturnButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
-    my.depth = parseInt(my.buttonElem.dataset.returnDepth); // number of levels to return
 
-    // Ignore the callback and return to calling menu
-    function getReturnMenu(menu, depth) {
+    // Private methods
+    my.getReturnMenu = function(menu, depth) {
         if (depth === 0) {
             return menu;
         } else {
-            return getReturnMenu(menu.parent, depth - 1);
+            return my.getReturnMenu(menu.parent, depth - 1);
         }
-    }
+    };
 
+    // Private data
+    my.depth = parseInt(my.buttonElem.dataset.returnDepth); // number of levels to return
+
+
+    // Public methods
     that.action = function(cbpressed) {
-        let returnMenu = getReturnMenu(my.menu, my.depth);
-        let majorMenu = getReturnMenu(my.menu, my.depth - 1);
+        let returnMenu = my.getReturnMenu(my.menu, my.depth);
+        let majorMenu = my.getReturnMenu(my.menu, my.depth - 1);
         majorMenu.slideUp();
         returnMenu.scan();
     };
     return that;
-}
+};
 
 // Word guesses
-function makeGuessButton(spec, my) {
+let makeGuessButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+
+    // Private data
     my.textCategory = "word";
-    function getValue() {
+
+    // Public methods
+    that.getValue = function() {
         return my.buttonValue;
-    }
-    function setValue(value) {
+    };
+    that.setValue = function(value) {
         // TODO: Too many variables.
         my.buttonValue = my.announcementText = my.buttonElem.value = value;
-    }
-    function action(cbpressed) {
+    };
+    that.action = function(cbpressed) {
         my.buffer.write(getValue(), my.textCategory);
-    }
-    that.getValue = getValue;
-    that.setValue = setValue;
-    return that;
-}
+    };
 
-function makeNotImplementedButton(spec, my) {
+    return that;
+};
+
+let makeNotImplementedButton = function(spec, my) {
+    // Internal constants
     const PAUSE = 500;
+
     my = my || {};
     let that = makeButton(spec, my);
 
-    // Inform the user that the button isn't yet implemented
     that.action = function(cbpressed) {
         function afterRead() {
             setTimeout(cbpressed, PAUSE);
@@ -534,7 +558,7 @@ function makeNotImplementedButton(spec, my) {
         my.buttonElem.utternce = utterance;
     };
     return that;
-}
+};
 
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
