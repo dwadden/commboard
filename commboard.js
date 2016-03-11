@@ -203,66 +203,65 @@ let makeLeafMenu = function(spec, my) {
 
 // The guess menu is like a leaf menu, but also listens to buffer updates and
 // updates its buttons accordingly
-function makeGuessMenu(spec, my) {
+let makeGuessMenu = function(spec, my) {
     my = my || {};
     let that = makeLeafMenu(spec, my);
-    // register to listen for changes in buffer
-    my.buffer.addChangeListener(update);
 
-    // Update word guesses based on changes to buffer
-    function update() {
-        let inputText = my.buffer.getText();
-        function callback(guesses) {
-            zip(that.getButtons(), guesses).forEach(function([button, guess])
-                                               { button.setValue(guess); });
-        }
-        guessWord(inputText, callback);
-    }
+    // internal constants
+    const N_GUESSES = 7;        // Number of guesses to be offered to user
+    const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
 
-    // TODO: Need to deal with the fact that the wordnik api is accessed via http
-    // not https.
-    // This function is passed a callback, which tells it what to do once the the
-    // word guesses have been returned from the server
-    function guessWord(inputText, cb) {
-        const N_GUESSES = 7;        // Number of guesses to be offered to user
-        const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
-        let text = inputText.split(" ").slice(-1)[0].toLowerCase();
-        if (text === "") {          // If no text, no guesses.
-            cb(repeat("", N_GUESSES));
-        }
-        wordnik(text, success, failure);
-
-        function success(data, status) {
+    // private methods
+    my.wordnik = function(text, success, failure) {
+        // TODO: It's probably wrong to hard-code the api key. User will have to get
+        // his own. Deal with this later.
+        let queryURL = "http:api.wordnik.com:80/v4/words.json/search/" + text;
+        jQuery.ajax({
+            url: queryURL,
+            data: { minCorpusCount: MIN_COUNT,
+                    api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
+                    caseSensitive: false,
+                    limit: N_GUESSES },
+            type: "GET",
+            dataType: "json",
+            success: success,
+            error: failure
+        });
+    };
+    my.guessWord = function(inputText, cb) {
+        // TODO: Need to deal with the fact that the wordnik api is accessed via http
+        // not https.
+        let success = function(data, status) {
             let guesses = (data.searchResults.slice(1).
                            map(function(o) { return o.word; }));
             let padded = pad(guesses, "", N_GUESSES); // Pad with proper number of guesses
             cb(padded);
-        }
-
+        };
         // TODO: Figure out how to handle this properly
-        function failure(data, status) {
+        let failure = function(data, status) {
             debugger;
+        };
+
+        let text = inputText.split(" ").slice(-1)[0].toLowerCase();
+        if (text === "") {          // If no text, no guesses.
+            cb(repeat("", N_GUESSES));
         }
-        // get completions from wordnik. Provide success and failure callbacks.
-        // TODO: It's probably wrong to hard-code the api key. User will have to get
-        // his own. Deal with this later.
-        function wordnik(text, success, failure) {
-            let queryURL = "http:api.wordnik.com:80/v4/words.json/search/" + text;
-            jQuery.ajax({
-                url: queryURL,
-                data: { minCorpusCount: MIN_COUNT,
-                        api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
-                        caseSensitive: false,
-                        limit: N_GUESSES },
-                type: "GET",
-                dataType: "json",
-                success: success,
-                error: failure
-            });
-        }
-    }
+        my.wordnik(text, success, failure);
+    };
+    // Update word guesses based on changes to buffer
+    my.update = function() {
+        let callback = function(guesses) {
+            zip(that.getButtons(), guesses).forEach(function([button, guess])
+                                                    { button.setValue(guess); });
+        };
+        let inputText = my.buffer.getText();
+        my.guessWord(inputText, callback);
+    };
+
+    // Initialization
+    my.buffer.addChangeListener(my.update);
     return that;
-}
+};
 
 function makeButton(spec, my) {
     my = my || {};
