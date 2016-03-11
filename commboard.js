@@ -323,11 +323,14 @@ let makeButton = function(spec, my) {
     return that;
 };
 
-function makeMenuSelectorButton(spec, my) {
+let makeMenuSelectorButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+
+    // Private data
     my.slide = JSON.parse(my.buttonElem.dataset.slide); // converts to boolean
 
+    // Public methods
     that.action = function(cbpressed) {
         let nextMenuName = my.buttonValue.toLowerCase();
         let nextMenu = my.menu.getChildren().get(nextMenuName);
@@ -336,66 +339,70 @@ function makeMenuSelectorButton(spec, my) {
         }
         nextMenu.scan();
     };
-    return that;
-}
 
-function makeStartButton(spec, my) {
+    return that;
+};
+
+let makeStartButton = function(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
-    that.toggle();
-    my.detector.addExtendedGazeListener(start);
-
-    // Kick off the process
-    function start() {
-        my.detector.removeExtendedGazeListener(start);
+    // Public
+    that.start = function() {
+        my.detector.removeExtendedGazeListener(that.start);
         my.buttonValue = my.announcementText = my.buttonElem.value = "Stop";
         my.menu.scan();
         that.toggle();
-    }
-
+    };
     that.action = function(cbpressed) {
-        my.detector.addExtendedGazeListener(start);
+        my.detector.addExtendedGazeListener(that.start);
         my.buttonValue = my.announcementText = my.buttonElem.value = "Start";
         my.buttonElem.value = my.buttonValue;
         that.toggle();
     };
-    return that;
-}
 
-function makeRequestButton(spec, my) {
+    // Initialize
+    that.toggle();
+    my.detector.addExtendedGazeListener(that.start);
+    return that;
+};
+
+let makeRequestButton = function(spec, my) {
     my = my || {};
-    my.utterance = null;
     let that = makeButton(spec, my);
 
-    let messages = { Cold: "I am cold.",
-                     Hot: "I am hot.",
-                     Company: "I'd like some company." };
-    let message = messages[my.buttonValue];
+    // internal constants
+    const MESSAGES = { Cold: "I am cold.",
+                       Hot: "I am hot.",
+                       Company: "I'd like some company." };
 
-    function beep() {
-        var context = new window.AudioContext();
-        var oscillator = context.createOscillator();
+    // Private variables
+    my.utterance = null;
+    my.message = MESSAGES[my.buttonValue];
+
+    // Public methods
+    that.beep = function() {
+        let context = new window.AudioContext();
+        let oscillator = context.createOscillator();
         oscillator.frequency.value = 400;
         oscillator.connect(context.destination);
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
-    }
-
+    };
     that.action = function(cbpressed) {
-        function afterBeep() {
-            function afterSpeech() {
+        let afterBeep = function() {
+            let afterSpeech = function() {
                 setTimeout(cbpressed, my.slider.getms());
-            }
-            let utterance = speak(message);
+            };
+            let utterance = speak(my.message);
             utterance.onend = afterSpeech;
             my.buttonElem.utterance = utterance; // Not extraneous, but subtle. See issue 1.
-        }
-        beep();
+        };
+        that.beep();
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
     };
     return that;
-}
+};
 
 function makeTextButton(spec, my) {
     my = my || {};
