@@ -11,18 +11,18 @@ const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second befo
 // *****************************************************************************
 
 // Setup, to be invoked on page load
-const setup = function() {
+let setup = function() {
     // Initialization procedures
-    const makeSpec = function(menuName) {
+    let makeSpec = function(menuName) {
         return { detector, buffer, slider, menuName };
     };
-    const makeLeaf = function(menuName) {
+    let makeLeaf = function(menuName) {
         return makeLeafMenu(makeSpec(menuName));
     };
-    const makeBranch = function(menuName) {
+    let makeBranch = function(menuName) {
         return makeBranchMenu(makeSpec(menuName));
     };
-    const makeComposeSubmenus = function() {
+    let makeComposeSubmenus = function() {
         return new Map([["guess",   makeGuessMenu(makeSpec("composeGuess"))],
                         ["1",       makeLeaf("compose1")],
                         ["2",       makeLeaf("compose2")],
@@ -33,17 +33,17 @@ const setup = function() {
     };
 
     // Create utility objects
-    const detector = makeDetector();
-    const buffer = makeBuffer();
-    const clock = makeClock();
-    const slider = makeSlider();
+    let detector = makeDetector();
+    let buffer = makeBuffer();
+    let clock = makeClock();
+    let slider = makeSlider();
 
     // Create menus
-    const main = makeBranch("main");
-    const request = makeLeaf("request");
-    const email = makeBranch("email");
-    const compose = makeBranch("compose");
-    const composeSubmenus = makeComposeSubmenus();
+    let main = makeBranch("main");
+    let request = makeLeaf("request");
+    let email = makeBranch("email");
+    let compose = makeBranch("compose");
+    let composeSubmenus = makeComposeSubmenus();
 
     // Add children to menus
     main.addChildren(new Map([["request", request],
