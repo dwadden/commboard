@@ -198,10 +198,17 @@ function makeLeafMenu(spec, my) {
 function makeGuessMenu(spec, my) {
     my = my || {};
     let that = makeLeafMenu(spec, my);
+    // register to listen for changes in buffer
+    my.buffer.addChangeListener(update);
 
     // Update word guesses based on changes to buffer
     function update() {
-
+        let inputText = my.buffer.getText();
+        function callback(guesses) {
+            zip(that.buttons, guesses).forEach(function([button, guess])
+                                               { button.setValue(guess); });
+        }
+        guessWord(inputText, callback);
     }
 
     // TODO: Need to deal with the fact that the wordnik api is accessed via http
@@ -482,6 +489,19 @@ function makeReturnButton(spec, my) {
 function makeGuessButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
+    my.textCategory = "word";
+    function getValue() {
+        return my.buttonValue;
+    }
+    function setValue(value) {
+        // TODO: Too many variables.
+        my.buttonValue = my.announcementText = my.buttonElem.value = value;
+    }
+    function action(cbpressed) {
+        my.buffer.write(getValue(), my.textCategory);
+    }
+    that.getValue = getValue;
+    that.setValue = setValue;
     return that;
 }
 
@@ -636,10 +656,12 @@ function makeBuffer() {
     function write(text, textCategory) {
         let dispatch = new Map([["letter", writeLetter],
                                 ["space", writeSpace],
+                                ["word", writeWord],
                                 ["nonTerminalPunctuation", writeNonTerminalPunctuation],
                                 ["terminalPunctuation", writeTerminalPunctuation]]);
         let writer = dispatch.get(textCategory);
         writer(text);
+        that.emitChange();
     }
     // Generic function to write to buffer
     function writeText(text) {
@@ -659,7 +681,12 @@ function makeBuffer() {
         writeText(" ");
         wordStart = true;
     }
-
+    function writeWord(text) {
+        let toWrite = sentenceStart ? capitalize(text) : text;
+        pop();
+        writeText(toWrite);
+        writeSpace();
+    }
     // Just writes the text.
     function writeNonTerminalPunctuation(text) {
         writeText(text);
@@ -683,6 +710,7 @@ function makeBuffer() {
         pop();                  // Need to pop the cursor and the last letter
         pop();
         push(CURSOR);           // Then add the cursor back
+        that.emitChange();
         cb();
     }
 
@@ -700,6 +728,7 @@ function makeBuffer() {
     function clear(cb) {
         bufferText = CURSOR;;
         update();
+        that.emitChange();
         cb();
     }
 
