@@ -833,3 +833,18 @@ function pad(xs, fillVal, len) {
     let padding = repeat(fillVal, nMissing);
     return xs.concat(padding);
 }
+
+// Convert first letter of word to uppercase
+function capitalize(text) {
+    return text[0].toUpperCase() + text.slice(1);
+}
+
+// Zip two arrays. If unequal lengths, truncate the longer.
+function zip(xs, ys) {
+    if (xs.length === 0 || ys.length === 0) {
+        return [];
+    } else {
+        return Array.prototype.concat([[xs[0], ys[0]]],
+                                      zip(xs.slice(1), ys.slice(1)));
+    }
+}
