@@ -46,13 +46,13 @@ let setup = function() {
     let composeSubmenus = makeComposeSubmenus();
 
     // Add children to menus
-    main.addChildren(new Map([["request", request],
+    main.setChildren(new Map([["request", request],
                               ["compose", compose],
                               ["email",   email]]));
-    compose.addChildren(composeSubmenus);
+    compose.setChildren(composeSubmenus);
 
     // Final actions
-    detector.setupTracking();
+    // detector.setupTracking();
     main.slideDown();
 };
 
@@ -60,47 +60,20 @@ window.onload = setup;
 
 // *****************************************************************************
 
+// Menus
+
 // The spec is an object with four fields:
 // detector: the detector object
 // slider: the slider object
 // buffer: the buffer object. Left unused by many buttons.
 // menuId: the id of the DOM element corresponding to the menu
-function makeMenu(spec, my) {
+let makeMenu = function(spec, my) {
+    // Private and public objects
     my = my || {};
     let that = {};
-    my.detector = spec.detector;
-    my.slider = spec.slider;
-    my.buffer = spec.buffer;
-    let query = `input[type=button][data-menu="${spec.menuName}"]`;
-    my.divElem = document.querySelector(`div#${spec.menuName}`);
-    my.buttonElems = document.querySelectorAll(query);
-    that.buttons = initButtons();
-    that.nButtons = that.buttons.length;
 
-    // The input is an object containing the menus that are children of this
-    // menu
-    that.addChildren = function(children) {
-        that.children = children;
-        function addParent(child) {
-            child.parent = that;
-        }
-        children.forEach(addParent);
-    };
-
-    function initButtons() {
-        function mapped(buttonElem) {
-            return { elem: buttonElem,
-                     menu: that,
-                     detector: my.detector,
-                     slider: my.slider,
-                     buffer: my.buffer
-                   };
-        }
-        let specs = Array.prototype.map.call(my.buttonElems, mapped);
-        return specs.map(initButton);
-    }
-
-    function initButton(spec) {
+    // Private methods
+    my.initButton = function(spec) {
         let dispatch = new Map([["menuSelector", makeMenuSelectorButton],
                                 ["start", makeStartButton],
                                 ["request", makeRequestButton],
@@ -114,8 +87,50 @@ function makeMenu(spec, my) {
                                 ["notImplemented", makeNotImplementedButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
-    }
+    };
+    my.initButtons = function() {
+        let mapped = function(buttonElem) {
+            return { elem: buttonElem,
+                     menu: that,
+                     detector: my.detector,
+                     slider: my.slider,
+                     buffer: my.buffer
+                   };
+        };
+        let specs = Array.prototype.map.call(my.buttonElems, mapped);
+        return specs.map(my.initButton);
+    };
+    my.nextButton = function(ix) {
+        return (ix + 1) % my.nButtons;
+    };
+    my.isLastButton = function(buttonIx) {
+        return buttonIx === my.nButtons - 1;
+    };
 
+    // Private data
+    my.detector = spec.detector;
+    my.slider = spec.slider;
+    my.buffer = spec.buffer;
+    my.divElem = document.querySelector(`div#${spec.menuName}`);
+    my.buttonElems = document.querySelectorAll(
+        `input[type=button][data-menu="${spec.menuName}"]`);
+    my.buttons = my.initButtons();
+    my.nButtons = my.buttons.length;
+    my.children = null;
+
+    // Public methods
+    // The input is an object containing the menus that are children of this
+    // menu
+    that.getChildren = function() {
+        return my.children;
+    };
+    that.setChildren = function(children) {
+        my.children = children;
+        let setParent = function(child) {
+            child.parent = that;
+        };
+        children.forEach(setParent);
+    };
     // Slide menus up and down. Only do this for menus with a div element
     // associated with them. Those are the "major" menus.
     // TODO: Is there a cleaner way to do this?
@@ -124,32 +139,25 @@ function makeMenu(spec, my) {
             jQuery(my.divElem).slideUp();
         }
     };
-
     that.slideDown = function() {
         if (my.divElem !== undefined) {
             jQuery(my.divElem).slideDown();
         }
     };
-
-    that.slideUp();
-
-    function nextButton(ix) {
-        return (ix + 1) % that.nButtons;
-    }
-    my.nextButton = nextButton;
-
-    function isLastButton(buttonIx) {
-        return buttonIx === that.nButtons - 1;
-    }
-    my.isLastButton = isLastButton;
-
     that.scan = function() {
         that.slideDown();
         my.scanAt(0, 0);
     };
-
+    that.getButtons = function() {
+        return my.buttons;
+    };
+    that.getNButtons = function() {
+        return my.nButtons;
+    };
+    // Initialize and return
+    that.slideUp();
     return that;
-}
+};
 
 // The spec is an object
 function makeBranchMenu(spec, my) {
@@ -159,7 +167,7 @@ function makeBranchMenu(spec, my) {
     my.scanAt = function(buttonIx) {
         let cbpassed = function() { my.scanAt(my.nextButton(buttonIx)); };
         let cbpressed = that.scan;
-        let button = that.buttons[buttonIx];
+        let button = that.getButtons()[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
@@ -187,7 +195,7 @@ function makeLeafMenu(spec, my) {
                         cbpressed :
                         function() { my.scanAt(my.nextButton(buttonIx),
                                                my.nextLoop(buttonIx, loopIx)); });
-        let button = that.buttons[buttonIx];
+        let button = that.getButtons()[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
@@ -206,7 +214,7 @@ function makeGuessMenu(spec, my) {
     function update() {
         let inputText = my.buffer.getText();
         function callback(guesses) {
-            zip(that.buttons, guesses).forEach(function([button, guess])
+            zip(that.getButtons(), guesses).forEach(function([button, guess])
                                                { button.setValue(guess); });
         }
         guessWord(inputText, callback);
@@ -324,7 +332,7 @@ function makeMenuSelectorButton(spec, my) {
 
     that.action = function(cbpressed) {
         let nextMenuName = my.buttonValue.toLowerCase();
-        let nextMenu = my.menu.children.get(nextMenuName);
+        let nextMenu = my.menu.getChildren().get(nextMenuName);
         if (my.slide) {
             my.menu.slideUp();
         }
