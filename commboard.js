@@ -159,8 +159,7 @@ let makeMenu = function(spec, my) {
     return that;
 };
 
-// The spec is an object
-function makeBranchMenu(spec, my) {
+let makeBranchMenu = function(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
@@ -172,35 +171,35 @@ function makeBranchMenu(spec, my) {
     };
 
     return that;
-}
+};
 
-function makeLeafMenu(spec, my) {
+let makeLeafMenu = function(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
     my.isLastLoop = function(loopIx) {
         return loopIx === LEAF_LOOPS - 1;
     };
-
     my.nextLoop = function(buttonIx, loopIx) {
         return my.isLastButton(buttonIx) ? loopIx + 1 : loopIx;
     };
-
     my.scanAt = function(buttonIx, loopIx) {
-        function cbpressed() {
+        let cbpressed = function() {
             that.slideUp();
             that.parent.scan();
-        }
+        };
+        let cbnext = function() {
+            my.scanAt(my.nextButton(buttonIx),
+                      my.nextLoop(buttonIx, loopIx));
+        };
         let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
-                        cbpressed :
-                        function() { my.scanAt(my.nextButton(buttonIx),
-                                               my.nextLoop(buttonIx, loopIx)); });
+                        cbpressed : cbnext);
         let button = that.getButtons()[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
     return that;
-}
+};
 
 // The guess menu is like a leaf menu, but also listens to buffer updates and
 // updates its buttons accordingly
