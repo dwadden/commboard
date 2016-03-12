@@ -159,7 +159,7 @@ function makeMenu(spec, my) {
     return that;
 }
 
-let makeBranchMenu = function(spec, my) {
+function makeBranchMenu(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
@@ -171,9 +171,9 @@ let makeBranchMenu = function(spec, my) {
     };
 
     return that;
-};
+}
 
-let makeLeafMenu = function(spec, my) {
+function makeLeafMenu(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
@@ -199,11 +199,11 @@ let makeLeafMenu = function(spec, my) {
     };
 
     return that;
-};
+}
 
 // The guess menu is like a leaf menu, but also listens to buffer updates and
 // updates its buttons accordingly
-let makeGuessMenu = function(spec, my) {
+function makeGuessMenu(spec, my) {
     my = my || {};
     let that = makeLeafMenu(spec, my);
 
@@ -261,13 +261,13 @@ let makeGuessMenu = function(spec, my) {
     // Initialization
     my.buffer.addChangeListener(my.update);
     return that;
-};
+}
 
 // *****************************************************************************
 
 // Buttons
 
-let makeButton = function(spec, my) {
+function makeButton(spec, my) {
     my = my || {};
     let that = {};
 
@@ -321,9 +321,9 @@ let makeButton = function(spec, my) {
         let timeout = setTimeout(onTimeout, my.slider.getms());
     };
     return that;
-};
+}
 
-let makeMenuSelectorButton = function(spec, my) {
+function makeMenuSelectorButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -341,9 +341,9 @@ let makeMenuSelectorButton = function(spec, my) {
     };
 
     return that;
-};
+}
 
-let makeStartButton = function(spec, my) {
+function makeStartButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -365,9 +365,9 @@ let makeStartButton = function(spec, my) {
     that.toggle();
     my.detector.addExtendedGazeListener(that.start);
     return that;
-};
+}
 
-let makeRequestButton = function(spec, my) {
+function makeRequestButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -402,9 +402,9 @@ let makeRequestButton = function(spec, my) {
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
     };
     return that;
-};
+}
 
-let makeTextButton = function(spec, my) {
+function makeTextButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -420,18 +420,18 @@ let makeTextButton = function(spec, my) {
     };
 
     return that;
-};
+}
 
-let makeLetterButton = function(spec, my) {
+function makeLetterButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
 
     my.textCategory = "letter";
 
     return that;
-};
+}
 
-let makeSpaceButton = function(spec, my) {
+function makeSpaceButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
 
@@ -441,7 +441,7 @@ let makeSpaceButton = function(spec, my) {
     return that;
 };
 
-let makePunctuationButton = function(spec, my) {
+function makePunctuationButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
 
@@ -454,29 +454,29 @@ let makePunctuationButton = function(spec, my) {
     my.announcementText = m.get(my.buttonValue);
 
     return that;
-};
+}
 
-let makeNonTerminalPunctuationButton = function(spec, my) {
+function makeNonTerminalPunctuationButton(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
 
     my.textCategory = "nonTerminalPunctuation";
 
     return that;
-};
+}
 
 // A puncutation button that signals the end of a setnence
-let makeTerminalPunctuationButton = function(spec, my) {
+function makeTerminalPunctuationButton(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
 
     my.textCategory = "terminalPunctuation";
 
     return that;
-};
+}
 
 // Actions on the buffer
-let makeBufferActionButton = function(spec, my) {
+function makeBufferActionButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -488,11 +488,11 @@ let makeBufferActionButton = function(spec, my) {
     };
 
     return that;
-};
+}
 
 // Return to calling menu
 // TODO: Replace this with a gesture to do the return
-let makeReturnButton = function(spec, my) {
+function makeReturnButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -517,10 +517,10 @@ let makeReturnButton = function(spec, my) {
         returnMenu.scan();
     };
     return that;
-};
+}
 
 // Word guesses
-let makeGuessButton = function(spec, my) {
+function makeGuessButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -536,13 +536,13 @@ let makeGuessButton = function(spec, my) {
         my.buttonValue = my.announcementText = my.buttonElem.value = value;
     };
     that.action = function(cbpressed) {
-        my.buffer.write(getValue(), my.textCategory);
+        my.buffer.write(my.buttonValue, my.textCategory);
     };
 
     return that;
-};
+}
 
-let makeNotImplementedButton = function(spec, my) {
+function makeNotImplementedButton(spec, my) {
     // Internal constants
     const PAUSE = 500;
 
@@ -558,7 +558,7 @@ let makeNotImplementedButton = function(spec, my) {
         my.buttonElem.utternce = utterance;
     };
     return that;
-};
+}
 
 // Constructor for detector object. Inherits from EventEmitter.
 function makeDetector() {
