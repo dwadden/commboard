@@ -11,18 +11,20 @@ const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second befo
 // *****************************************************************************
 
 // Setup, to be invoked on page load
-let setup = function() {
+window.onload = setup;
+
+function setup() {
     // Initialization procedures
-    let makeSpec = function(menuName) {
+    function makeSpec(menuName) {
         return { detector, buffer, slider, menuName };
-    };
-    let makeLeaf = function(menuName) {
+    }
+    function makeLeaf (menuName) {
         return makeLeafMenu(makeSpec(menuName));
-    };
-    let makeBranch = function(menuName) {
+    }
+    function makeBranch(menuName) {
         return makeBranchMenu(makeSpec(menuName));
-    };
-    let makeComposeSubmenus = function() {
+    }
+    function makeComposeSubmenus() {
         return new Map([["guess",   makeGuessMenu(makeSpec("composeGuess"))],
                         ["1",       makeLeaf("compose1")],
                         ["2",       makeLeaf("compose2")],
@@ -30,7 +32,7 @@ let setup = function() {
                         ["4",       makeLeaf("compose4")],
                         ["5",       makeLeaf("compose5")],
                         ["actions", makeLeaf("composeActions")]]);
-    };
+    }
 
     // Create utility objects
     let detector = makeDetector();
@@ -54,9 +56,7 @@ let setup = function() {
     // Final actions
     // detector.setupTracking();
     main.slideDown();
-};
-
-window.onload = setup;
+}
 
 // *****************************************************************************
 
@@ -67,7 +67,7 @@ window.onload = setup;
 // slider: the slider object
 // buffer: the buffer object. Left unused by many buttons.
 // menuId: the id of the DOM element corresponding to the menu
-let makeMenu = function(spec, my) {
+function makeMenu(spec, my) {
     // Private and public objects
     my = my || {};
     let that = {};
@@ -157,7 +157,7 @@ let makeMenu = function(spec, my) {
     // Initialize and return
     that.slideUp();
     return that;
-};
+}
 
 let makeBranchMenu = function(spec, my) {
     my = my || {};
