@@ -54,7 +54,8 @@ function setup() {
     compose.setChildren(composeSubmenus);
 
     // Final actions
-    // detector.setupTracking();
+    detector.setupTracking();
+    detector.setupKeyPress();
     main.slideDown();
 }
 
@@ -560,7 +561,12 @@ function makeNotImplementedButton(spec, my) {
     return that;
 }
 
-// Constructor for detector object. Inherits from EventEmitter.
+// *****************************************************************************
+
+// Constructors for utility objects - blink detector, text buffer, etc.
+// Because these objects are not members of hierarchies, they do not need shared
+// secrets. Instead of "my", we just have local variables.
+
 function makeDetector() {
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
 
@@ -571,13 +577,16 @@ function makeDetector() {
     const EXTENDED_GAZE_TIME = 2000; // duration (s) for extended gaze; triggers reset
     const MIN_N_CHANGED = 10;          // if in "off" state, need 10 consecutive
     const TRACKER_COLOR = "yellow";    // detections to switch to "on", and vice versa
-    // Function-level variables
+
+    // Local variables
     let startTime = null;              // start time for most recent upward gaze
     let state = OFF;
     let nChanged = 0;           // # consecutive detections that state has changed
 
-    function time() { return new Date().getTime(); }
-
+    // Local procedures
+    function time() {
+        return new Date().getTime();
+    }
     // Function to call if there is a detection in the current frame.
     function detection() {
         if (state === OFF) {
@@ -622,25 +631,16 @@ function makeDetector() {
     // Emit an extended gaze event for listeners
     function emitExtendedGaze() {
         that.emitEvent("extendedGaze");
-    } // Emit extended gaze event
+    }
+    // Key presses can be used in place of gazes
+    function onKeyPress(event) {
+        let dispatch = new Map([[103, emitGaze], // 103 is "g" for gaze
+                                [101, emitExtendedGaze]]); // 101 is "e" for extended
+        let f = dispatch.get(event.keyCode) || function() { ; };
+        f();
+    }
 
-    // Setup up tracking.
-    // TODO: Ideally, this is the only function that will need to change when we
-    // switch from color tracking to eye tracking.
-    that.setupTracking = function() {
-        let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
-        tracker.on("track", function(event) {
-            if (event.data.length === 0) { // No colors
-                noDetection();
-            } else {                      // Colors found
-                detection();
-            }
-        });
-        tracking.track("#cam", tracker, {camera: true});
-    };
-
-    // Methods to add and remove listeners for relevant events.
-    // These should not be removed.
+    // Public procedures
     that.addGazeListener = function(listener) {
         that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
     };
@@ -653,20 +653,22 @@ function makeDetector() {
     that.removeExtendedGazeListener = function(listener) {
         that.removeListener("extendedGaze", listener);
     };
-
-    // TODO: These methods are only make visible for development. Remove them
-    // when I've got things working.
-    that.emitGaze = emitGaze;
-    that.emitExtendedGaze = emitExtendedGaze;
-
-    // TODO: This stuff is just for debugging. Remove it.
-    document.addEventListener("keypress", dispatchKeypress);
-    function dispatchKeypress(event) {
-        let dispatch = new Map([[103, emitGaze], // 103 is "g" for gaze
-                                [101, emitExtendedGaze]]); // 101 is "e" for extended
-        let f = dispatch.get(event.keyCode) || function() { ; };
-        f();
-    }
+    // TODO: Change from color detection to eye tracking
+    that.setupTracking = function() {
+        let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
+        tracker.on("track", function(event) {
+            if (event.data.length === 0) { // No colors
+                noDetection();
+            } else {                      // Colors found
+                detection();
+            }
+        });
+        tracking.track("#cam", tracker, {camera: true});
+    };
+    // Functionality to listen for key presses
+    that.setupKeyPress = function() {
+        document.addEventListener("keypress", onKeyPress);
+    };
 
     return that;
 }
