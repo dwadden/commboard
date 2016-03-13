@@ -1,12 +1,12 @@
 {
-  "name": "commboard",
+  "name": "wedjat",
   "description": "",
-  "main": "commboard.js",
+  "main": "wedjat.js",
   "authors": [
     "David Wadden <dave.wadden@gmail.com>"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/dwadden/commboard",
+  "homepage": "https://github.com/dwadden/wedjat",
   "moduleType": [],
   "private": true,
   "ignore": [

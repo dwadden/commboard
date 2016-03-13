@@ -1,7 +1,7 @@
-/* Style sheet for commboard. Most of the styles here are devoted to the layout
-of the bottom, always-showing section of the commboard. This contains the text
-buffer, camera feed, date and time, and controls to change the scan speed and
-restart the program. The rest of the layout is straightforward. */
+/* Style sheet. Most of the styles here are devoted to the layout of the bottom,
+always-showing section of the commboard. This contains the text buffer, camera
+feed, date and time, and controls to change the scan speed and restart the
+program. The rest of the layout is straightforward. */
 
 /* Document-level classes and styles */
 html, body { /* Body takes up full window */
