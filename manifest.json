@@ -1,5 +1,5 @@
 {
-    "name": "Commboard",
+    "name": "commboard",
     "description": "Commboard Chrome app.",
     "version": "0.1",
     "manifest_version": 2,
@@ -9,5 +9,5 @@
         }
     },
     "permissions": ["videoCapture"],
-    "icons": { "48": "horus-48.png", "128": "horus-128.png" }
+    "icons": { "48": "img/horus-48.png", "128": "img/horus-128.png" }
 }
