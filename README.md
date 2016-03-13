@@ -23,7 +23,6 @@ bower install
 ```
 
 ### Chrome App setup
-
 Wedjat is a [Chrome app](https://developer.chrome.com/apps/about_apps). To
 launch the app, follow
 [Step 5](https://developer.chrome.com/apps/first_app#five) from the Chrome app
@@ -49,8 +48,8 @@ extended gaze indicates a cancellation.
 ### Simulating interactions with the keyboard
 Developers and assistants may wish to simulate interactions with the program
 without actually gazing. The keyboard may be used for this purpose. Pressing the
-letter "e" fires an extended gaze event, while pressing "g" fires a short
-gaze event.
+letter "e" fires an extended gaze event, while pressing "g" fires a short gaze
+event.
 
 ### Controlling Scan Speed
 A slider at the bottom of the application window allows an assistant to adjust
