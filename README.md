@@ -14,6 +14,9 @@ Wedjat requires that the following software be installed:
 - [Bower](http://bower.io/)
 - [Chrome](https://www.google.com/chrome/)
 
+The code should work on Chrome versions 49+. It will probably break on earlier
+versions.
+
 ### Package dependencies
 Clone the repository. Change to the installation directory and execute the
 following:
