@@ -7,10 +7,24 @@ const PRESS_WAIT = 350;          // After button is pressed, wait this many ms b
 const BEEP_DURATION = 1000;      // Length in ms of request beep
 const AFTER_BEEP_WAIT = 500;     // Wait this long after beep before making request
 const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second before restart
+const WINDOW_WIDTH = 1000;       // Default window width
+const WINDOW_HEIGHT = 800;       // Default window height
 
 // *****************************************************************************
 
-// Setup, to be invoked on page load
+// Setup
+
+// Chrome app launch
+chrome.app.runtime.onLaunched.addListener(function() {
+    chrome.app.window.create('window.html', {
+        'outerBounds': {
+            'width': WINDOW_WIDTH,
+            'height': WINDOW_HEIGHT
+        }
+    });
+});
+
+// Window load
 window.onload = setup;
 
 function setup() {

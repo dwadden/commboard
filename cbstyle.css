@@ -8,6 +8,7 @@ html, body { /* Body takes up full window */
   height: 100%;
   margin: 0px auto;
   padding: 0px auto;
+  overflow-y:  visible;
 }
 #wrapper { /* Wrapper takes up full window */
   width: 100%

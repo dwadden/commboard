@@ -19,6 +19,8 @@
   "dependencies": {
     "eventEmitter": "^4.3.0",
     "moment": "^2.11.2",
-    "tracking": "^1.1.2"
+    "tracking": "^1.1.2",
+    "jquery": "^2.2.1",
+    "jquery-ui": "^1.11.4"
   }
 }
