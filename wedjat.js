@@ -1,21 +1,13 @@
 "use strict";
 
-// Global variables
-const LANG = "en-US";            // Dialect for speech synthesis
-const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
-const PRESS_WAIT = 350;          // After button is pressed, wait this many ms before its action
-const BEEP_DURATION = 1000;      // Length in ms of request beep
-const AFTER_BEEP_WAIT = 500;     // Wait this long after beep before making request
-const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second before restart
-const WINDOW_WIDTH = 1000;       // Default window width
-const WINDOW_HEIGHT = 800;       // Default window height
-
 // *****************************************************************************
 
 // Setup
 
 // Chrome app launch
 chrome.app.runtime.onLaunched.addListener(function() {
+    const WINDOW_WIDTH = 1000;       // Default window width
+    const WINDOW_HEIGHT = 800;       // Default window height
     chrome.app.window.create('window.html', {
         'outerBounds': {
             'width': WINDOW_WIDTH,
@@ -192,6 +184,8 @@ function makeLeafMenu(spec, my) {
     my = my || {};
     let that = makeMenu(spec, my);
 
+    const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
+
     my.isLastLoop = function(loopIx) {
         return loopIx === LEAF_LOOPS - 1;
     };
@@ -285,6 +279,9 @@ function makeGuessMenu(spec, my) {
 function makeButton(spec, my) {
     my = my || {};
     let that = {};
+
+    // Internal constants
+    const PRESS_WAIT = 350;          // After button is pressed, wait this many ms before its action
 
     // Private data
     my.buttonElem = spec.elem;
@@ -387,6 +384,8 @@ function makeRequestButton(spec, my) {
     let that = makeButton(spec, my);
 
     // internal constants
+    const BEEP_DURATION = 1000;      // Length in ms of request beep
+    const AFTER_BEEP_WAIT = 500;     // Wait this long after beep before making request
     const MESSAGES = { Cold: "I am cold.",
                        Hot: "I am hot.",
                        Company: "I'd like some company." };
@@ -693,6 +692,7 @@ function makeBuffer() {
 
     // Constants
     const CURSOR = "_";          // Cursor character. Could be |, for instance
+    const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second before restart
 
     // Local variables
     let bufferElem = document.getElementById("buffer");
@@ -891,6 +891,7 @@ function makeSlider() {
 
 // Speak text out loud
 function speak(text) {
+    const LANG = "en-US";            // Dialect for speech synthesis
     let utterance = new window.SpeechSynthesisUtterance(text);
     utterance.lang = LANG;
     window.speechSynthesis.speak(utterance);
