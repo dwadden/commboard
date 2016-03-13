@@ -804,23 +804,32 @@ function makeBuffer() {
 
 // Constructor for clock object.
 function makeClock() {
+    let that = {};
+
+    // Constants
     const INTERVAL = 1000;      // Update each second
+
+    // Local variables
     let clockElem = document.getElementById("clockContainer");
     let textElem = clockElem.querySelector("p");
     let iv;                     // Handle for the interval
+
+    // Internal procedures
     function tick() {           // Clock ticks every second once started.
         let m = moment(new Date());
         textElem.textContent = m.format("dddd, h:mm:ss a");
     }
-    function start() {
+
+    // Public methods
+    that.start = function() {
         iv = setInterval(tick, INTERVAL);
-    }
-    function stop() {
+    };
+    that.stop = function() {
         clearInterval(iv);
-    }
+    };
     // Start the clock and return the method.
-    start();
-    return { start, stop };
+    that.start();
+    return that;
 }
 
 // constructor for slider object
