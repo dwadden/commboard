@@ -8,5 +8,6 @@
             "scripts": ["commboard.js"]
         }
     },
-    "permissions": ["videoCapture"]
+    "permissions": ["videoCapture"],
+    "icons": { "48": "horus-48.png", "128": "horus-128.png" }
 }
