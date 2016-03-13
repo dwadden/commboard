@@ -673,36 +673,37 @@ function makeDetector() {
     return that;
 }
 
-// Constructor for buffer object.
+// Text buffer
 function makeBuffer() {
-    let that = Object.create(EventEmitter.prototype); // Emit events detected by word guesser
+    let that = Object.create(EventEmitter.prototype);
+
+    // Constants
     const CURSOR = "_";          // Cursor character. Could be |, for instance
+
+    // Local variables
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = CURSOR;
-    // Booleans to indicate whether we are at the start of a new word and new sentence
-    let wordStart = true;       // If true, guess full words
-    let sentenceStart = true;   // If true, capitalize the next letter.
+    let wordStart = true;       // Are we at start of new word?
+    let sentenceStart = true;   // Are we at start of new sentence?
 
-    // To actually get the text, don't return the cursor at the end
-    function getText() {
-        return bufferText.slice(0, -1);
-    }
+    // Elementary buffer operations
     // Update element text to match text stored in JS variable
     function update() {
         textElem.textContent = bufferText;
-    };
-    // Write text to buffer. Dispatch based on text category.
-    function write(text, textCategory) {
-        let dispatch = new Map([["letter", writeLetter],
-                                ["space", writeSpace],
-                                ["word", writeWord],
-                                ["nonTerminalPunctuation", writeNonTerminalPunctuation],
-                                ["terminalPunctuation", writeTerminalPunctuation]]);
-        let writer = dispatch.get(textCategory);
-        writer(text);
-        that.emitChange();
     }
+    // Push to buffer
+    function push(char) {
+        bufferText += char;
+        update();
+    }
+    // Pop off end of buffer
+    function pop() {
+        bufferText = bufferText.slice(0, -1);
+        update();
+    }
+
+    // Higher-level procedures implementing button actions
     // Generic function to write to buffer
     function writeText(text) {
         pop();                  // Get cursor out of the way
@@ -731,77 +732,73 @@ function makeBuffer() {
     function writeNonTerminalPunctuation(text) {
         writeText(text);
     }
-
     function writeTerminalPunctuation(text) {
         writeText(text);
         sentenceStart = true;
         writeSpace();           // Add space to start new word
     }
-
-    function executeAction(actionName, cbpressed) {
-        let dispatch = new Map([["delete", deleteText],
-                                ["read", read],
-                                ["clear", clear]]);
-        let action = dispatch.get(actionName);
-        action(cbpressed);
-    }
-
     function deleteText(cb) {
         pop();                  // Need to pop the cursor and the last letter
         pop();
         push(CURSOR);           // Then add the cursor back
-        that.emitChange();
+        emitChange();
         cb();
     }
-
     // Read buffer contents out loud
     function read(cb) {
         function afterRead() {  // Allow a short pause after reading finishes
             setTimeout(cb, AFTER_BUFFER_READ);
         }
-        let utterance = speak(getText());
+        let utterance = speak(that.getText());
         utterance.onend = afterRead;       // Read the utterance, then continue the program
         bufferElem.utterance = utterance; // So the utterance won't go out of scope
     }
-
     // Clear the buffer.
     function clear(cb) {
         bufferText = CURSOR;;
         update();
-        that.emitChange();
+        emitChange();
         cb();
     }
-
-    // Push to buffer
-    function push(char) {
-        bufferText += char;
-        update();
-    }
-    // Pop off end of buffer
-    function pop(cb) {
-        bufferText = bufferText.slice(0, -1);
-        update();
-    }
-
-    // To be fired when buffer changes
-    that.emitChange = function() {
+    // Fired when buffer changes
+    function emitChange() {
         that.emitEvent("bufferChange");
-    };
+    }
 
+    // Public methods
+    // Write to the buffer. Called by buttons. Buffer dispatches on text type.
+    that.write = function(text, textCategory) {
+        let dispatch = new Map([["letter", writeLetter],
+                                ["space", writeSpace],
+                                ["word", writeWord],
+                                ["nonTerminalPunctuation", writeNonTerminalPunctuation],
+                                ["terminalPunctuation", writeTerminalPunctuation]]);
+        let writer = dispatch.get(textCategory);
+        writer(text);
+        emitChange();
+    };
+    // Perform buffer actions. Dispatched based on action.
+    that.executeAction = function(actionName, cbpressed) {
+        let dispatch = new Map([["delete", deleteText],
+                                ["read", read],
+                                ["clear", clear]]);
+        let action = dispatch.get(actionName);
+        action(cbpressed);
+    };
+    that.getText = function() {
+        return bufferText.slice(0, -1);
+    };
     // Add a listener (the guess menu)
     that.addChangeListener = function(listener) {
         that.addListener("bufferChange", listener);
     };
-
     // Remove listener
     that.removeChangeListener = function(listener) {
         that.removeListener("bufferChange", listener);
     };
-    that.write = write;
-    that.executeAction = executeAction;
-    that.getText = getText;
 
-    update();                   // Display cursor in DOM
+    // Initialize and return
+    update();
     return that;
 }
 
