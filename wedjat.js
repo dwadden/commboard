@@ -75,14 +75,23 @@ function setup() {
 
 // Menus
 
-// The spec is an object with four fields:
-// detector: the detector object
-// slider: the slider object
-// buffer: the buffer object. Left unused by many buttons.
-// menuId: the id of the DOM element corresponding to the menu
+/**
+ * Constructor for generic Menu objects.
+ * @param {Object} spec - Specification object.
+ * @param {Object} spec.detector - Gaze detector object.
+ * @param {Object} spec.buffer - Text buffer object.
+ * @param {Object} spec.slider - Slider object.
+ * @param {string} spec.menuName - CSS id of menu's document eement.
+ * @param {Object} my - Holds class hierarchy shared secrets.
+ * @returns {Object} A Menu object.
+ */
 function makeMenu(spec, my) {
     // Private and public objects
     my = my || {};
+    /**
+     * Namespace for generic Menu object.
+     * @namespace Menu
+     */
     let that = {};
 
     // Private methods
@@ -132,11 +141,19 @@ function makeMenu(spec, my) {
     my.children = null;
 
     // Public methods
-    // The input is an object containing the menus that are children of this
-    // menu
+    /**
+     * Get the child menus for this menu.
+     * @returns {Array} An array of child menus.
+     * @memberof Menu
+     */
     that.getChildren = function() {
         return my.children;
     };
+    /**
+     * Set the child menus for this menu.
+     * @param {Array} children An array of child menus.
+     * @memberof Menu
+     */
     that.setChildren = function(children) {
         my.children = children;
         let setParent = function(child) {
@@ -144,26 +161,46 @@ function makeMenu(spec, my) {
         };
         children.forEach(setParent);
     };
-    // Slide menus up and down. Only do this for menus with a div element
-    // associated with them. Those are the "major" menus.
-    // TODO: Is there a cleaner way to do this?
+    /**
+     * Slide this menu's document element up, hiding it.
+     * @memberof Menu
+     */
     that.slideUp = function() {
+        // TODO: Is there a cleaner way to do this?
         if (my.divElem !== undefined) {
             jQuery(my.divElem).slideUp();
         }
     };
+    /**
+     * Slide this menu's document element down, revealing it.
+     * @memberof Menu
+     */
     that.slideDown = function() {
         if (my.divElem !== undefined) {
             jQuery(my.divElem).slideDown();
         }
     };
+    /**
+     * Scan through the buttons in the menu, awaiting user input.
+     * @memberof Menu
+     */
     that.scan = function() {
         that.slideDown();
         my.scanAt(0, 0);
     };
+    /**
+     * Get the buttons contained by this menu.
+     * @returns {Array} An array of buttons.
+     * @memberof Menu
+     */
     that.getButtons = function() {
         return my.buttons;
     };
+    /**
+     * Get the number of buttons contained in the menu.
+     * @returns {Number} The number of buttons.
+     * @memberof Menu
+     */
     that.getNButtons = function() {
         return my.nButtons;
     };
@@ -172,8 +209,20 @@ function makeMenu(spec, my) {
     return that;
 }
 
+/**
+ * Constructor for branch menus. When finished scanning their contents, branch
+ * menus begin again scanning again.
+ * @param {Object} spec - Specification object. See makeMenu for details.
+ * @param {Object} my - Shared secrets as in makeMenu.
+ * @returns {Object} A branchMenu object.
+ */
 function makeBranchMenu(spec, my) {
     my = my || {};
+    /**
+     * Namespace for a branchMenu object.
+     * @namespace branchMenu
+     * @augments Menu
+     */
     let that = makeMenu(spec, my);
 
     my.scanAt = function(buttonIx) {
@@ -186,8 +235,20 @@ function makeBranchMenu(spec, my) {
     return that;
 }
 
+/**
+ * Constructor for leaf menus. When finished scanning their contents, leaf
+ * menus return control of the program to their parent.
+ * @param {Object} spec - Specification object. See makeMenu for details.
+ * @param {Object} my - Shared secrets as in makeMenu.
+ * @returns {Object} A leafMenu object.
+ */
 function makeLeafMenu(spec, my) {
     my = my || {};
+    /**
+     * Namespace for leafMenu object.
+     * @namespace leafMenu
+     * @augments Menu
+     */
     let that = makeMenu(spec, my);
 
     const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
@@ -216,10 +277,19 @@ function makeLeafMenu(spec, my) {
     return that;
 }
 
-// The guess menu is like a leaf menu, but also listens to buffer updates and
-// updates its buttons accordingly
+/**
+ * Constructor for guess menus, which submit web queries for content guesses.
+ * @param {Object} spec - Specification object. See makeMenu for details.
+ * @param {Object} my - Shared secrets as in makeMenu.
+ * @returns {Object} A leafMenu object.
+ */
 function makeGuessMenu(spec, my) {
     my = my || {};
+    /**
+     * Namespace for guessMenu object.
+     * @namespace guessMenu
+     * @augments Menu
+     */
     let that = makeLeafMenu(spec, my);
 
     // internal constants
