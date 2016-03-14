@@ -4,8 +4,14 @@
 
 // Setup
 
-// Chrome app launch
-chrome.app.runtime.onLaunched.addListener(function() {
+// Execute on app launch and window load
+chrome.app.runtime.onLaunched.addListener(launch);
+window.onload = setup;
+
+/**
+ * Executed on chrome app launch. Creates app window.
+ */
+function launch() {
     const WINDOW_WIDTH = 1000;       // Default window width
     const WINDOW_HEIGHT = 800;       // Default window height
     chrome.app.window.create('window.html', {
@@ -14,11 +20,11 @@ chrome.app.runtime.onLaunched.addListener(function() {
             'height': WINDOW_HEIGHT
         }
     });
-});
+}
 
-// Window load
-window.onload = setup;
-
+/**
+ * Top-level setup function. Creates and initializes program objects.
+ */
 function setup() {
     // Initialization procedures
     function makeSpec(menuName) {

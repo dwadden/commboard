@@ -57,3 +57,15 @@ event.
 ### Controlling Scan Speed
 A slider at the bottom of the application window allows an assistant to adjust
 the rate at which the program scans through buttons.
+
+## Documentation
+
+Comments in the code follow [JSDoc](http://usejsdoc.org/) syntax. You may
+generate documentation by entering the following at the command line, from the
+installation directory:
+
+```
+jsdoc wedjat.js
+```
+
+For information, see the JSDoc documentation.
