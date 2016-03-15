@@ -278,7 +278,7 @@ function makeLeafMenu(spec, my) {
  * Constructor for guess menus, which submit web queries for content guesses.
  * @param {Object} spec - Specification object. See makeMenu for details.
  * @param {Object} my - Shared secrets as in makeMenu.
- * @returns {Object} A leafMenu object.
+ * @returns {Object} A guessMenu object.
  */
 function makeGuessMenu(spec, my) {
     my = my || {};
@@ -484,6 +484,7 @@ function makeMenuSelectorButton(spec, my) {
  * Constructor for start / stop button.
  * @param {Object} spec - Specification object, as in makeButton.
  * @param {Object} my - Shared secrets, as in makeButton.
+ * @returns {Object} - A startButton object.
  */
 function makeStartButton(spec, my) {
     my = my || {};
@@ -871,7 +872,14 @@ function makeNotImplementedButton(spec, my) {
 // Because these objects are not members of hierarchies, they do not need shared
 // secrets. Instead of "my", we just have local variables.
 
+/**
+ * Constructor for detector objects.
+ * @returns {Object} A detector object.
+ */
 function makeDetector() {
+    /**
+     * @namespace Detector
+     */
     let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
 
     // Constants and magic numbers. Can be changed depending on client needs.
@@ -945,20 +953,44 @@ function makeDetector() {
     }
 
     // Public procedures
+    /**
+     * Add listener for gaze event.
+     * @param {Function} listener - The listener.
+     * @memberof Detector
+     */
     that.addGazeListener = function(listener) {
         that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
     };
+    /**
+     * Add listener for extended gaze event.
+     * @param {Function} listener - The listener.
+     * @memberof Detector
+     */
     that.addExtendedGazeListener = function(listener) {
         that.addListener("extendedGaze", listener);
     };
+    /**
+     * Remove listener for gaze event.
+     * @param {Function} listener - The listener.
+     * @memberof Detector
+     */
     that.removeGazeListener = function(listener) {
         that.removeListener("gaze", listener);
     };
+    /**
+     * Remove listener extended for gaze event.
+     * @param {Function} listener - The listener.
+     * @memberof Detector
+     */
     that.removeExtendedGazeListener = function(listener) {
         that.removeListener("extendedGaze", listener);
     };
-    // TODO: Change from color detection to eye tracking
+    /**
+     * Initialize color tracking.
+     * @memberof Detector
+     */
     that.setupTracking = function() {
+        // TODO: Change from color detection to eye tracking
         let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
         tracker.on("track", function(event) {
             if (event.data.length === 0) { // No colors
@@ -969,7 +1001,10 @@ function makeDetector() {
         });
         tracking.track("#cam", tracker, {camera: true});
     };
-    // Functionality to listen for key presses
+    /**
+     * Initialize key press event handling.
+     * @memberof Detector
+     */
     that.setupKeyPress = function() {
         document.addEventListener("keypress", onKeyPress);
     };
