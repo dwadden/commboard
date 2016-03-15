@@ -1012,8 +1012,14 @@ function makeDetector() {
     return that;
 }
 
-// Text buffer
+/**
+ * Constructor for text buffer.
+ * @returns {Object} A buffer object.
+ */
 function makeBuffer() {
+    /**
+     * @namespace Buffer
+     */
     let that = Object.create(EventEmitter.prototype);
 
     // Constants
@@ -1106,7 +1112,13 @@ function makeBuffer() {
     }
 
     // Public methods
-    // Write to the buffer. Called by buttons. Buffer dispatches on text type.
+    /**
+     * Write to the buffer.
+     * @param {string} text - The text to write.
+     * @param {string} textCategory - The type of text (e.g. punctuation,
+     * letter).
+     * @memberof Buffer
+     */
     that.write = function(text, textCategory) {
         let dispatch = new Map([["letter", writeLetter],
                                 ["space", writeSpace],
@@ -1117,7 +1129,12 @@ function makeBuffer() {
         writer(text);
         emitChange();
     };
-    // Perform buffer actions. Dispatched based on action.
+    /**
+     * Perform buffer action
+     * @param {string} actionName - The name of the action to be performed.
+     * @param {Function} cbpressed - The callback to invoke after completion.
+     * @memberof Buffer
+     */
     that.executeAction = function(actionName, cbpressed) {
         let dispatch = new Map([["delete", deleteText],
                                 ["read", read],
@@ -1125,14 +1142,27 @@ function makeBuffer() {
         let action = dispatch.get(actionName);
         action(cbpressed);
     };
+    /**
+     * Get buffer text.
+     * @returns {string} The buffer text
+     * @memberof Buffer
+     */
     that.getText = function() {
         return bufferText.slice(0, -1);
     };
-    // Add a listener (the guess menu)
+    /**
+     * Add listener for buffer change event.
+     * @param {Function} listener - The listener.
+     * @memberof Buffer
+     */
     that.addChangeListener = function(listener) {
         that.addListener("bufferChange", listener);
     };
-    // Remove listener
+    /**
+     * Remove listener for buffer change event.
+     * @param {Function} listener - The listener.
+     * @memberof Buffer
+     */
     that.removeChangeListener = function(listener) {
         that.removeListener("bufferChange", listener);
     };
