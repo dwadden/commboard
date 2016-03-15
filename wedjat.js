@@ -37,12 +37,12 @@ function setup() {
         return makeBranchMenu(makeSpec(menuName));
     }
     function makeComposeSubmenus() {
-        return new Map([["guess",   makeGuessMenu(makeSpec("composeGuess"))],
-                        ["1",       makeLeaf("compose1")],
+        return new Map([["1",       makeLeaf("compose1")],
                         ["2",       makeLeaf("compose2")],
                         ["3",       makeLeaf("compose3")],
                         ["4",       makeLeaf("compose4")],
                         ["5",       makeLeaf("compose5")],
+                        ["guess",   makeGuessMenu(makeSpec("composeGuess"))],
                         ["actions", makeLeaf("composeActions")]]);
     }
 
@@ -167,6 +167,7 @@ function makeMenu(spec, my) {
     that.slideUp = function() {
         // TODO: Is there a cleaner way to do this?
         if (my.divElem !== undefined) {
+            debugger;
             jQuery(my.divElem).slideUp();
         }
     };
