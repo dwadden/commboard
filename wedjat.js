@@ -226,7 +226,7 @@ function makeBranchMenu(spec, my) {
     my.scanAt = function(buttonIx) {
         let cbpassed = function() { my.scanAt(my.nextButton(buttonIx)); };
         let cbpressed = that.scan;
-        let button = that.getButtons()[buttonIx];
+        let button = my.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
@@ -266,7 +266,7 @@ function makeLeafMenu(spec, my) {
         };
         let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
                         cbpressed : cbnext);
-        let button = that.getButtons()[buttonIx];
+        let button = my.buttons[buttonIx];
         button.scan(cbpassed, cbpressed);
     };
 
@@ -334,7 +334,7 @@ function makeGuessMenu(spec, my) {
     // Update word guesses based on changes to buffer
     my.update = function() {
         let callback = function(guesses) {
-            zip(that.getButtons(), guesses).forEach(function([button, guess])
+            zip(my.buttons, guesses).forEach(function([button, guess])
                                                     { button.setValue(guess); });
         };
         let inputText = my.buffer.getText();
