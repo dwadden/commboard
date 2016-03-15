@@ -1031,8 +1031,6 @@ function makeBuffer() {
     let bufferElem = document.getElementById("buffer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = CURSOR;
-    let wordStart = true;       // Are we at start of new word?
-    let sentenceStart = true;   // Are we at start of new sentence?
 
     // Elementary buffer operations
     // Update element text to match text stored in JS variable
@@ -1049,7 +1047,22 @@ function makeBuffer() {
         bufferText = bufferText.slice(0, -1);
         update();
     }
-
+    // Is the character a terminal punctuation character?
+    function isTerminalPunctuation(char) {
+        return char.match(/[.!?]/) !== null;
+    }
+    // Are we at the start of a word?
+    function isBufferWordStart() {
+        return that.getText() === "" || that.getText().slice(-1) == " ";
+    }
+    // Are we at the start of a sentence?
+    function isBufferSentenceStart() {
+        // This will break if user backspaces after a sentence finishes.
+        let text = that.getText();
+        return (text == "" ||
+                (text.slice(-1) === " " &&
+                 isTerminalPunctuation(text.slice(-2))));
+    }
     // Higher-level procedures implementing button actions
     // Generic function to write to buffer
     function writeText(text) {
@@ -1059,19 +1072,18 @@ function makeBuffer() {
     }
     // For letters, capitalize if at beginning of sentence
     function writeLetter(text) {
-        let toWrite = sentenceStart ? text.toUpperCase() : text;
+        let toWrite = isBufferSentenceStart() ? capitalize(text) : text;
         writeText(toWrite);
-        wordStart = false;
-        sentenceStart = false;
     }
     // For spaces, write a space and switch wordStart to true
     function writeSpace() {
         writeText(" ");
-        wordStart = true;
     }
+    // Write a whole word to the buffer; for use in word guessing
     function writeWord(text) {
-        let toWrite = sentenceStart ? capitalize(text) : text;
-        pop();
+        while (!isBufferWordStart()) // Clear out partial word.
+            pop();
+        let toWrite = isBufferSentenceStart() ? capitalize(text) : text;
         writeText(toWrite);
         writeSpace();
     }
@@ -1081,7 +1093,6 @@ function makeBuffer() {
     }
     function writeTerminalPunctuation(text) {
         writeText(text);
-        sentenceStart = true;
         writeSpace();           // Add space to start new word
     }
     function deleteText(cb) {
