@@ -166,8 +166,7 @@ function makeMenu(spec, my) {
      */
     that.slideUp = function() {
         // TODO: Is there a cleaner way to do this?
-        if (my.divElem !== undefined) {
-            debugger;
+        if (my.divElem !== null) {
             jQuery(my.divElem).slideUp();
         }
     };
@@ -176,7 +175,7 @@ function makeMenu(spec, my) {
      * @memberof Menu
      */
     that.slideDown = function() {
-        if (my.divElem !== undefined) {
+        if (my.divElem !== null) {
             jQuery(my.divElem).slideDown();
         }
     };
@@ -248,7 +247,6 @@ function makeLeafMenu(spec, my) {
      * @augments Menu
      */
     let that = makeMenu(spec, my);
-
     const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
 
     my.isLastLoop = function(loopIx) {
@@ -302,7 +300,7 @@ function makeGuessMenu(spec, my) {
             url: queryURL,
             data: { minCorpusCount: MIN_COUNT,
                     api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
-                    caseSensitive: false,
+                    caseSensitive: true,
                     limit: N_GUESSES },
             type: "GET",
             dataType: "json",
@@ -324,11 +322,12 @@ function makeGuessMenu(spec, my) {
             debugger;
         };
 
-        let text = inputText.split(" ").slice(-1)[0].toLowerCase();
+        let text = inputText.split(" ").slice(-1)[0];
         if (text === "") {          // If no text, no guesses.
             cb(repeat("", N_GUESSES));
+        } else {
+            my.wordnik(text, success, failure);
         }
-        my.wordnik(text, success, failure);
     };
     // Update word guesses based on changes to buffer
     my.update = function() {
@@ -797,9 +796,9 @@ function makeGuessButton(spec, my) {
     my = my || {};
     /**
      * @namespace guessButton
-     * @augments Button
+     * @augments textButton
      */
-    let that = makeButton(spec, my);
+    let that = makeTextButton(spec, my);
 
     // Private data
     my.textCategory = "word";
@@ -829,6 +828,7 @@ function makeGuessButton(spec, my) {
      */
     that.action = function(cbpressed) {
         my.buffer.write(my.buttonValue, my.textCategory);
+        cbpressed();
     };
 
     return that;
