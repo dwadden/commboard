@@ -1172,8 +1172,13 @@ function makeBuffer() {
     return that;
 }
 
-// Constructor for clock object.
+/**
+ * Constructor for clock objects.
+ */
 function makeClock() {
+    /**
+     * @namespace Clock
+     */
     let that = {};
 
     // Constants
@@ -1191,19 +1196,33 @@ function makeClock() {
     }
 
     // Public methods
+    /**
+     * Start the clock.
+     * @memberof Clock
+     */
     that.start = function() {
         iv = setInterval(tick, INTERVAL);
     };
+    /**
+     * Stop the clock.
+     * @memberof Clock
+     */
     that.stop = function() {
         clearInterval(iv);
     };
+
     // Start the clock and return the method.
     that.start();
     return that;
 }
 
-// constructor for slider object
+/**
+ * Constructor for slider objects.
+ */
 function makeSlider() {
+    /**
+     * @namespace Slider
+     */
     let that = {};
 
     // Constants
@@ -1232,6 +1251,11 @@ function makeSlider() {
     }
 
     // Public methods.
+    /**
+     * Get the wait time specified by the slider.
+     * @returns {number} Wait time in milliseconds.
+     * @memberof Slider
+     */
     that.getms = function() {
         return sliderValue * 1000;
     };
