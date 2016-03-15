@@ -41,13 +41,6 @@ td {
   padding: 3px; /* Space between buttons */
   height: 60px;
 }
-.rowOn { /* Styling when a menu is not currently active */
-  color: yellow;
-  background-color: yellowgreen;
-}
-.rowOff { /* Styling when a menu is active */
-  background-color: transparent;
-}
 
 /* Button styling */
 input[type=button] { /* Input buttons. */
