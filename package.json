@@ -1,0 +1,25 @@
+{
+  "name": "wedjat",
+  "version": "1.0.0",
+  "description": "Wedjat was created in the hopes of allowing completely locked in individuals to communicate with a computer.",
+  "main": "wedjat.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dwadden/wedjat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dwadden/wedjat/issues"
+  },
+  "homepage": "https://github.com/dwadden/wedjat#readme",
+  "dependencies": {
+    "nodemailer": "^2.3.0"
+  }
+}

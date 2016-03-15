@@ -19,9 +19,10 @@ versions.
 
 ### Package dependencies
 Clone the repository. Change to the installation directory and execute the
-following:
+following to install the requisite packages from npm and bower:
 
 ```
+npm install
 bower install
 ```
 
