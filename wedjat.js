@@ -105,6 +105,7 @@ function makeMenu(spec, my) {
                                 ["bufferAction", makeBufferActionButton],
                                 ["return", makeReturnButton],
                                 ["guess", makeGuessButton],
+                                ["email", makeEmailButton],
                                 ["notImplemented", makeNotImplementedButton]]);
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
@@ -831,6 +832,25 @@ function makeGuessButton(spec, my) {
     that.action = function(cbpressed) {
         my.buffer.write(my.buttonValue, my.textCategory);
         cbpressed();
+    };
+
+    return that;
+}
+
+function makeEmailButton(spec, my) {
+    console.log("Here");
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    // Private data
+    my.buffer = spec.buffer;
+    my.recipients = my.buttonElem.dataset.recipients.split(" ");
+
+    // Public methods
+    that.action = function(cbpressed) {
+        console.log(that);
+        console.log(my);
+        debugger;
     };
 
     return that;
