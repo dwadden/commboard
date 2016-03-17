@@ -7,6 +7,8 @@ const jQuery = require("jquery");
 require("jquery-ui");
 const EventEmitter = require("wolfy87-eventemitter");
 const moment = require("moment");
+const bootbox = require("bootbox");
+require("bootstrap");
 
 // Setup
 
@@ -56,6 +58,7 @@ function setup() {
     compose.setChildren(composeSubmenus);
 
     // Final actions
+    registerEmailConfigButton(); // Register email config button
     // detector.setupTracking();
     detector.setupKeyPress();
     main.slideDown();
@@ -833,7 +836,7 @@ function makeEmailButton(spec, my) {
 
     // Private data
     my.buffer = spec.buffer;
-    // my.recipients = my.buttonElem.dataset.recipients.split(" ");
+    my.recipients = my.buttonElem.dataset.recipients.split(" ");
 
     // Public methods
     that.action = function(cbpressed) {
@@ -876,6 +879,40 @@ function makeNotImplementedButton(spec, my) {
         my.buttonElem.utternce = utterance;
     };
     return that;
+}
+
+/**
+ * Register button to prompt user for email information on click.
+*/
+function registerEmailConfigButton() {
+    let selector = "input[type=button][data-button-type=emailConfig";
+    let buttonElem = document.querySelector(selector);
+    buttonElem.onclick = clicked;
+
+    // TODO: Figure out how to do this correctly. For now I just want to get the
+    // program running; a clear warning is ok.
+    function clicked() {
+        let alert = `WARNING: This is an experimental feature. The email
+password will not be stored securely, and it is possible a malicious person
+could retrieve them. Only enter a password for an account created expressely for
+use with this program, which will NEVER be used to exchange sensitive
+information (bank / credit card statements, travel documents, etc).`;
+        bootbox.alert(alert, getUserName);
+    }
+    function getUserName() {
+        bootbox.prompt("Please enter your email address.",
+                       function(username) { getPassword(username); });
+    }
+    function getPassword(username) {
+        bootbox.prompt("Please enter your password.",
+                       function(password) {
+                           storeEmailConfig(username, password);
+                       });
+    }
+    function storeEmailConfig(username, password) {
+        window.sessionStorage.setItem("username", username);
+        window.sessionStorage.setItem("password", password);
+    }
 }
 
 // *****************************************************************************

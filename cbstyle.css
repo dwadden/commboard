@@ -138,18 +138,17 @@ with text. */
   font-weight: bold;
 }
 /* Reset button. On the right. */
-#resetContainer { /* Layout. */
+#buttonContainer { /* Layout. */
   position: absolute;
-  left: 50%;
-  width: 50%;
+  left: 60%;
+  width: 40%;
   height: 100%;
 }
-#resetButton { /* The button. */
-  position: absolute;
-  width: 70%;
-  height: 70%;
-  right: 5%;
-  bottom: 5%;
+#buttonContainer td {
+  padding: 3px; /* Space between buttons */
+  height: 45px;
+}
+.settingsButton { /* The button. */
   color: firebrick;
   border-color: ghostwhite;
   background-color: ghostwhite;

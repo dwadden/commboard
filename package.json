@@ -7,6 +7,8 @@
   },
   "homepage": "https://github.com/dwadden/wedjat#readme",
   "dependencies": {
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.6",
     "jquery": "^2.2.1",
     "jquery-ui": "^1.10.5",
     "moment": "^2.12.0",

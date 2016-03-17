@@ -6,6 +6,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="cbstyle.css" type="text/css">
     <link rel="stylesheet" href="node_modules/jquery-ui/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <!-- Commboard script -->
     <script src="wedjat.js"></script>
   </head>
@@ -56,7 +57,7 @@
                        data-recipients="dmozersky@yahoo.com"></td>
             <td><input type="button" class="buttonOff" value="Developers"
                        data-menu="email" data-button-type="email"
-                       data-address="dave.wadden@gmail.com ylh@gmx.com"></td>
+                       data-recipients="dave.wadden@gmail.com ylh@gmx.com"></td>
             <td colspan="5"></td>
           </tr>
         </tbody></table>
@@ -211,8 +212,13 @@
                 <div id="sliderValue"></div>
                 <div id="slider"></div>
               </div>
-              <div id="resetContainer"> <!-- Reset button. Stop program and return to main menu. -->
-                <input type="button" id="resetButton" value="Reset">
+              <div id="buttonContainer"> <!-- Reset button. Stop program and return to main menu. -->
+                <table><tbody>
+                  <tr><td><input type="button" class="settingsButton" value="Setup"
+                                 data-button-type="emailConfig"></td></tr>
+                  <tr><td><input type="button" class="settingsButton" value="Reset"
+                                 data-button-type="notImplemented"></td></tr>
+                </tbody></table>
               </div>
             </div>
           </div>
