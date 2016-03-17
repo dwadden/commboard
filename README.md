@@ -11,26 +11,33 @@ Wedjat requires that the following software be installed:
 - [Git](https://git-scm.com/)
 - [Node.js](http://nodejs.org/)
 - [npm](http://npmjs.org/)
-- [Bower](http://bower.io/)
-- [Chrome](https://www.google.com/chrome/)
-
-The code should work on Chrome versions 49+. It will probably break on earlier
-versions.
 
 ### Package dependencies
 Clone the repository. Change to the installation directory and execute the
-following to install the requisite packages from npm and bower:
+following to install the requisite packages from npm:
 
 ```
 npm install
-bower install
 ```
 
-### Chrome App setup
-Wedjat is a [Chrome app](https://developer.chrome.com/apps/about_apps). To
-launch the app, follow
-[Step 5](https://developer.chrome.com/apps/first_app#five) from the Chrome app
-developer page. You should be able to ignore the step about enabling flags.
+Wedjat runs on Github's [Electron](http://electron.atom.io/). You may install it
+globally using:
+
+```
+npm install -g electron-prebuilt
+```
+
+### Running the program
+
+If Electron is installed globally, navigate to the Wedjat home directory and
+enter:
+
+```
+electron .
+```
+
+The program will launch. If Electron is installed locally, locate the executable
+and invoke in the same fashion.
 
 ## Usage
 

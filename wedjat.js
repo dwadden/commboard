@@ -2,25 +2,15 @@
 
 // *****************************************************************************
 
+// Imports
+const jQuery = require("jquery");
+require("jquery-ui");
+const EventEmitter = require("wolfy87-eventemitter");
+const moment = require("moment");
+
 // Setup
 
-// Execute on app launch and window load
-chrome.app.runtime.onLaunched.addListener(launch);
 window.onload = setup;
-
-/**
- * Executed on chrome app launch. Creates app window.
- */
-function launch() {
-    const WINDOW_WIDTH = 1000;       // Default window width
-    const WINDOW_HEIGHT = 800;       // Default window height
-    chrome.app.window.create('window.html', {
-        'outerBounds': {
-            'width': WINDOW_WIDTH,
-            'height': WINDOW_HEIGHT
-        }
-    });
-}
 
 /**
  * Top-level setup function. Creates and initializes program objects.
@@ -66,7 +56,7 @@ function setup() {
     compose.setChildren(composeSubmenus);
 
     // Final actions
-    detector.setupTracking();
+    // detector.setupTracking();
     detector.setupKeyPress();
     main.slideDown();
 }
@@ -838,13 +828,12 @@ function makeGuessButton(spec, my) {
 }
 
 function makeEmailButton(spec, my) {
-    console.log("Here");
     my = my || {};
     let that = makeButton(spec, my);
 
     // Private data
     my.buffer = spec.buffer;
-    my.recipients = my.buttonElem.dataset.recipients.split(" ");
+    // my.recipients = my.buttonElem.dataset.recipients.split(" ");
 
     // Public methods
     that.action = function(cbpressed) {
@@ -1009,20 +998,11 @@ function makeDetector() {
         that.removeListener("extendedGaze", listener);
     };
     /**
-     * Initialize color tracking.
+     * Initialize tracking.
      * @memberof Detector
      */
     that.setupTracking = function() {
-        // TODO: Change from color detection to eye tracking
-        let tracker = new tracking.ColorTracker([TRACKER_COLOR]);
-        tracker.on("track", function(event) {
-            if (event.data.length === 0) { // No colors
-                noDetection();
-            } else {                      // Colors found
-                detection();
-            }
-        });
-        tracking.track("#cam", tracker, {camera: true});
+        notImplemented();
     };
     /**
      * Initialize key press event handling.
