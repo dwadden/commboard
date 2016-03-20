@@ -10,6 +10,9 @@ require("jquery-ui");
 const EventEmitter = require("wolfy87-eventemitter");
 const moment = require("moment");
 
+// File imports
+const util = require("./util.js");
+
 // Exports
 module.exports = { makeDetector, makeBuffer, makeClock, makeSlider };
 
@@ -131,7 +134,7 @@ function makeDetector() {
      * @memberof Detector
      */
     that.setupTracking = function() {
-        notImplemented();
+        util.notImplemented();
     };
     /**
      * Initialize key press event handling.
@@ -202,7 +205,7 @@ function makeBuffer() {
     }
     // For letters, capitalize if at beginning of sentence
     function writeLetter(text) {
-        let toWrite = isBufferSentenceStart() ? capitalize(text) : text;
+        let toWrite = isBufferSentenceStart() ? util.capitalize(text) : text;
         writeText(toWrite);
     }
     // For spaces, write a space and switch wordStart to true
@@ -213,7 +216,7 @@ function makeBuffer() {
     function writeWord(text) {
         while (!isBufferWordStart()) // Clear out partial word.
             pop();
-        let toWrite = isBufferSentenceStart() ? capitalize(text) : text;
+        let toWrite = isBufferSentenceStart() ? util.capitalize(text) : text;
         writeText(toWrite);
         writeSpace();
     }
@@ -234,7 +237,7 @@ function makeBuffer() {
     }
     // Read buffer contents out loud
     function readBuffer(cb) {
-        read(that.getText(), cb, bufferElem);
+        util.read(that.getText(), cb, bufferElem);
     }
     // Clear the buffer.
     function clear(cb) {
