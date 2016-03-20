@@ -105,8 +105,8 @@ any sensitive data in response messages.
 
 Developers and assistants may wish to simulate interactions with the program
 without actually gazing. The keyboard may be used for this purpose. Pressing the
-letter "e" fires an extended gaze event, while pressing "g" fires a short gaze
-event.
+down arrow key fires an extended gaze event, while pressing up arrow key fires a
+short gaze event.
 
 ### Controlling Scan Speed
 

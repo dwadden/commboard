@@ -61,7 +61,7 @@ function setup() {
     // Final actions
     registerEmailConfigButton(); // Register email config button
     // detector.setupTracking();
-    detector.setupKeyPress();
+    detector.setupKeyDown();
     main.slideDown();
 }
 
@@ -1052,9 +1052,9 @@ function makeDetector() {
         that.emitEvent("extendedGaze");
     }
     // Key presses can be used in place of gazes
-    function onKeyPress(event) {
-        let dispatch = new Map([[103, emitGaze], // 103 is "g" for gaze
-                                [101, emitExtendedGaze]]); // 101 is "e" for extended
+    function onKeyDown(event) {
+        let dispatch = new Map([[38, emitGaze], // 38 is up arrow key
+                                [40, emitExtendedGaze]]); // 40 is down arrow key
         let f = dispatch.get(event.keyCode) || function() { ; };
         f();
     }
@@ -1103,8 +1103,8 @@ function makeDetector() {
      * Initialize key press event handling.
      * @memberof Detector
      */
-    that.setupKeyPress = function() {
-        document.addEventListener("keypress", onKeyPress);
+    that.setupKeyDown = function() {
+        document.addEventListener("keydown", onKeyDown);
     };
 
     return that;
