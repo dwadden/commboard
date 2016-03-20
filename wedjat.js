@@ -6,6 +6,7 @@
 const jQuery = require("jquery");
 require("jquery-ui");
 const EventEmitter = require("wolfy87-eventemitter");
+const nodemailer = require("nodemailer");
 const moment = require("moment");
 const bootbox = require("bootbox");
 require("bootstrap");
@@ -47,7 +48,7 @@ function setup() {
     // Create menus
     let main = makeBranch("main");
     let request = makeLeaf("request");
-    let email = makeBranch("email");
+    let email = makeLeaf("email");
     let compose = makeBranch("compose");
     let composeSubmenus = makeComposeSubmenus();
 
@@ -830,19 +831,48 @@ function makeGuessButton(spec, my) {
     return that;
 }
 
+// TODO: Add documentation
 function makeEmailButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
     // Private data
     my.buffer = spec.buffer;
-    my.recipients = my.buttonElem.dataset.recipients.split(" ");
+    my.recipients = my.buttonElem.dataset.recipients;
+    my.name = window.sessionStorage.getItem("name");
+    my.address = window.sessionStorage.getItem("address");
+    my.password = window.sessionStorage.getItem("password");
 
     // Public methods
     that.action = function(cbpressed) {
-        console.log(that);
-        console.log(my);
-        debugger;
+        function afterSend(error, info) {
+            if (error) {
+                // If something goes wrong, inform user and dump the error info
+                read("An error ocurred.", cbpressed, my.buttonElem);
+                console.log(error);
+            } else {
+                // Otherwise, inform user of success and continue program
+                read(`Message sent to ${my.buttonValue}`,
+                     cbpressed, my.buttonElem);
+            }
+        }
+        // For details, see https://nodemailer.com/
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: my.address,
+                pass: my.password
+            }
+        });
+        const mailOptions = {
+            from: `"${my.name}" <${my.address}>`,
+            to: `${my.recipients}`, // list of receivers
+            subject: `A message from ${my.name}`, // Subject line
+            text: my.buffer.getText() // plaintext body
+        };
+
+        // Send it off
+        transporter.sendMail(mailOptions, afterSend);
     };
 
     return that;
