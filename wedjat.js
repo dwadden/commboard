@@ -306,8 +306,6 @@ function makeGuessMenu(spec, my) {
         });
     };
     my.guessWord = function(inputText, cb) {
-        // TODO: Need to deal with the fact that the wordnik api is accessed via http
-        // not https.
         let success = function(data, status) {
             let guesses = (data.searchResults.slice(1).
                            map(function(o) { return o.word; }));
@@ -831,9 +829,21 @@ function makeGuessButton(spec, my) {
     return that;
 }
 
-// TODO: Add documentation
+/**
+ * Constructor for email button. When pressed, attempts to send an email to the
+ * named recipient.
+ * @param {Object} spec - Sepcification object, as in makeButton, with one
+ * addition.
+ * @param {Object} spec.buffer - A textBuffer object.
+ * @param {Object} my - Shared secrets as in makeButton
+ * @returns {Object} An emailButton object.
+ */
 function makeEmailButton(spec, my) {
     my = my || {};
+    /**
+     * @namespace emailButton
+     * @augments Button
+     */
     let that = makeButton(spec, my);
 
     // Private data
@@ -844,6 +854,11 @@ function makeEmailButton(spec, my) {
     my.password = window.sessionStorage.getItem("password");
 
     // Public methods
+    /**
+     Send email.
+     * @param {Function} cbpressed - Callback to be invoked after buffer write.
+     * @memberof emailButton
+     */
     that.action = function(cbpressed) {
         const warningText = `This message was sent using experimental software
 for individuals with Completely Locked-in Syndrome. Due to the immaturity of the
