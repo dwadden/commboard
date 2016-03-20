@@ -1064,7 +1064,6 @@ function makeBuffer() {
 
     // Constants
     const CURSOR = "_";          // Cursor character. Could be |, for instance
-    const AFTER_BUFFER_READ = 1000;  // After reading the buffer, wait a second before restart
 
     // Local variables
     let bufferElem = document.getElementById("buffer");
@@ -1142,13 +1141,8 @@ function makeBuffer() {
         cb();
     }
     // Read buffer contents out loud
-    function read(cb) {
-        function afterRead() {  // Allow a short pause after reading finishes
-            setTimeout(cb, AFTER_BUFFER_READ);
-        }
-        let utterance = speak(that.getText());
-        utterance.onend = afterRead;       // Read the utterance, then continue the program
-        bufferElem.utterance = utterance; // So the utterance won't go out of scope
+    function readBuffer(cb) {
+        read(that.getText(), cb, bufferElem);
     }
     // Clear the buffer.
     function clear(cb) {
@@ -1188,7 +1182,7 @@ function makeBuffer() {
      */
     that.executeAction = function(actionName, cbpressed) {
         let dispatch = new Map([["delete", deleteText],
-                                ["read", read],
+                                ["read", readBuffer],
                                 ["clear", clear]]);
         let action = dispatch.get(actionName);
         action(cbpressed);
@@ -1327,6 +1321,18 @@ function speak(text) {
     utterance.lang = LANG;
     window.speechSynthesis.speak(utterance);
     return utterance;
+}
+// Speak the text. Instead of returning, invoke a callback when speech is
+// finished. Bind the utterance to an element in the dom so that it doesn't get
+// garbage-collected.
+function read(text, cb, element) {
+    const AFTER_READ = 1000;    // After reading, wait a second before continuing
+    function afterRead() {
+        setTimeout(cb, AFTER_READ);
+    }
+    let utterance = speak(text);
+    utterance.onend = afterRead;
+    element.utterance = utterance;
 }
 function notImplemented () {
     throw new Error("Not implemented.");
