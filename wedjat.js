@@ -845,6 +845,13 @@ function makeEmailButton(spec, my) {
 
     // Public methods
     that.action = function(cbpressed) {
+        const warningText = `This message was sent using experimental software
+for individuals with Completely Locked-in Syndrome. Due to the immaturity of the
+software, the password for this email account may not be stored securely. What
+this means for you is that you should NEVER send sensitive information
+(e.g. bank accounts, social security numbers, etc) to this email address, as a
+malicious person could be able to gain access to it. For normal conversations,
+it is perfectly fine to send messages to this address.`;
         function afterSend(error, info) {
             if (error) {
                 // If something goes wrong, inform user and dump the error info
@@ -868,7 +875,7 @@ function makeEmailButton(spec, my) {
             from: `"${my.name}" <${my.address}>`,
             to: `${my.recipients}`, // list of receivers
             subject: `A message from ${my.name}`, // Subject line
-            text: my.buffer.getText() // plaintext body
+            text: my.buffer.getText() + "\n\n\n" + warningText // plaintext body
         };
 
         // Send it off
