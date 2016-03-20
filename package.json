@@ -1,6 +1,6 @@
 {
     "name": "wedjat",
-    "main": "main.js",
+    "main": "./src/main.js",
     "license": "MIT",
     "repository": {
         "type": "git",
