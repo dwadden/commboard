@@ -1,19 +1,20 @@
 {
-  "name": "wedjat",
-  "main": "main.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dwadden/wedjat.git"
-  },
-  "homepage": "https://github.com/dwadden/wedjat#readme",
-  "dependencies": {
-    "bootbox": "^4.4.0",
-    "bootstrap": "^3.3.6",
-    "jquery": "^2.2.1",
-    "jquery-ui": "^1.10.5",
-    "moment": "^2.12.0",
-    "nodemailer": "^2.3.0",
-    "requirejs": "^2.1.22",
-    "wolfy87-eventemitter": "^4.3.0"
-  }
+    "name": "wedjat",
+    "main": "main.js",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dwadden/wedjat.git"
+    },
+    "homepage": "https://github.com/dwadden/wedjat#readme",
+    "dependencies": {
+        "bootbox": "^4.4.0",
+        "bootstrap": "^3.3.6",
+        "jquery": "^2.2.1",
+        "jquery-ui": "^1.10.5",
+        "moment": "^2.12.0",
+        "nodemailer": "^2.3.0",
+        "requirejs": "^2.1.22",
+        "wolfy87-eventemitter": "^4.3.0"
+    }
 }
