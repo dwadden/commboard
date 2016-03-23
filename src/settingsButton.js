@@ -5,7 +5,7 @@ const bootbox = require("bootbox");
 require("bootstrap");
 
 // Exports
-module.exports = { registerEmailConfigButton };
+module.exports = { registerEmailConfigButton, makeSoundToggleButton };
 
 /**
  * Register button to prompt user for email information on click.
@@ -45,4 +45,22 @@ information (bank / credit card statements, travel documents, etc).`;
         window.sessionStorage.setItem("address", address);
         window.sessionStorage.setItem("password", password);
     }
+}
+
+function makeSoundToggleButton() {
+    // TODO: Documentation
+    let selector = "input[type=button][data-button-type=soundToggle";
+    let buttonElem = document.querySelector(selector);
+    let soundOn = true;
+    buttonElem.onclick = clicked;
+
+    function clicked() {
+        soundOn = !soundOn;
+        buttonElem.value = soundOn ? "Sound Off" : "Sound On";
+    }
+    function isSoundOn() {
+        return soundOn;
+    }
+
+    return { isSoundOn };
 }

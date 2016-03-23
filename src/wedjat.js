@@ -25,10 +25,11 @@ function setup() {
     let buffer = io.makeBuffer();
     let clock = io.makeClock();
     let slider = io.makeSlider();
+    let soundToggle = settingsButton.makeSoundToggleButton();
 
     // Initialization procedures
     function makeSpec(menuName) {
-        return { detector, buffer, slider, menuName };
+        return { detector, buffer, slider, soundToggle, menuName };
     }
     function makeLeaf (menuName) {
         return menu.makeLeafMenu(makeSpec(menuName));

@@ -55,7 +55,8 @@ function makeMenu(spec, my) {
                      menu: that,
                      detector: my.detector,
                      slider: my.slider,
-                     buffer: my.buffer
+                     buffer: my.buffer,
+                     soundToggle: my.soundToggle
                    };
         };
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
@@ -72,6 +73,7 @@ function makeMenu(spec, my) {
     my.detector = spec.detector;
     my.slider = spec.slider;
     my.buffer = spec.buffer;
+    my.soundToggle = spec.soundToggle;
     my.divElem = document.querySelector(`div#${spec.menuName}`);
     my.buttonElems = document.querySelectorAll(
         `input[type=button][data-menu="${spec.menuName}"]`);

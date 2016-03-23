@@ -54,6 +54,7 @@ function makeButton(spec, my) {
     my.detector = spec.detector;
     my.slider = spec.slider;
     my.menu = spec.menu;
+    my.soundToggle = spec.soundToggle;
     my.timeout = null;
 
     // Public methods
@@ -78,7 +79,9 @@ function makeButton(spec, my) {
      * @memberof Button
      */
     that.announce = function() {
-        util.speak(my.announcementText);
+        if (my.soundToggle.isSoundOn()) {
+            util.speak(my.announcementText);
+        }
     };
     /**
      Toggle button highlighting.
