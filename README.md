@@ -108,10 +108,10 @@ without actually gazing. The keyboard may be used for this purpose. Pressing the
 down arrow key fires an extended gaze event, while pressing up arrow key fires a
 short gaze event.
 
-### Controlling Scan Speed
+### Program settings
 
-A slider at the bottom of the application window allows an assistant to adjust
-the rate at which the program scans through buttons.
+- **Adjust scan speed** - Use the slider at the bottom right.
+- **Toggle sound** - Click the button labeled "Sound Off" at the bottom right.
 
 ## Documentation
 
