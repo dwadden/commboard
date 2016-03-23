@@ -47,20 +47,37 @@ information (bank / credit card statements, travel documents, etc).`;
     }
 }
 
+/**
+ * Constructor for sound toggle button object. This object is passed to menu
+ * buttons to let them know whether to make an aural announcement when scanning.
+ * @returns {Object} A soundToggleButton object.
+*/
 function makeSoundToggleButton() {
-    // TODO: Documentation
+    /**
+     * @namespace soundToggleButton
+     */
+    let that = {};
+
+    // Private variables
     let selector = "input[type=button][data-button-type=soundToggle";
     let buttonElem = document.querySelector(selector);
     let soundOn = true;
     buttonElem.onclick = clicked;
 
+    // Private procedures
     function clicked() {
         soundOn = !soundOn;
         buttonElem.value = soundOn ? "Sound Off" : "Sound On";
     }
-    function isSoundOn() {
-        return soundOn;
-    }
 
-    return { isSoundOn };
+    // Public procedures
+    /**
+     * @returns {Boolean} - Flag indicating whether sound is on.
+     * @memberof soundToggleButton
+     */
+    that.isSoundOn = function() {
+        return soundOn;
+    };
+
+    return that;
 }
