@@ -4,9 +4,9 @@
     <title>Wedjat</title>
     <meta charset="utf-8" />
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="cbstyle.css" type="text/css">
     <link rel="stylesheet" href="../node_modules/jquery-ui/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="cbstyle.css" type="text/css">
     <!-- Commboard script -->
     <script src="./wedjat.js"></script>
   </head>
@@ -17,13 +17,13 @@
         <h1>Main Menu</h1>
         <table><tbody>
           <tr>
-            <td><input type="button" class="buttonOff" value="Start"
+            <td><input type="button" class="menuButton buttonOff" value="Start"
                        data-menu="main" data-button-type="start"></td>
-            <td><input type="button" class="buttonOff" value="Request"
+            <td><input type="button" class="menuButton buttonOff" value="Request"
                        data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
-            <td><input type="button" class="buttonOff" value="Compose"
+            <td><input type="button" class="menuButton buttonOff" value="Compose"
                        data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
-            <td><input type="button" class="buttonOff" value="Email"
+            <td><input type="button" class="menuButton buttonOff" value="Email"
                        data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
             <td colspan="4"></td>
           </tr>
@@ -34,11 +34,11 @@
         <h1>Request</h1>
         <table><tbody>
           <tr>
-            <td><input type="button" class="buttonOff" value="Cold"
+            <td><input type="button" class="menuButton buttonOff" value="Cold"
                        data-menu="request" data-button-type="request"></td>
-            <td><input type="button" class="buttonOff" value="Hot"
+            <td><input type="button" class="menuButton buttonOff" value="Hot"
                        data-menu="request" data-button-type="request"></td>
-            <td><input type="button" class="buttonOff" value="Company"
+            <td><input type="button" class="menuButton buttonOff" value="Company"
                        data-menu="request" data-button-type="request"></td>
             <td colspan="5"></td> <!-- Pad button table with empty entries -->
           </tr>
@@ -51,13 +51,13 @@
           <tr>
             <!-- Recipients should be separated with commas,
                  e.g. data-recipients="foo@gmail.com, bar@yahoo.com" -->
-            <td><input type="button" class="buttonOff" value="Dad"
+            <td><input type="button" class="menuButton buttonOff" value="Dad"
                        data-menu="email" data-button-type="email"
                        data-recipients="kmozersky@gmail.com"></td>
-            <td><input type="button" class="buttonOff" value="David"
+            <td><input type="button" class="menuButton buttonOff" value="David"
                        data-menu="email" data-button-type="email"
                        data-recipients="dmozersky@yahoo.com"></td>
-            <td><input type="button" class="buttonOff" value="Developers"
+            <td><input type="button" class="menuButton buttonOff" value="Developers"
                        data-menu="email" data-button-type="email"
                        data-recipients="dave.wadden@gmail.com"></td>
             <td colspan="5"></td>
@@ -69,127 +69,127 @@
         <h1>Compose</h1>
         <table><tbody>
           <tr> <!-- Container for various other controls. -->
-            <td><input type="button" class="buttonOff" value="Guess"
+            <td><input type="button" class="menuButton buttonOff" value="Guess"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="2"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="3"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="4"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="5"></td>
-            <td><input type="button" class="buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value=""
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="6"></td>
           </tr>
           <tr> <!-- Letters. This and the next 3 rows. -->
-            <td><input type="button" class="buttonOff" value="1"
+            <td><input type="button" class="menuButton buttonOff" value="1"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="A"
+            <td><input type="button" class="menuButton buttonOff" value="A"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="B"
+            <td><input type="button" class="menuButton buttonOff" value="B"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="C"
+            <td><input type="button" class="menuButton buttonOff" value="C"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="D"
+            <td><input type="button" class="menuButton buttonOff" value="D"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="E"
+            <td><input type="button" class="menuButton buttonOff" value="E"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="F"
+            <td><input type="button" class="menuButton buttonOff" value="F"
                        data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="G"
+            <td><input type="button" class="menuButton buttonOff" value="G"
                        data-menu="compose1" data-button-type="letter"></td>
           </tr>
           <tr>
-            <td><input type="button" class="buttonOff" value="2"
+            <td><input type="button" class="menuButton buttonOff" value="2"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="H"
+            <td><input type="button" class="menuButton buttonOff" value="H"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="I"
+            <td><input type="button" class="menuButton buttonOff" value="I"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="J"
+            <td><input type="button" class="menuButton buttonOff" value="J"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="K"
+            <td><input type="button" class="menuButton buttonOff" value="K"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="L"
+            <td><input type="button" class="menuButton buttonOff" value="L"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="M"
+            <td><input type="button" class="menuButton buttonOff" value="M"
                        data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="N"
+            <td><input type="button" class="menuButton buttonOff" value="N"
                        data-menu="compose2" data-button-type="letter"></td>
           </tr>
           <tr>
-            <td><input type="button" class="buttonOff" value="3"
+            <td><input type="button" class="menuButton buttonOff" value="3"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="O"
+            <td><input type="button" class="menuButton buttonOff" value="O"
                        data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="buttonOff" value="P"
+            <td><input type="button" class="menuButton buttonOff" value="P"
                        data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="buttonOff" value="Q"
+            <td><input type="button" class="menuButton buttonOff" value="Q"
                        data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="buttonOff" value="R"
+            <td><input type="button" class="menuButton buttonOff" value="R"
                        data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="buttonOff" value="S"
+            <td><input type="button" class="menuButton buttonOff" value="S"
                        data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="buttonOff" value="T"
+            <td><input type="button" class="menuButton buttonOff" value="T"
                        data-menu="compose3" data-button-type="letter""></td>
             <td></td>
           </tr>
           <tr>
-            <td><input type="button" class="buttonOff" value="4"
+            <td><input type="button" class="menuButton buttonOff" value="4"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="U"
+            <td><input type="button" class="menuButton buttonOff" value="U"
                        data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="V"
+            <td><input type="button" class="menuButton buttonOff" value="V"
                        data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="W"
+            <td><input type="button" class="menuButton buttonOff" value="W"
                        data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="X"
+            <td><input type="button" class="menuButton buttonOff" value="X"
                        data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="Y"
+            <td><input type="button" class="menuButton buttonOff" value="Y"
                        data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="buttonOff" value="Z"
+            <td><input type="button" class="menuButton buttonOff" value="Z"
                        data-menu="compose4" data-button-type="letter"></td>
             <td></td>
           </tr>
           <tr> <!-- Punctuation. -->
-            <td><input type="button" class="buttonOff" value="5"
+            <td><input type="button" class="menuButton buttonOff" value="5"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="Space"
+            <td><input type="button" class="menuButton buttonOff" value="Space"
                        data-menu="compose5" data-button-type="space"></td>
-            <td><input type="button" class="buttonOff" value="."
+            <td><input type="button" class="menuButton buttonOff" value="."
                        data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="buttonOff" value="?"
+            <td><input type="button" class="menuButton buttonOff" value="?"
                        data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="buttonOff" value="!"
+            <td><input type="button" class="menuButton buttonOff" value="!"
                        data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="buttonOff" value="'"
+            <td><input type="button" class="menuButton buttonOff" value="'"
                        data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="buttonOff" value='"'
+            <td><input type="button" class="menuButton buttonOff" value='"'
                        data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="buttonOff" value="@"
+            <td><input type="button" class="menuButton buttonOff" value="@"
                        data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
           </tr>
           <tr> <!-- Actions. Read text, load saved text, etc. -->
-            <td><input type="button" class="buttonOff" value="Actions"
+            <td><input type="button" class="menuButton buttonOff" value="Actions"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="buttonOff" value="Read"
+            <td><input type="button" class="menuButton buttonOff" value="Read"
                        data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Delete"
+            <td><input type="button" class="menuButton buttonOff" value="Delete"
                        data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Clear"
+            <td><input type="button" class="menuButton buttonOff" value="Clear"
                        data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="buttonOff" value="Load"
+            <td><input type="button" class="menuButton buttonOff" value="Load"
                        data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="buttonOff" value="Save"
+            <td><input type="button" class="menuButton buttonOff" value="Save"
                        data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="buttonOff" value="Erase"
+            <td><input type="button" class="menuButton buttonOff" value="Erase"
                        data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="buttonOff" value="Return"
+            <td><input type="button" class="menuButton buttonOff" value="Return"
                        data-menu="composeActions" data-button-type="return" data-return-depth="2"></td>
           </tr>
         </tbody></table>
@@ -216,10 +216,17 @@
               </div>
               <div id="buttonContainer"> <!-- Reset button. Stop program and return to main menu. -->
                 <table><tbody>
-                  <tr><td><input type="button" class="settingsButton" value="Setup"
-                                 data-button-type="emailConfig"></td></tr>
-                  <tr><td><input type="button" class="settingsButton" value="Reset"
-                                 data-button-type="notImplemented"></td></tr>
+                  <tr>
+                    <td><input type="button" class="settingsButton" value="Email Setup"
+                               data-button-type="emailConfig"></td>
+                    <td><input type="button" class="settingsButton" value="Reset"
+                               data-button-type="notImplemented"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="button" class="settingsButton" value="Toggle Sound"
+                               data-button-type="soundToggle"></td>
+                    <td></td>
+                  </tr>
                 </tbody></table>
               </div>
             </div>

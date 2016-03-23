@@ -1,7 +1,7 @@
 /* Style sheet. Most of the styles here are devoted to the layout of the bottom,
-always-showing section of the commboard. This contains the text buffer, camera
-feed, date and time, and controls to change the scan speed and restart the
-program. The rest of the layout is straightforward. */
+   always-showing section of the commboard. This contains the text buffer,
+   camera feed, date and time, and controls to change the scan speed and restart
+   the program. The rest of the layout is straightforward. */
 
 /* Document-level classes and styles */
 html, body { /* Body takes up full window */
@@ -31,7 +31,6 @@ h1 {
 .singleRowMenu {
   height: 125px;
 }
-
 /* Table styling. Tables serve as containers for buttons. */
 table {
   table-layout: fixed; /* All buttons have same width */
@@ -41,9 +40,7 @@ td {
   padding: 3px; /* Space between buttons */
   height: 60px;
 }
-
-/* Button styling */
-input[type=button] { /* Input buttons. */
+.menuButton {
   width: 100%; /* Fill bounding <td> element. */
   height: 100%;
   font-family: 'trebuchet ms',helvetica,sans-serif;
@@ -68,7 +65,7 @@ input[type=button] { /* Input buttons. */
 /* Utility elements at bottom of page. */
 #io { /* Container for all io / utility elements. */
   position: relative;
-  height: 400px;
+  height: 500px;
 }
 /* Text buffer. Side-by-side with settings. */
 #buffer { /* Layout. */
@@ -85,7 +82,7 @@ input[type=button] { /* Input buttons. */
   margin-right: 5%;
 }
 /* Settings. Holds the camera, clock, slider, and reset button. Side-by-side
-with text. */
+   with text. */
 #settings {
   float: right;
   width: 40%;
@@ -93,7 +90,7 @@ with text. */
 }
 /* Camera. Above the rest of the settings elements. */
 #camContainer { /* Layout. */
-  height: 60%
+  height: 50%
 }
 #cam { /* Camera feed. */
   float: right;
@@ -105,11 +102,11 @@ with text. */
 }
 /* Sub-settings. The clock, slider, and reset. Below the camera. */
 #subSettings {
-  height: 40%;
+  height: 50%;
 }
 /* The clock. */
 #clockContainer {
-  height: 35%;
+  height: 25%;
   width: 100%;
   color: royalblue;
   font-family: 'trebuchet ms',helvetica,sans-serif;
@@ -119,15 +116,15 @@ with text. */
 /* Controls. Below the clock. */
 #controls {
   position: relative;
-  height: 65%;
+  height: 75%;
   width: 100%;
 }
 /* Slider. On the left. */
 #sliderContainer { /* Layout */
   position: absolute;
   left: 0%;
-  width: 50%;
-  height: 100%
+  width: 100%;
+  height: 25%
 }
 #slider { /* The slider itself */
   width: 100%;
@@ -140,9 +137,9 @@ with text. */
 /* Reset button. On the right. */
 #buttonContainer { /* Layout. */
   position: absolute;
-  left: 60%;
-  width: 40%;
-  height: 100%;
+  top: 25%;
+  width: 100%;
+  height: 75%;
 }
 #buttonContainer td {
   padding: 3px; /* Space between buttons */
@@ -152,4 +149,8 @@ with text. */
   color: firebrick;
   border-color: ghostwhite;
   background-color: ghostwhite;
+  width: 100%; /* Fill bounding <td> element. */
+  height: 100%;
+  font-family: 'trebuchet ms',helvetica,sans-serif;
+  font-size: 100%;
 }
