@@ -8,7 +8,7 @@ require("jquery-ui");
 
 // File imports
 const menu = require("./menu.js");
-const button = require("./button.js");
+const settingsButton = require("./settingsButton.js");
 const io = require("./io.js");
 const util = require("./util.js");
 
@@ -61,7 +61,7 @@ function setup() {
     compose.setChildren(composeSubmenus);
 
     // Final actions
-    button.registerEmailConfigButton(); // Register email config button
+    settingsButton.registerEmailConfigButton(); // Register email config button
     // detector.setupTracking();
     detector.setupKeyDown();
     main.slideDown();

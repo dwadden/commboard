@@ -4,7 +4,7 @@
 const jQuery = require("jquery");
 
 // File imports
-const button = require("./button.js");
+const menuButton = require("./menuButton.js");
 const util = require("./util.js");
 
 // Exports
@@ -33,18 +33,18 @@ function makeMenu(spec, my) {
     // Private methods
     my.initButton = function(spec) {
         let dispatch = new Map(
-            [["menuSelector", button.makeMenuSelectorButton],
-             ["start", button.makeStartButton],
-             ["request", button.makeRequestButton],
-             ["letter", button.makeLetterButton],
-             ["space", button.makeSpaceButton],
-             ["terminalPunctuation", button.makeTerminalPunctuationButton],
-             ["nonTerminalPunctuation", button.makeNonTerminalPunctuationButton],
-             ["bufferAction", button.makeBufferActionButton],
-             ["return", button.makeReturnButton],
-             ["guess", button.makeGuessButton],
-             ["email", button.makeEmailButton],
-             ["notImplemented", button.makeNotImplementedButton]]
+            [["menuSelector", menuButton.makeMenuSelectorButton],
+             ["start", menuButton.makeStartButton],
+             ["request", menuButton.makeRequestButton],
+             ["letter", menuButton.makeLetterButton],
+             ["space", menuButton.makeSpaceButton],
+             ["terminalPunctuation", menuButton.makeTerminalPunctuationButton],
+             ["nonTerminalPunctuation", menuButton.makeNonTerminalPunctuationButton],
+             ["bufferAction", menuButton.makeBufferActionButton],
+             ["return", menuButton.makeReturnButton],
+             ["guess", menuButton.makeGuessButton],
+             ["email", menuButton.makeEmailButton],
+             ["notImplemented", menuButton.makeNotImplementedButton]]
         );
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
