@@ -11,7 +11,7 @@ html, body { /* Body takes up full window */
   overflow-y:  visible;
 }
 #wrapper { /* Wrapper for all document elements */
-  width: 1000px; /* Width of document is 1000 pixels */
+  width: 1200px; /* Width of document is 1000 pixels */
   height: 100%; /* Height is long enough to hold all elements below. */
 }
 h1 {
@@ -61,7 +61,7 @@ td {
 
 /* Styling and layout for specific elements.  */
 #compose { /* Compose text. */
-  height: 500px;
+  /* height: 400px; */
 }
 /* Utility elements at bottom of page. */
 #io { /* Container for all io / utility elements. */

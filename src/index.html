@@ -12,78 +12,10 @@
   </head>
   <body>
     <div id="wrapper">
-      <!-- Main menu. -->
-      <!-- <div id="main" class="container singleRowMenu">
-           <h1>Main Menu</h1>
-           <table><tbody>
-           <tr>
-           <td><input type="button" class="menuButton buttonOff" value="Start"
-           data-menu="main" data-button-type="start"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Request"
-           data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Compose"
-           data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Email"
-           data-menu="main" data-button-type="menuSelector" data-slide="true"></td>
-           <td colspan="4"></td>
-           </tr>
-           </tbody></table>
-           </div> -->
-      <!-- Menu to ask for help from caretakers. -->
-      <!-- <div id="request" class="container singleRowMenu">
-           <h1>Request</h1>
-           <table><tbody>
-           <tr>
-           <td><input type="button" class="menuButton buttonOff" value="Cold"
-           data-menu="request" data-button-type="request"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Hot"
-           data-menu="request" data-button-type="request"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Company"
-           data-menu="request" data-button-type="request"></td>
-           <td colspan="5"></td>
-           </tr>
-           </tbody></table>
-           </div> -->
-      <!-- Email menu. For now, just a placeholder. -->
-      <!-- <div id="email" class="container singleRowMenu">
-           <h1>Email</h1>
-           <table><tbody>
-           <tr>
-           <td><input type="button" class="menuButton buttonOff" value="Dad"
-           data-menu="email" data-button-type="email"
-           data-recipients="kmozersky@gmail.com"></td>
-           <td><input type="button" class="menuButton buttonOff" value="David"
-           data-menu="email" data-button-type="email"
-           data-recipients="dmozersky@yahoo.com"></td>
-           <td><input type="button" class="menuButton buttonOff" value="Developers"
-           data-menu="email" data-button-type="email"
-           data-recipients="dave.wadden@gmail.com"></td>
-           <td colspan="5"></td>
-           </tr>
-           </tbody></table>
-           </div> -->
       <!-- Compose text. The user will spend most of his time here. -->
       <div id="compose" class="container">
         <h1>Compose</h1>
         <table><tbody>
-          <tr> <!-- Container for various other controls. -->
-            <td><input type="button" class="menuButton buttonOff" value="Guess"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="2"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="3"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="4"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="5"></td>
-            <td><input type="button" class="menuButton buttonOff" value=""
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="6"></td>
-          </tr>
           <tr> <!-- Letters. This and the next 3 rows. -->
             <td><input type="button" class="menuButton buttonOff" value="1"
                        data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
@@ -154,45 +86,119 @@
                        data-menu="compose4" data-button-type="letter"></td>
             <td></td>
           </tr>
-          <tr> <!-- Punctuation. -->
-            <td><input type="button" class="menuButton buttonOff" value="5"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Space"
-                       data-menu="compose5" data-button-type="space"></td>
-            <td><input type="button" class="menuButton buttonOff" value="."
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="?"
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="!"
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="'"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value='"'
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="@"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-          </tr>
-          <tr> <!-- Actions. Read text, load saved text, etc. -->
-            <td><input type="button" class="menuButton buttonOff" value="Actions"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Read"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Delete"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Clear"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Load"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Save"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Erase"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Return"
-                       data-menu="composeActions" data-button-type="return" data-return-depth="2"></td>
+
+          <tr>
+            <td><input type="button" class="menuButton buttonOff" value="5"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Guess"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Punctuation"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Edit"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Email"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Call Bell"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Morse"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Pause"></td>
           </tr>
         </tbody></table>
       </div>
-      <!-- Utilities. Text buffer on left, controls on right. -->
+      <div id="dropdowns">
+        <div id="guess" class="container">
+          <h1>Guess</h1>
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="2"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="3"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="4"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="5"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="6"></td>
+              <td><input type="button" class="menuButton buttonOff" value=""
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="7"></td>
+            </tr>
+          </tbody></table>
+        </div>
+        <div id="punctuation" class="container">
+          <h1>Punctuation</h1>
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Space"
+                         data-menu="compose5" data-button-type="space"></td>
+              <td><input type="button" class="menuButton buttonOff" value="."
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="?"
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="!"
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="'"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value='"'
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="@"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value=";"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+            </tr>
+          </tbody></table>
+        </div>
+        <div id="edit" class="container">
+          <h1>Edit</h1>
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Read"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Delete"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Clear"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Load"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Save"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Erase"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td colspan="2"></td>
+            </tr>
+          </tbody></table>
+        </div>
+        <div id="edit" class="container">
+          <h1>Email</h1>
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Dad"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="kmozersky@gmail.com"></td>
+              <td><input type="button" class="menuButton buttonOff" value="David"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="dmozersky@yahoo.com"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Developers"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="dave.wadden@gmail.com"></td>
+              <td colspan="5"></td>
+            </tr>
+          </tbody></table>
+        </div>
+        <div id="request" class="container">
+          <h1>Call Bell</h1>
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Cold"
+                         data-menu="request" data-button-type="request"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Hot"
+                         data-menu="request" data-button-type="request"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Company"
+                         data-menu="request" data-button-type="request"></td>
+              <td colspan="5"></td>
+            </tr>
+          </tbody></table>
+        </div>
+      </div>
+      <!-- IO. Text buffer on left, controls on right. -->
       <div id="io" class="container">
         <div id="buffer"> <!-- The user's text. -->
           <p id="bufferText">
