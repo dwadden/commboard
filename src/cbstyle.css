@@ -71,8 +71,7 @@ td {
 /* Text buffer. Side-by-side with settings. */
 #buffer { /* Layout. */
   position: absolute;
-  left: 0;
-  width: 60%;
+  width: 40%;
   height: 100%;
   color: black;
   font-size: 150%;
@@ -86,17 +85,17 @@ td {
    with text. */
 #settings {
   float: right;
-  width: 40%;
+  width: 60%;
   height: 100%;
 }
 /* Camera. Above the rest of the settings elements. */
 #camContainer { /* Layout. */
   height: 50%
 }
-#cam { /* Camera feed. */
+.cam { /* Camera feed. */
   float: right;
-  max-width: 100%;
-  max-height: 100%;
+  width: 160px;
+  height: 120px;
   border-style: solid;
   border-color: darkGreen;
   border-radius: 10px;
@@ -104,6 +103,7 @@ td {
 /* Sub-settings. The clock, slider, and reset. Below the camera. */
 #subSettings {
   height: 50%;
+  position: relative;
 }
 /* The clock. */
 #clockContainer {
@@ -115,10 +115,19 @@ td {
   font-weight: bold;
 }
 /* Controls. Below the clock. */
-#controls {
-  position: relative;
-  height: 75%;
-  width: 100%;
+/* #controls {
+   position: relative;
+   height: 75%;
+   width: 100%;
+   } */
+#emailSettings {
+  float: right;
+  width: 50%;
+}
+#generalSettings {
+  position: absolute;
+  width: 50%;
+  left: 0%;
 }
 /* Slider. On the left. */
 #sliderContainer { /* Layout */

@@ -23,7 +23,7 @@ function setup() {
     // Create utility objects
     let detector = io.makeDetector();
     let buffer = io.makeBuffer();
-    let clock = io.makeClock();
+    // let clock = io.makeClock();
     let slider = io.makeSlider();
     let soundToggle = settingsButton.makeSoundToggleButton();
 

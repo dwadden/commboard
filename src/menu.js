@@ -146,7 +146,7 @@ function makeMenu(spec, my) {
         return my.nButtons;
     };
     // Initialize and return
-    that.slideUp();
+    // that.slideUp();
     return that;
 }
 
