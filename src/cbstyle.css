@@ -21,8 +21,8 @@ h1 {
 }
 .container { /* Containers centered within wrapper div */
   width: 100%;
-  margin-left: 5px;
-  margin-right: 5px;
+  /* margin-left: 5px;
+     margin-right: 5px; */
 }
 .floatRight {
   float: right;
@@ -40,6 +40,12 @@ tr {
 }
 td {
   padding: 3px; /* Space between buttons */
+}
+th {
+  font-family: Arial,Helvetica,sans-serif;
+  color: firebrick;
+  margin: 5px;
+  text-align: center;
 }
 .menuButton {
   width: 100%; /* Fill bounding <td> element. */
@@ -66,11 +72,12 @@ td {
 /* Utility elements at bottom of page. */
 #io { /* Container for all io / utility elements. */
   position: relative;
-  height: 500px;
+  height: 600px;
 }
 /* Text buffer. Side-by-side with settings. */
 #buffer { /* Layout. */
   position: absolute;
+  float: left;
   width: 40%;
   height: 100%;
   color: black;
@@ -84,26 +91,33 @@ td {
 /* Settings. Holds the camera, clock, slider, and reset button. Side-by-side
    with text. */
 #settings {
+  position: relative;
   float: right;
   width: 60%;
   height: 100%;
 }
 /* Camera. Above the rest of the settings elements. */
 #camContainer { /* Layout. */
-  height: 50%
+  height: 50%;
+  text-align: center;
 }
 .cam { /* Camera feed. */
   float: right;
   width: 160px;
   height: 120px;
   border-style: solid;
-  border-color: darkGreen;
+  border-color: black;
   border-radius: 10px;
+}
+#camContainer select {
+  text-align: center;
+}
+#camContainer input {
+  text-align: center;
 }
 /* Sub-settings. The clock, slider, and reset. Below the camera. */
 #subSettings {
   height: 50%;
-  position: relative;
 }
 /* The clock. */
 #clockContainer {
@@ -115,25 +129,26 @@ td {
   font-weight: bold;
 }
 /* Controls. Below the clock. */
-/* #controls {
-   position: relative;
-   height: 75%;
-   width: 100%;
-   } */
+#controls {
+  height: 100%;
+  width: 100%;
+}
 #emailSettings {
   float: right;
   width: 50%;
+  height: 100%;
 }
 #generalSettings {
-  position: absolute;
+  /* position: absolute; */
+  position: relative;
+  float: left;
   width: 50%;
-  left: 0%;
+  height: 100%;
 }
 /* Slider. On the left. */
 #sliderContainer { /* Layout */
-  position: absolute;
   left: 0%;
-  width: 100%;
+  width: 50%;
   height: 25%
 }
 #slider { /* The slider itself */
@@ -163,4 +178,22 @@ td {
   height: 100%;
   font-family: 'trebuchet ms',helvetica,sans-serif;
   font-size: 100%;
+}
+.border { /* Camera feed. */
+  border-style: solid;
+  border-color: darkGreen;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 10px;
+}
+.invisibleBorder {
+  padding: 0px;
+  margin: 10px;
+}
+.fooBorder {
+  border-style: solid;
+  border-color: darkGreen;
+  border-radius: 10px;
+  padding: 0px;
+  margin: 0px;
 }

@@ -12,9 +12,9 @@
   </head>
   <body>
     <div id="wrapper">
+      <h1>Wedjat</h1>
       <!-- Compose text. The user will spend most of his time here. -->
-      <div id="compose" class="container">
-        <h1>Wedjat</h1>
+      <div id="compose" class="container border">
         <table><tbody>
           <tr> <!-- Letters. This and the next 3 rows. -->
             <td><input type="button" class="menuButton buttonOff" value="1"
@@ -26,6 +26,7 @@
             <td><input type="button" class="menuButton buttonOff" value="C"
                        data-menu="compose1" data-button-type="letter"></td>
             <td><input type="button" class="menuButton buttonOff" value="D"
+
                        data-menu="compose1" data-button-type="letter"></td>
             <td><input type="button" class="menuButton buttonOff" value="E"
                        data-menu="compose1" data-button-type="letter"></td>
@@ -86,23 +87,22 @@
             <td><input type="button" class="menuButton buttonOff" value="Z"
                        data-menu="compose4" data-button-type="letter"></td>
           </tr>
-
           <tr>
             <td><input type="button" class="menuButton buttonOff" value="5"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Guess"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Space"></td>
             <td><input type="button" class="menuButton buttonOff" value="Punctuation"></td>
+            <td><input type="button" class="menuButton buttonOff" value="Guess"></td>
             <td><input type="button" class="menuButton buttonOff" value="Edit"></td>
             <td><input type="button" class="menuButton buttonOff" value="Email"></td>
             <td><input type="button" class="menuButton buttonOff" value="Call Bell"></td>
             <td><input type="button" class="menuButton buttonOff" value="Morse"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Pause"></td>
           </tr>
         </tbody></table>
       </div>
-      <div id="dropdowns" class="container">
+      <div id="dropdowns" class="container border">
         <table><tbody>
           <tr>
-            <td><input type="button" class="menuButton buttonOff" value=""
+            <td><input type="button" class="menuButton buttonOff" value="guess0"
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
             <td><input type="button" class="menuButton buttonOff" value="guess1"
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
@@ -120,8 +120,6 @@
                        data-menu="composeGuess" data-button-type="guess" data-guess-id="7"></td>
           </tr>
           <tr>
-            <td><input type="button" class="menuButton buttonOff" value="Space"
-                       data-menu="compose5" data-button-type="space"></td>
             <td><input type="button" class="menuButton buttonOff" value="."
                        data-menu="compose5" data-button-type="terminalPunctuation"></td>
             <td><input type="button" class="menuButton buttonOff" value="?"
@@ -135,6 +133,8 @@
             <td><input type="button" class="menuButton buttonOff" value="@"
                        data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
             <td><input type="button" class="menuButton buttonOff" value=";"
+                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+            <td><input type="button" class="menuButton buttonOff" value=":"
                        data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
           </tr>
           <tr>
@@ -176,19 +176,20 @@
         </tbody></table>
       </div>
       <!-- IO. Text buffer on left, controls on right. -->
-      <div id="io" class="container">
-        <div id="buffer"> <!-- The user's text. -->
+      <!-- <div id="io" class="container"> -->
+      <div id="io" class="container invisibleBorder">
+        <div id="buffer" class="fooBorder"> <!-- The user's text. -->
           <p id="bufferText">
           </p>
         </div>
-        <div id="settings">  <!-- Container for various other controls. -->
-          <div id="camContainer"> <!-- Camera and templates. -->
+        <div id="settings" class="fooBorder">  <!-- Container for various other controls. -->
+          <div id="camContainer" class="fooBorder"> <!-- Camera and templates. -->
             <table><tbody>
               <tr>
-                <td>Video Feed</td>
-                <td>Rest Template</td>
-                <td>Up Template</td>
-                <td>Down Template</td>
+                <th>Video Feed</th>
+                <th>Rest Template</th>
+                <th>Up Template</th>
+                <th>Down Template</th>
               </tr>
               <tr>
                 <td><video autoplay class="cam"></video></td>
@@ -210,9 +211,9 @@
               </tr>
             </tbody></table>
           </div>
-          <div id ="subSettings"> <!-- Sub-container, situated below camera. -->
+          <div id ="subSettings" class="fooBorder"> <!-- Sub-container, situated below camera. -->
             <div id="controls"> <!-- Sub-container, situated below the clock. -->
-              <div id="generalSettings">
+              <div id="generalSettings" class="fooBorder">
                 <h2>General Settings</h2>
                 <input type="checkbox" checked="checked"> Sound
                 <input type="checkbox" checked="checked"> Show Menu
@@ -238,10 +239,8 @@
                     <div id="slider"></div>
                   </div>
                 </p>
-
-
               </div>
-              <div id="emailSettings">
+              <div id="emailSettings" class="fooBorder">
                 <h2>Email Settings</h2>
                 <table><tbody>
                   <tr>
@@ -261,26 +260,7 @@
                   </tr>
                 </tbody></table>
               </div>
-              <!-- <div id="buttonContainer">
-                   <table><tbody>
-                   <tr>
-                   <td><input type="button" class="settingsButton" value="Email Setup"
-                   data-button-type="emailConfig"></td>
-                   <td><input type="button" class="settingsButton" value="Reset"
-                   data-button-type="notImplemented"></td>
-                   </tr>
-                   <tr>
-                   <td><input type="button" class="settingsButton" value="Sound Off"
-                   data-button-type="soundToggle"></td>
-                   <td></td>
-                   </tr>
-                   </tbody></table>
-                   </div> -->
             </div>
-            <!-- <div id="clockContainer">
-                 <p class="floatRight">
-                 </p>
-                 </div> -->
           </div>
         </div>
       </div>
