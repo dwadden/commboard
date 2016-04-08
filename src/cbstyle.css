@@ -3,12 +3,33 @@
    camera feed, date and time, and controls to change the scan speed and restart
    the program. The rest of the layout is straightforward. */
 
+:root {
+  /* Use Solarized colors, from here: http://ethanschoonover.com/solarized */
+  --base03:    #002b36;
+  --base02:    #073642;
+  --base01:    #586e75;
+  --base00:    #657b83;
+  --base0:     #839496;
+  --base1:     #93a1a1;
+  --base2:     #eee8d5;
+  --base3:     #fdf6e3;
+  --yellow:    #b58900;
+  --orange:    #cb4b16;
+  --red:       #dc322f;
+  --magenta:   #d33682;
+  --violet:    #6c71c4;
+  --blue:      #268bd2;
+  --cyan:      #2aa198;
+  --green:     #859900;
+}
+
 /* Document-level classes and styles */
 html, body { /* Body takes up full window */
   height: 100%;
   margin: 0px auto;
   padding: 0px auto;
   overflow-y:  visible;
+  background-color: var(--base3);
 }
 #wrapper { /* Wrapper for all document elements */
   width: 1200px; /* Width of document is 1000 pixels */
@@ -21,6 +42,7 @@ h1 {
 }
 .container { /* Containers centered within wrapper div */
   width: 100%;
+  background-color: var(--base2);
   /* margin-left: 5px;
      margin-right: 5px; */
 }
@@ -43,7 +65,7 @@ td {
 }
 th {
   font-family: Arial,Helvetica,sans-serif;
-  color: firebrick;
+  color: var(--red);
   margin: 5px;
   text-align: center;
 }
@@ -55,14 +77,10 @@ th {
   font-weight: bold;
 }
 .buttonOn { /* Active button. */
-  color: darkred;
-  border-color: yellow;
-  background-color: yellow;
+  color: var(--orange);
 }
 .buttonOff { /* Inactive button. */
-  color: darkblue;
-  border-color: ghostwhite;
-  background-color: ghostwhite;
+  color: var(--blue);
 }
 
 /* Styling and layout for specific elements.  */
@@ -106,7 +124,8 @@ th {
   width: 160px;
   height: 120px;
   border-style: solid;
-  border-color: black;
+  border-width: 2px;
+  border-color: var(--base01);
   border-radius: 10px;
 }
 #camContainer select {
@@ -171,7 +190,7 @@ th {
   height: 45px;
 }
 .settingsButton { /* The button. */
-  color: firebrick;
+  color: red;
   border-color: ghostwhite;
   background-color: ghostwhite;
   width: 100%; /* Fill bounding <td> element. */
@@ -181,8 +200,9 @@ th {
 }
 .border { /* Camera feed. */
   border-style: solid;
-  border-color: darkGreen;
+  border-color: var(--base0);
   border-radius: 10px;
+  border-width: 1px;
   padding: 5px;
   margin: 10px;
 }
@@ -192,8 +212,9 @@ th {
 }
 .fooBorder {
   border-style: solid;
-  border-color: darkGreen;
+  border-color: var(--base0);
   border-radius: 10px;
+  border-width: 1px;
   padding: 0px;
   margin: 0px;
 }
