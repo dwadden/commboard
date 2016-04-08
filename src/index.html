@@ -15,175 +15,177 @@
     <div id="wrapper">
       <!-- Compose text. The user will spend most of his time here. -->
       <div id="compose" class="container border">
-        <table><tbody>
-          <tr> <!-- Letters. This and the next 3 rows. -->
-            <td><input type="button" class="menuButton buttonOff" value="1"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="A"
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="B"
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="C"
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="D"
+        <div id="commboard">
+          <table><tbody>
+            <tr> <!-- Letters. This and the next 3 rows. -->
+              <td><input type="button" class="menuButton buttonOff" value="1"
+                         data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
+              <td><input type="button" class="menuButton buttonOff" value="A"
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="B"
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="C"
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="D"
 
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="E"
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="F"
-                       data-menu="compose1" data-button-type="letter"></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="2"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="G"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="H"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="I"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="J"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="K"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="L"
-                       data-menu="compose2" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="M"
-                       data-menu="compose2" data-button-type="letter"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="3"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="N"
-                       data-menu="compose3" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="O"
-                       data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="menuButton buttonOff" value="P"
-                       data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="menuButton buttonOff" value="Q"
-                       data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="menuButton buttonOff" value="R"
-                       data-menu="compose3" data-button-type="letter""></td>
-            <td><input type="button" class="menuButton buttonOff" value="S"
-                       data-menu="compose3" data-button-type="letter""></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="4"
-                       data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
-            <td><input type="button" class="menuButton buttonOff" value="T"
-                       data-menu="compose4" data-button-type="letter""></td>
-            <td><input type="button" class="menuButton buttonOff" value="U"
-                       data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="V"
-                       data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="W"
-                       data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="X"
-                       data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Y"
-                       data-menu="compose4" data-button-type="letter"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Z"
-                       data-menu="compose4" data-button-type="letter"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="5"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Space"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Punctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Guess"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Edit"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Email"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Call Bell"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Morse"></td>
-          </tr>
-        </tbody></table>
-      </div>
-      <div id="dropdowns" class="container border">
-        <table><tbody>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="guess0"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess1"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess2"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="2"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess3"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="3"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess4"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="4"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess5"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="5"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess6"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="6"></td>
-            <td><input type="button" class="menuButton buttonOff" value="guess7"
-                       data-menu="composeGuess" data-button-type="guess" data-guess-id="7"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="."
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="?"
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="!"
-                       data-menu="compose5" data-button-type="terminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="'"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value='"'
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value="@"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value=";"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-            <td><input type="button" class="menuButton buttonOff" value=":"
-                       data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="Read"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Delete"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Clear"
-                       data-menu="composeActions" data-button-type="bufferAction"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Load"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Save"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Erase"
-                       data-menu="composeActions" data-button-type="notImplemented"></td>
-            <td colspan="2"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="Dad"
-                       data-menu="email" data-button-type="email"
-                       data-recipients="kmozersky@gmail.com"></td>
-            <td><input type="button" class="menuButton buttonOff" value="David"
-                       data-menu="email" data-button-type="email"
-                       data-recipients="dmozersky@yahoo.com"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Developers"
-                       data-menu="email" data-button-type="email"
-                       data-recipients="dave.wadden@gmail.com"></td>
-            <td colspan="5"></td>
-          </tr>
-          <tr>
-            <td><input type="button" class="menuButton buttonOff" value="Cold"
-                       data-menu="request" data-button-type="request"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Hot"
-                       data-menu="request" data-button-type="request"></td>
-            <td><input type="button" class="menuButton buttonOff" value="Company"
-                       data-menu="request" data-button-type="request"></td>
-            <td colspan="5"></td>
-          </tr>
-        </tbody></table>
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="E"
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="F"
+                         data-menu="compose1" data-button-type="letter"></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="2"
+                         data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
+              <td><input type="button" class="menuButton buttonOff" value="G"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="H"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="I"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="J"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="K"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="L"
+                         data-menu="compose2" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="M"
+                         data-menu="compose2" data-button-type="letter"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="3"
+                         data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
+              <td><input type="button" class="menuButton buttonOff" value="N"
+                         data-menu="compose3" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="O"
+                         data-menu="compose3" data-button-type="letter""></td>
+              <td><input type="button" class="menuButton buttonOff" value="P"
+                         data-menu="compose3" data-button-type="letter""></td>
+              <td><input type="button" class="menuButton buttonOff" value="Q"
+                         data-menu="compose3" data-button-type="letter""></td>
+              <td><input type="button" class="menuButton buttonOff" value="R"
+                         data-menu="compose3" data-button-type="letter""></td>
+              <td><input type="button" class="menuButton buttonOff" value="S"
+                         data-menu="compose3" data-button-type="letter""></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="4"
+                         data-menu="compose" data-button-type="menuSelector" data-slide="false"></td>
+              <td><input type="button" class="menuButton buttonOff" value="T"
+                         data-menu="compose4" data-button-type="letter""></td>
+              <td><input type="button" class="menuButton buttonOff" value="U"
+                         data-menu="compose4" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="V"
+                         data-menu="compose4" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="W"
+                         data-menu="compose4" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="X"
+                         data-menu="compose4" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Y"
+                         data-menu="compose4" data-button-type="letter"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Z"
+                         data-menu="compose4" data-button-type="letter"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="5"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Space"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Punctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Guess"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Edit"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Email"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Call Bell"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Morse"></td>
+            </tr>
+          </tbody></table>
+        </div>
+        <div id="dropdowns">
+          <table><tbody>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="guess0"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess1"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="1"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess2"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="2"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess3"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="3"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess4"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="4"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess5"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="5"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess6"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="6"></td>
+              <td><input type="button" class="menuButton buttonOff" value="guess7"
+                         data-menu="composeGuess" data-button-type="guess" data-guess-id="7"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="."
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="?"
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="!"
+                         data-menu="compose5" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="'"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value='"'
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value="@"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value=";"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="menuButton buttonOff" value=":"
+                         data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Read"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Delete"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Clear"
+                         data-menu="composeActions" data-button-type="bufferAction"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Load"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Save"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Erase"
+                         data-menu="composeActions" data-button-type="notImplemented"></td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Dad"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="kmozersky@gmail.com"></td>
+              <td><input type="button" class="menuButton buttonOff" value="David"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="dmozersky@yahoo.com"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Developers"
+                         data-menu="email" data-button-type="email"
+                         data-recipients="dave.wadden@gmail.com"></td>
+              <td colspan="5"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="menuButton buttonOff" value="Cold"
+                         data-menu="request" data-button-type="request"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Hot"
+                         data-menu="request" data-button-type="request"></td>
+              <td><input type="button" class="menuButton buttonOff" value="Company"
+                         data-menu="request" data-button-type="request"></td>
+              <td colspan="5"></td>
+            </tr>
+          </tbody></table>
+        </div>
       </div>
       <!-- IO. Text buffer on left, controls on right. -->
       <!-- <div id="io" class="container"> -->
-      <div id="io" class="container invisibleBorder">
-        <div id="buffer" class="fooBorder"> <!-- The user's text. -->
+      <div id="io" class="invisibleBorder">
+        <div id="buffer" class="container fooBorder"> <!-- The user's text. -->
           <p id="bufferText">
           </p>
         </div>
-        <div id="settings" class="fooBorder">  <!-- Container for various other controls. -->
-          <div id="camContainer" class="fooBorder"> <!-- Camera and templates. -->
+        <div id="settings">  <!-- Container for various other controls. -->
+          <div id="camContainer" class="container fooBorder"> <!-- Camera and templates. -->
             <table><tbody>
               <tr>
                 <th>Video Feed</th>
@@ -211,55 +213,53 @@
               </tr>
             </tbody></table>
           </div>
-          <div id ="subSettings" class="fooBorder"> <!-- Sub-container, situated below camera. -->
-            <div id="controls"> <!-- Sub-container, situated below the clock. -->
-              <div id="generalSettings" class="fooBorder">
-                <h2>General Settings</h2>
-                <input type="checkbox" checked="checked"> Sound
-                <input type="checkbox" checked="checked"> Show Menu
-                <p>
-                  Layout:
-                  <select name="layout">
-                    <option value="layout1">layout1</option>
-                    <option value="layout2">layout2</option>
-                    <option value="layout3">layout3</option>
-                  </select>
-                </p>
-                <p>
-                  Language:
-                  <select name="language">
-                    <option value="english">English</option>
-                    <option value="french">French</option>
-                  </select>
-                </p>
-                <p>
-                  Scan speed:
-                  <div id="sliderContainer">
-                    <div id="sliderValue"></div>
-                    <div id="slider"></div>
-                  </div>
-                </p>
-              </div>
-              <div id="emailSettings" class="fooBorder">
-                <h2>Email Settings</h2>
-                <table><tbody>
-                  <tr>
-                    <td>Signature:</td>
-                    <td><input type="text" name="signature"></td>
-                    <td><input type="button" value="Store"></td>
-                  </tr>
-                  <tr>
-                    <td>Address:</td>
-                    <td><input type="text" name="address"></td>
-                    <td><input type="button" value="Store"></td>
-                  </tr>
-                  <tr>
-                    <td>Password:</td>
-                    <td><input type="password" name="password"></td>
-                    <td><input type="button" value="Store"></td>
-                  </tr>
-                </tbody></table>
-              </div>
+          <div id="controls" class="fooBorder container"> <!-- Sub-container, situated below the clock. -->
+            <div id="generalSettings">
+              <h2>General Settings</h2>
+              <input type="checkbox" checked="checked"> Sound
+              <input type="checkbox" checked="checked"> Show Menu
+              <p>
+                Layout:
+                <select name="layout">
+                  <option value="layout1">layout1</option>
+                  <option value="layout2">layout2</option>
+                  <option value="layout3">layout3</option>
+                </select>
+              </p>
+              <p>
+                Language:
+                <select name="language">
+                  <option value="english">English</option>
+                  <option value="french">French</option>
+                </select>
+              </p>
+              <p>
+                Scan speed:
+                <div id="sliderContainer">
+                  <div id="sliderValue"></div>
+                  <div id="slider"></div>
+                </div>
+              </p>
+            </div>
+            <div id="emailSettings">
+              <h2>Email Settings</h2>
+              <table><tbody>
+                <tr>
+                  <td>Signature:</td>
+                  <td><input type="text" name="signature"></td>
+                  <td><input type="button" value="Store"></td>
+                </tr>
+                <tr>
+                  <td>Address:</td>
+                  <td><input type="text" name="address"></td>
+                  <td><input type="button" value="Store"></td>
+                </tr>
+                <tr>
+                  <td>Password:</td>
+                  <td><input type="password" name="password"></td>
+                  <td><input type="button" value="Store"></td>
+                </tr>
+              </tbody></table>
             </div>
           </div>
         </div>

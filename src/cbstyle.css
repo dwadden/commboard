@@ -111,7 +111,7 @@ th {
 #settings {
   position: relative;
   float: right;
-  width: 60%;
+  width: 58%;
   height: 100%;
 }
 /* Camera. Above the rest of the settings elements. */
@@ -137,6 +137,8 @@ th {
 /* Sub-settings. The clock, slider, and reset. Below the camera. */
 #subSettings {
   height: 50%;
+  width: 100%;
+  margin: 5px;
 }
 /* The clock. */
 #clockContainer {
@@ -149,8 +151,8 @@ th {
 }
 /* Controls. Below the clock. */
 #controls {
-  height: 100%;
-  width: 100%;
+  height: 50%;
+  margin-right: 5px;
 }
 #emailSettings {
   float: right;
@@ -161,8 +163,12 @@ th {
   /* position: absolute; */
   position: relative;
   float: left;
-  width: 50%;
+  width: 45%;
   height: 100%;
+  border-right-style: solid;
+  border-right-color: var(--base0);
+  border-right-width: 1px;
+  pad-right: 5px;
 }
 /* Slider. On the left. */
 #sliderContainer { /* Layout */
@@ -208,13 +214,28 @@ th {
 }
 .invisibleBorder {
   padding: 0px;
-  margin: 10px;
+  margin: 5px;
+  width: 100%;
 }
 .fooBorder {
   border-style: solid;
   border-color: var(--base0);
   border-radius: 10px;
   border-width: 1px;
+  padding: 5px;
+  margin: 5px;
+}
+.padded {
+  padding: 10px;
+}
+.noBorder {
   padding: 0px;
   margin: 0px;
+}
+#dropdowns {
+  border-top-style: solid;
+  border-top-color: var(--base0);
+  border-top-width: 1px;
+  margin-top: 10px;
+  padding-top: 10px;
 }
