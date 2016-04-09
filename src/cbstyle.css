@@ -1,10 +1,9 @@
-/* Style sheet. Most of the styles here are devoted to the layout of the bottom,
-   always-showing section of the commboard. This contains the text buffer,
-   camera feed, date and time, and controls to change the scan speed and restart
-   the program. The rest of the layout is straightforward. */
+/* Style sheet. In general, things are divided so that "#" tags specify
+dimensions, while presentation (e.g. borders, padding, floats, etc) are
+specified by CSS classes. */
 
+/* Solarized colors, from here: http://ethanschoonover.com/solarized */
 :root {
-  /* Use Solarized colors, from here: http://ethanschoonover.com/solarized */
   --base03:    #002b36;
   --base02:    #073642;
   --base01:    #586e75;
@@ -22,57 +21,78 @@
   --cyan:      #2aa198;
   --green:     #859900;
 }
-
-/* Document-level classes and styles */
-html, body { /* Body takes up full window */
-  height: 100%;
-  margin: 0px auto;
-  padding: 0px auto;
-  overflow-y:  visible;
+body {
   background-color: var(--base3);
 }
-#wrapper { /* Wrapper for all document elements */
-  width: 1200px; /* Width of document is 1000 pixels */
-  height: 100%; /* Height is long enough to hold all elements below. */
+
+/* Small classes specifying margins, borders, etc */
+.container {
+  background-color: var(--base2);
 }
-h1 {
-  font-family: Arial,Helvetica,sans-serif;
-  color: firebrick;
+.borderLine {
+  border-color: var(--base0);
+  border-width: 1px;
+}
+.borderSurround {
+  border-style: solid;
+  border-radius: 10px;
+}
+.borderBottom {
+  border-bottom-style: solid;
+}
+.borderRight {
+  border-right-style: solid;
+}
+.marginSurround {
   margin: 5px;
 }
-.container { /* Containers centered within wrapper div */
-  width: 100%;
-  background-color: var(--base2);
-  /* margin-left: 5px;
-     margin-right: 5px; */
+.marginRight {
+  margin-right: 5px;
+}
+.marginBottom {
+  margin-bottom: 5px;
+}
+.padSurround {
+  padding: 5px;
+}
+.padTop {
+  padding-top: 5px;
+}
+.padBottom {
+  padding-bottom: 5px;
+}
+.floatLeft {
+  float: left;
 }
 .floatRight {
   float: right;
 }
-.singleRowMenu {
-  height: 125px;
+.alignCenter {
+  text-align: center;
 }
-/* Table styling. Tables serve as containers for buttons. */
+
+/* General css classes and styles */
 table {
   width: 100%;
   table-layout: fixed; /* All buttons have same width */
 }
-tr {
+.wrapper { /* Wrapper for all document elements */
+  width: 1200px;
+}
+
+/* Commboard styling */
+#commboard { /* The commboard buttons */
+  width: 1190px;
+}
+#commboard tr {
   height: 60px;
 }
-td {
-  padding: 3px; /* Space between buttons */
-}
-th {
-  font-family: Arial,Helvetica,sans-serif;
-  color: var(--red);
-  margin: 5px;
-  text-align: center;
+#commboard td {
+  padding: 3px;
 }
 .menuButton {
-  width: 100%; /* Fill bounding <td> element. */
   height: 100%;
-  font-family: 'trebuchet ms',helvetica,sans-serif;
+  width: 100%;
   font-size: 150%;
   font-weight: bold;
 }
@@ -83,159 +103,45 @@ th {
   color: var(--blue);
 }
 
-/* Styling and layout for specific elements.  */
-#compose { /* Compose text. */
-  /* height: 400px; */
-}
-/* Utility elements at bottom of page. */
-#io { /* Container for all io / utility elements. */
-  position: relative;
+/* IO styling */
+#io {
   height: 600px;
+  width: 1190px;
 }
-/* Text buffer. Side-by-side with settings. */
-#buffer { /* Layout. */
-  position: absolute;
-  float: left;
-  width: 40%;
+#buffer {
   height: 100%;
-  color: black;
+  width: 495px;
   font-size: 150%;
 }
-#bufferText { /* Text element. */
-  top: 0;
-  margin-top: 0%;
-  margin-right: 5%;
-}
-/* Settings. Holds the camera, clock, slider, and reset button. Side-by-side
-   with text. */
 #settings {
-  position: relative;
-  float: right;
-  width: 58%;
   height: 100%;
+  width: 690px;
 }
-/* Camera. Above the rest of the settings elements. */
-#camContainer { /* Layout. */
-  height: 50%;
-  text-align: center;
+#camContainer {
+  height: 295px;
+  width: 690px;
 }
-.cam { /* Camera feed. */
-  float: right;
-  width: 160px;
+.cam {
   height: 120px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: var(--base01);
-  border-radius: 10px;
+  width: 160px;
 }
-#camContainer select {
-  text-align: center;
-}
-#camContainer input {
-  text-align: center;
-}
-/* Sub-settings. The clock, slider, and reset. Below the camera. */
-#subSettings {
-  height: 50%;
-  width: 100%;
+#camContainer th {
+  color: var(--red);
   margin: 5px;
+  text-align: center; /* Even though this is set in outer element, it's overidden for th elements */
 }
-/* The clock. */
-#clockContainer {
-  height: 25%;
-  width: 100%;
-  color: royalblue;
-  font-family: 'trebuchet ms',helvetica,sans-serif;
-  font-size: 150%;
-  font-weight: bold;
-}
-/* Controls. Below the clock. */
 #controls {
   height: 50%;
-  margin-right: 5px;
-}
-#emailSettings {
-  float: right;
-  width: 50%;
-  height: 100%;
+  width: 690px;
 }
 #generalSettings {
-  /* position: absolute; */
-  position: relative;
-  float: left;
-  width: 45%;
   height: 100%;
-  border-right-style: solid;
-  border-right-color: var(--base0);
-  border-right-width: 1px;
-  pad-right: 5px;
+  width: 335px;
 }
-/* Slider. On the left. */
 #sliderContainer { /* Layout */
-  left: 0%;
-  width: 50%;
-  height: 25%
+  width: 150px;
 }
-#slider { /* The slider itself */
-  width: 100%;
-}
-#sliderValue { /* Its value. */
-  color: gray;
-  font-family: 'trebuchet ms',helvetica,sans-serif;
-  font-weight: bold;
-}
-/* Reset button. On the right. */
-#buttonContainer { /* Layout. */
-  position: absolute;
-  top: 25%;
-  width: 100%;
-  height: 75%;
-}
-#buttonContainer td {
-  padding: 3px; /* Space between buttons */
-  height: 45px;
-}
-.settingsButton { /* The button. */
-  color: red;
-  border-color: ghostwhite;
-  background-color: ghostwhite;
-  width: 100%; /* Fill bounding <td> element. */
+#emailSettings {
   height: 100%;
-  font-family: 'trebuchet ms',helvetica,sans-serif;
-  font-size: 100%;
-}
-.border { /* Camera feed. */
-  border-style: solid;
-  border-color: var(--base0);
-  border-radius: 10px;
-  border-width: 1px;
-  padding: 5px;
-  margin: 10px;
-}
-.invisibleBorder {
-  padding: 0px;
-  margin: 5px;
-  width: 100%;
-}
-.fooBorder {
-  border-style: solid;
-  border-color: var(--base0);
-  border-radius: 10px;
-  border-width: 1px;
-  padding: 5px;
-  margin: 5px;
-}
-.padded {
-  padding: 10px;
-}
-.noBorder {
-  padding: 0px;
-  margin: 0px;
-}
-#dropdowns {
-  border-top-style: solid;
-  border-top-color: var(--base0);
-  border-top-width: 1px;
-  margin-top: 10px;
-  padding-top: 10px;
+  width: 340px;
 }

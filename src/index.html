@@ -12,10 +12,11 @@
     <script src="./wedjat.js"></script>
   </head>
   <body>
-    <div id="wrapper">
+    <div class="wrapper">
       <!-- Compose text. The user will spend most of his time here. -->
-      <div id="compose" class="container border">
-        <div id="commboard">
+      <div id="commboard" class="container borderLine borderSurround padSurround marginSurround">
+        <!-- The main 5 rows of the commboard -->
+        <div class="padBottom borderLine borderBottom">
           <table><tbody>
             <tr> <!-- Letters. This and the next 3 rows. -->
               <td><input type="button" class="menuButton buttonOff" value="1"
@@ -88,6 +89,7 @@
               <td><input type="button" class="menuButton buttonOff" value="Z"
                          data-menu="compose4" data-button-type="letter"></td>
             </tr>
+            <!-- The special function row. -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="5"></td>
               <td><input type="button" class="menuButton buttonOff" value="Space"></td>
@@ -100,8 +102,10 @@
             </tr>
           </tbody></table>
         </div>
-        <div id="dropdowns">
+        <!-- Dropdown menus. -->
+        <div class="padTop">
           <table><tbody>
+            <!-- Guesses -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="guess0"
                          data-menu="composeGuess" data-button-type="guess" data-guess-id="0"></td>
@@ -120,6 +124,7 @@
               <td><input type="button" class="menuButton buttonOff" value="guess7"
                          data-menu="composeGuess" data-button-type="guess" data-guess-id="7"></td>
             </tr>
+            <!-- Punctuation -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="."
                          data-menu="compose5" data-button-type="terminalPunctuation"></td>
@@ -138,6 +143,7 @@
               <td><input type="button" class="menuButton buttonOff" value=":"
                          data-menu="compose5" data-button-type="nonTerminalPunctuation"></td>
             </tr>
+            <!-- Buffer actions (e.g. read, delete, clear). -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="Read"
                          data-menu="composeActions" data-button-type="bufferAction"></td>
@@ -153,6 +159,7 @@
                          data-menu="composeActions" data-button-type="notImplemented"></td>
               <td colspan="2"></td>
             </tr>
+            <!-- Email. -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="Dad"
                          data-menu="email" data-button-type="email"
@@ -165,6 +172,7 @@
                          data-recipients="dave.wadden@gmail.com"></td>
               <td colspan="5"></td>
             </tr>
+            <!-- Call bell requests. -->
             <tr>
               <td><input type="button" class="menuButton buttonOff" value="Cold"
                          data-menu="request" data-button-type="request"></td>
@@ -177,15 +185,17 @@
           </tbody></table>
         </div>
       </div>
-      <!-- IO. Text buffer on left, controls on right. -->
-      <!-- <div id="io" class="container"> -->
-      <div id="io" class="invisibleBorder">
-        <div id="buffer" class="container fooBorder"> <!-- The user's text. -->
-          <p id="bufferText">
-          </p>
+
+      <!-- IO. -->
+      <div id="io" class="marginSurround">
+        <!-- The text buffer -->
+        <div id="buffer" class="container floatLeft borderLine borderSurround padSurround marginRight"> <!-- The user's text. -->
+          <p id="bufferText"></p>
         </div>
-        <div id="settings">  <!-- Container for various other controls. -->
-          <div id="camContainer" class="container fooBorder"> <!-- Camera and templates. -->
+        <!-- All settings. -->
+        <div id="settings" class="floatRight">
+          <!-- The camera and templates -->
+          <div id="camContainer" class="container borderLine borderSurround padSurround marginBottom alignCenter"> <!-- Camera and templates. -->
             <table><tbody>
               <tr>
                 <th>Video Feed</th>
@@ -194,10 +204,10 @@
                 <th>Down Template</th>
               </tr>
               <tr>
-                <td><video autoplay class="cam"></video></td>
-                <td><canvas id="rest" class="cam"></canvas></td>
-                <td><canvas id="up" class="cam"></canvas></td>
-                <td><canvas id="down" class="cam"></canvas></td>
+                <td><video autoplay class="cam borderLine borderSurround"></video></td>
+                <td><canvas id="rest" class="cam borderLine borderSurround"></canvas></td>
+                <td><canvas id="up" class="cam borderLine borderSurround"></canvas></td>
+                <td><canvas id="down" class="cam borderLine borderSurround"></canvas></td>
               </tr>
               <tr>
                 <td>
@@ -213,8 +223,10 @@
               </tr>
             </tbody></table>
           </div>
-          <div id="controls" class="fooBorder container"> <!-- Sub-container, situated below the clock. -->
-            <div id="generalSettings">
+          <!-- Controls. -->
+          <div id="controls" class="container borderLine borderSurround padSurround">
+            <!-- General settings. Sound, layout, scan speed, etc. -->
+            <div id="generalSettings" class="padSurround borderLine borderRight floatLeft">
               <h2>General Settings</h2>
               <input type="checkbox" checked="checked"> Sound
               <input type="checkbox" checked="checked"> Show Menu
@@ -241,7 +253,8 @@
                 </div>
               </p>
             </div>
-            <div id="emailSettings">
+            <!-- Email settings. Allows aid to enter email info for user. -->
+            <div id="emailSettings" class="padSurround floatRight">
               <h2>Email Settings</h2>
               <table><tbody>
                 <tr>
