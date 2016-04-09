@@ -132,7 +132,7 @@ table {
   height: 230px;
   width: 690px;
 }
-.cam {
+.cam { /* These dimensions should agree with the constants in detector.js */
   height: 120px;
   width: 160px;
 }

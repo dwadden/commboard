@@ -8,7 +8,6 @@ require("jquery-ui");
 
 // File imports
 const menu = require("./menu.js");
-const settingsButton = require("./settingsButton.js");
 const io = require("./io.js");
 const util = require("./util.js");
 
@@ -25,11 +24,10 @@ function setup() {
     let buffer = io.makeBuffer();
     // let clock = io.makeClock();
     let slider = io.makeSlider();
-    let soundToggle = settingsButton.makeSoundToggleButton();
 
     // Initialization procedures
     function makeSpec(menuName) {
-        return { detector, buffer, slider, soundToggle, menuName };
+        return { detector, buffer, slider, menuName };
     }
     function makeLeaf (menuName) {
         return menu.makeLeafMenu(makeSpec(menuName));
@@ -61,8 +59,6 @@ function setup() {
                               ["email",   email]]));
     compose.setChildren(composeSubmenus);
 
-    // Final actions
-    settingsButton.registerEmailConfigButton(); // Register email config button
     // detector.setupTracking();
     detector.setupKeyDown();
     main.slideDown();

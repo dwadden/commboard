@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="cbstyle.css" type="text/css">
     <!-- Commboard script -->
     <script src="./wedjat.js"></script>
+    <script src="./detector.js"></script> <!-- Scratch work -->
   </head>
   <body>
     <div class="wrapper">
@@ -203,21 +204,20 @@
               </tr>
               <tr>
                 <td><video autoplay class="cam borderLine borderSurround"></video></td>
-                <td><canvas id="rest" class="cam borderLine borderSurround"></canvas></td>
-                <td><canvas id="up" class="cam borderLine borderSurround"></canvas></td>
+                <td><canvas class="cam borderLine borderSurround" data-canvas-id="rest"></canvas></td>
+                <td><canvas class="cam borderLine borderSurround" data-canvas-id="gaze"></canvas></td>
               </tr>
               <tr>
                 <td>
-                  <select name="cameras">
-                    <option value="camera1">foo</option>
-                    <option value="camera2">bar</option>
-                    <option value="camera3">qux</option>
+                  <select name="videoSource">
                   </select>
                 </td>
-                <td><input type="button" value="Capture"></td>
-                <td><input type="button" value="Capture"></td>
+                <td><input type="button" value="Capture" data-canvas-id="rest"></td>
+                <td><input type="button" value="Capture" data-canvas-id="gaze"></td>
               </tr>
             </tbody></table>
+            <!-- A hidden canvas that allows access to the current camera pixel values -->
+            <canvas data-canvas-id="video" hidden></canvas>
           </div>
           <!-- Controls. -->
           <div id="controls" class="container borderLine borderSurround padSurround">
@@ -270,6 +270,9 @@
               </p>
               <p></p>
               <input type="button" value="Store" class="floatRight">
+            </div>
+            <div id="begin" class="floatRight padSurround">
+              <input type="button" value="Begin">
             </div>
           </div>
         </div>
