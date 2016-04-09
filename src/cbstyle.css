@@ -106,7 +106,7 @@ table {
 
 /* IO styling */
 #io {
-  height: 600px;
+  height: 515px;
   width: 1190px;
 }
 #buffer {
@@ -129,7 +129,7 @@ table {
   width: 80px;
 }
 #camContainer {
-  height: 295px;
+  height: 230px;
   width: 690px;
 }
 .cam {
@@ -143,7 +143,7 @@ table {
   font-size: 125%;
 }
 #controls {
-  height: 50%;
+  height: 280px;
   width: 690px;
 }
 #generalSettings {
