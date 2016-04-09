@@ -8,11 +8,11 @@ require("jquery-ui");
 
 // File imports
 const menu = require("./menu.js");
+const detector = require("./detector.js");
 const io = require("./io.js");
 const util = require("./util.js");
 
 // Setup
-
 window.onload = setup;
 
 /**

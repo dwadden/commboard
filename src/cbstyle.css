@@ -157,9 +157,12 @@ table {
   height: 220px;
   width: 340px;
 }
-#begin {
+#startStop {
   font-size: 150%;
 }
-#begin input[type=button] {
+#startStop input[type=button][value=Start] {
   color: var(--green);
+}
+#startStop input[type=button][value=Stop] {
+  color: var(--magenta);
 }
