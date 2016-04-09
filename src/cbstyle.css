@@ -151,9 +151,15 @@ table {
   width: 335px;
 }
 #sliderContainer { /* Layout */
-  width: 150px;
+  width: 200px;
 }
 #emailSettings {
-  height: 100%;
+  height: 220px;
   width: 340px;
+}
+#begin {
+  font-size: 150%;
+}
+#begin input[type=button] {
+  color: var(--green);
 }
