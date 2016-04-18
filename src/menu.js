@@ -10,24 +10,40 @@ const util = require("./util.js");
 // Exports
 module.exports = { makeMenu, makeBranchMenu, makeLeafMenu, makeGuessMenu };
 
+function initMenus(spec) {
+    // Create all the menus and return
+    let menus = new Map();
+    let cbNames = [ "composeMain",
+                    "compose1",
+                    "compose2",
+                    "compose3",
+                    "compose4",
+                    "compose5" ];
+    let sNames = [ "guess",
+                   "punctuation",
+                   "buffer",
+                   "email",
+                   "callBell" ];
+    let commboardMenus = cbNames.forEach(function(name) {
+        menus.set(name, makeCommboardMenu(spec));
+    });
+    let slidingMenus = sNames.map(function(name) {
+        menus.set(name, makeSlidingMenu(spec));
+    });
+    menus.forEach(function(menu) { // Give each menu a pointer to all other menus
+        menu.menus = menus;
+    });
+
+    return menus;
+}
+
 // Menus
 
-/**
- * Constructor for generic Menu objects.
- * @param {Object} spec - Specification object.
- * @param {Object} spec.detector - Gaze detector object.
- * @param {Object} spec.buffer - Text buffer object.
- * @param {Object} spec.slider - Slider object.
- * @param {string} spec.menuName - CSS id of menu's document element.
- * @param {Object} my - Holds class hierarchy shared secrets.
- * @returns {Object} A Menu object.
- */
 function makeMenu(spec, my) {
+    // Constructor for generic menu objects
+
     // Private and public objects
     my = my || {};
-    /**
-     * @namespace Menu
-     */
     let that = {};
 
     // Private methods
@@ -62,16 +78,14 @@ function makeMenu(spec, my) {
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
         return specs.map(my.initButton);
     };
-    my.nextButton = function(ix) {
-        return (ix + 1) % my.nButtons;
-    };
-    my.isLastButton = function(buttonIx) {
-        return buttonIx === my.nButtons - 1;
-    };
+    // my.nextButton = function(ix) {
+    //     return (ix + 1) % my.nButtons;
+    // };
+    // my.isLastButton = function(buttonIx) {
+    //     return buttonIx === my.nButtons - 1;
+    // };
 
     // Private data
-    my.detector = spec.detector;
-    my.slider = spec.slider;
     my.buffer = spec.buffer;
     my.soundToggle = spec.soundToggle;
     my.divElem = document.querySelector(`div#${spec.menuName}`);
@@ -82,19 +96,9 @@ function makeMenu(spec, my) {
     my.children = null;
 
     // Public methods
-    /**
-     * Get the child menus for this menu.
-     * @returns {Array} An array of child menus.
-     * @memberof Menu
-     */
     that.getChildren = function() {
         return my.children;
     };
-    /**
-     * Set the child menus for this menu.
-     * @param {Array} children An array of child menus.
-     * @memberof Menu
-     */
     that.setChildren = function(children) {
         my.children = children;
         let setParent = function(child) {
@@ -102,46 +106,19 @@ function makeMenu(spec, my) {
         };
         children.forEach(setParent);
     };
-    /**
-     * Slide this menu's document element up, hiding it.
-     * @memberof Menu
-     */
     that.slideUp = function() {
-        // TODO: Is there a cleaner way to do this?
         if (my.divElem !== null) {
             jQuery(my.divElem).slideUp();
         }
     };
-    /**
-     * Slide this menu's document element down, revealing it.
-     * @memberof Menu
-     */
     that.slideDown = function() {
         if (my.divElem !== null) {
             jQuery(my.divElem).slideDown();
         }
     };
-    /**
-     * Scan through the buttons in the menu, awaiting user input.
-     * @memberof Menu
-     */
-    that.scan = function() {
-        that.slideDown();
-        my.scanAt(0, 0);
-    };
-    /**
-     * Get the buttons contained by this menu.
-     * @returns {Array} An array of buttons.
-     * @memberof Menu
-     */
     that.getButtons = function() {
         return my.buttons;
     };
-    /**
-     * Get the number of buttons contained in the menu.
-     * @returns {Number} The number of buttons.
-     * @memberof Menu
-     */
     that.getNButtons = function() {
         return my.nButtons;
     };
@@ -150,19 +127,27 @@ function makeMenu(spec, my) {
     return that;
 }
 
-/**
- * Constructor for branch menus. When finished scanning their contents, branch
- * menus begin again scanning again.
- * @param {Object} spec - Specification object. See makeMenu for details.
- * @param {Object} my - Shared secrets as in makeMenu.
- * @returns {Object} A branchMenu object.
- */
+function makeCommboardMenu(spec, my) {
+    // Commboard menus are always present; no sliding up and down
+    my = my || {};
+    let that = makeMenu(spec, my);
+
+    my.menuType = "commboard";
+}
+
+function makeSlidingMenu(spec, my) {
+    // Sliding menus are hidden; they slide down when they're being scanned or
+    // when a button targeting them has been pressed.
+    my = my || {};
+    let that = makeMenu(spec, my);
+
+    my.menuType = "sliding";
+}
+
+
+
 function makeBranchMenu(spec, my) {
     my = my || {};
-    /**
-     * @namespace branchMenu
-     * @augments Menu
-     */
     let that = makeMenu(spec, my);
 
     my.scanAt = function(buttonIx) {
@@ -175,19 +160,8 @@ function makeBranchMenu(spec, my) {
     return that;
 }
 
-/**
- * Constructor for leaf menus. When finished scanning their contents, leaf
- * menus return control of the program to their parent.
- * @param {Object} spec - Specification object. See makeMenu for details.
- * @param {Object} my - Shared secrets as in makeMenu.
- * @returns {Object} A leafMenu object.
- */
 function makeLeafMenu(spec, my) {
     my = my || {};
-    /**
-     * @namespace leafMenu
-     * @augments Menu
-     */
     let that = makeMenu(spec, my);
     const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
 
@@ -215,18 +189,8 @@ function makeLeafMenu(spec, my) {
     return that;
 }
 
-/**
- * Constructor for guess menus, which submit web queries for content guesses.
- * @param {Object} spec - Specification object. See makeMenu for details.
- * @param {Object} my - Shared secrets as in makeMenu.
- * @returns {Object} A guessMenu object.
- */
 function makeGuessMenu(spec, my) {
     my = my || {};
-    /**
-     * @namespace guessMenu
-     * @augments Menu
-     */
     let that = makeLeafMenu(spec, my);
 
     // internal constants
