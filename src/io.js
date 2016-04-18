@@ -14,139 +14,7 @@ const moment = require("moment");
 const util = require("./util.js");
 
 // Exports
-module.exports = { makeDetector, makeBuffer, makeClock, makeSlider };
-
-/**
- * Constructor for detector objects.
- * @returns {Object} A detector object.
- */
-function makeDetector() {
-    /**
-     * @namespace Detector
-     */
-    let that = Object.create(EventEmitter.prototype); // Inherit from EventEmitter
-
-    // Constants and magic numbers. Can be changed depending on client needs.
-    const ON = Symbol("on");
-    const OFF = Symbol("off");
-    const GAZE_TIME = 100;      // duration (s) for which gaze must be held
-    const EXTENDED_GAZE_TIME = 2000; // duration (s) for extended gaze; triggers reset
-    const MIN_N_CHANGED = 10;          // if in "off" state, need 10 consecutive
-    const TRACKER_COLOR = "yellow";    // detections to switch to "on", and vice versa
-
-    // Local variables
-    let startTime = null;              // start time for most recent upward gaze
-    let state = OFF;
-    let nChanged = 0;           // # consecutive detections that state has changed
-
-    // Local procedures
-    function time() {
-        return new Date().getTime();
-    }
-    // Function to call if there is a detection in the current frame.
-    function detection() {
-        if (state === OFF) {
-            nChanged += 1;
-            if (nChanged >= MIN_N_CHANGED) {
-                gazeOn();
-            }
-        } else {
-            nChanged = 0;
-        }
-    }
-    // Function to call for no detection.
-    function noDetection() {
-        if (state === ON) {
-            nChanged += 1;
-            if (nChanged >= MIN_N_CHANGED) {
-                gazeOff();
-            }
-        } else {
-            nChanged = 0;
-        }
-    }
-    // Gaze has changed state from off to on
-    function gazeOn() {
-        state = ON;
-        startTime = time();     // Start the gaze timer.
-    }
-    // Gaze has changed state from on to off
-    function gazeOff() {
-        state = OFF;
-        let elapsed = time() - startTime; // How long did the user gaze last
-        let dispatch = ((elapsed < GAZE_TIME) ? function() { ; } :
-                        ((elapsed < EXTENDED_GAZE_TIME) ?
-                         emitGaze : emitExtendedGaze));
-        dispatch();
-        startTime = null;
-    }
-    // Emit a gaze event for listeners
-    function emitGaze() {
-        that.emitEvent("gaze");
-    }
-    // Emit an extended gaze event for listeners
-    function emitExtendedGaze() {
-        that.emitEvent("extendedGaze");
-    }
-    // Key presses can be used in place of gazes
-    function onKeyDown(event) {
-        let dispatch = new Map([[38, emitGaze], // 38 is up arrow key
-                                [40, emitExtendedGaze]]); // 40 is down arrow key
-        let f = dispatch.get(event.keyCode) || function() { ; };
-        f();
-    }
-
-    // Public procedures
-    /**
-     * Add listener for gaze event.
-     * @param {Function} listener - The listener.
-     * @memberof Detector
-     */
-    that.addGazeListener = function(listener) {
-        that.addListener("gaze", listener); // Can't do with currying b/c scope of "this"
-    };
-    /**
-     * Add listener for extended gaze event.
-     * @param {Function} listener - The listener.
-     * @memberof Detector
-     */
-    that.addExtendedGazeListener = function(listener) {
-        that.addListener("extendedGaze", listener);
-    };
-    /**
-     * Remove listener for gaze event.
-     * @param {Function} listener - The listener.
-     * @memberof Detector
-     */
-    that.removeGazeListener = function(listener) {
-        that.removeListener("gaze", listener);
-    };
-    /**
-     * Remove listener extended for gaze event.
-     * @param {Function} listener - The listener.
-     * @memberof Detector
-     */
-    that.removeExtendedGazeListener = function(listener) {
-        that.removeListener("extendedGaze", listener);
-    };
-    /**
-     * Initialize tracking.
-     * @memberof Detector
-     */
-    that.setupTracking = function() {
-        util.notImplemented();
-    };
-    /**
-     * Initialize key press event handling.
-     * @memberof Detector
-     */
-    that.setupKeyDown = function() {
-        document.addEventListener("keydown", onKeyDown);
-    };
-
-    return that;
-}
-
+module.exports = { makeBuffer, makeSlider };
 /**
  * Constructor for text buffer.
  * @returns {Object} A buffer object.
@@ -248,7 +116,7 @@ function makeBuffer() {
     }
     // Fired when buffer changes
     function emitChange() {
-        that.emitEvent("bufferChange");
+        that.emit("bufferChange");
     }
 
     // Public methods
@@ -309,50 +177,6 @@ function makeBuffer() {
 
     // Initialize and return
     update();
-    return that;
-}
-
-/**
- * Constructor for clock objects.
- */
-function makeClock() {
-    /**
-     * @namespace Clock
-     */
-    let that = {};
-
-    // Constants
-    const INTERVAL = 1000;      // Update each second
-
-    // Local variables
-    let clockElem = document.getElementById("clockContainer");
-    let textElem = clockElem.querySelector("p");
-    let iv;                     // Handle for the interval
-
-    // Internal procedures
-    function tick() {           // Clock ticks every second once started.
-        let m = moment(new Date());
-        textElem.textContent = m.format("dddd, h:mm:ss a");
-    }
-
-    // Public methods
-    /**
-     * Start the clock.
-     * @memberof Clock
-     */
-    that.start = function() {
-        iv = setInterval(tick, INTERVAL);
-    };
-    /**
-     * Stop the clock.
-     * @memberof Clock
-     */
-    that.stop = function() {
-        clearInterval(iv);
-    };
-
-    // Start the clock and return the method.
-    that.start();
     return that;
 }
 
