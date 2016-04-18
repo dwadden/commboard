@@ -46,10 +46,10 @@ function makeDetector() {
         state = newState;
     }
     function emitGazeStart() {
-        that.emitEvent("gazeBegin");
+        that.emit("gazeBegin");
     }
     function emitGazeEnd() {
-        that.emitEvent("gazeEnd");
+        that.emit("gazeEnd");
     }
     function start() {
         // Listen for detections.
