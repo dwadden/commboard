@@ -15,51 +15,14 @@ const util = require("./util.js");
 // Setup
 window.onload = setup;
 
-/**
- * Top-level setup function. Creates and initializes program objects.
- */
 function setup() {
+    // Top-level setup to initialize the objects of the program.
+
     // Create utility objects
-    let detector = io.makeDetector();
+    let det = detector.makeDetector();
     let buffer = io.makeBuffer();
-    // let clock = io.makeClock();
     let slider = io.makeSlider();
 
-    // Initialization procedures
-    function makeSpec(menuName) {
-        return { detector, buffer, slider, menuName };
-    }
-    function makeLeaf (menuName) {
-        return menu.makeLeafMenu(makeSpec(menuName));
-    }
-    function makeBranch(menuName) {
-        return menu.makeBranchMenu(makeSpec(menuName));
-    }
-    function makeComposeSubmenus() {
-        return new Map(
-            [["1",       makeLeaf("compose1")],
-             ["2",       makeLeaf("compose2")],
-             ["3",       makeLeaf("compose3")],
-             ["4",       makeLeaf("compose4")],
-             ["5",       makeLeaf("compose5")],
-             ["guess",   menu.makeGuessMenu(makeSpec("composeGuess"))],
-             ["actions", makeLeaf("composeActions")]]);
-    }
-
-    // Create menus
-    let main = makeBranch("main");
-    let request = makeLeaf("request");
-    let email = makeLeaf("email");
-    let compose = makeBranch("compose");
-    let composeSubmenus = makeComposeSubmenus();
-
-    // Add children to menus
-    main.setChildren(new Map([["request", request],
-                              ["compose", compose],
-                              ["email",   email]]));
-    compose.setChildren(composeSubmenus);
-
-    // detector.setupTracking();
-    detector.setupKeyDown();
-    main.slideDown();
+    // Create menus (and implicitly buttons)
+    let menus = menu.initMenus({ det, buffer, slider });
 }

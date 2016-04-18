@@ -8,28 +8,46 @@ const menuButton = require("./menuButton.js");
 const util = require("./util.js");
 
 // Exports
-module.exports = { makeMenu, makeBranchMenu, makeLeafMenu, makeGuessMenu };
+module.exports = { makeMenu, makeBranchMenu, makeLeafMenu, makeGuessMenu, initMenus };
 
 function initMenus(spec) {
     // Create all the menus and return
-    let menus = new Map();
-    let cbNames = [ "composeMain",
-                    "compose1",
-                    "compose2",
-                    "compose3",
-                    "compose4",
-                    "compose5" ];
-    let sNames = [ "guess",
-                   "punctuation",
-                   "buffer",
-                   "email",
-                   "callBell" ];
-    let commboardMenus = cbNames.forEach(function(name) {
-        menus.set(name, makeCommboardMenu(spec));
-    });
-    let slidingMenus = sNames.map(function(name) {
-        menus.set(name, makeSlidingMenu(spec));
-    });
+
+    // The spec here indicates two behaviors for each menu.
+    // hide: "commboard" menus always remain showing.
+    //       "dropdown" menus are hidden unless they have been selected.
+    // scan: "repeat" menus should be repeated when scanned to the end
+    //       "finish" menus return to their calling menu when scanning is finished
+    let names = new Map([["composeMain", { hide: "commboard",
+                                           scan: "repeat" }],
+                         ["compose1",    { hide: "commboard",
+                                           scan: "finish" }],
+                         ["compose2",    { hide: "commboard",
+                                           scan: "finish" }],
+                         ["compose3",    { hide: "commboard",
+                                           scan: "finish" }],
+                         ["compose4",    { hide: "commboard",
+                                           scan: "finish" }],
+                         ["compose5",    { hide: "commboard",
+                                           scan: "finish" }],
+                         ["guess",       { hide: "dropdown",
+                                           scan: "finish" }],
+                         ["punctuation", { hide: "dropdown",
+                                           scan: "finish" }],
+                         ["buffer",      { hide: "dropdown",
+                                           scan: "finish" }],
+                         ["email",       { hide: "dropdown",
+                                           scan: "finish" }],
+                         ["callBell",    { hide: "dropdown",
+                                           scan: "finish" }]]
+                       );
+    function mapped(key) {
+        let newSpec = jQuery.extend(names.get(key), spec);
+        newSpec.menuName = key;
+        return makeMenu(newSpec);
+    }
+    debugger;
+    let menus = Array.from(names.keys()).map(mapped);
     menus.forEach(function(menu) { // Give each menu a pointer to all other menus
         menu.menus = menus;
     });
@@ -47,20 +65,20 @@ function makeMenu(spec, my) {
     let that = {};
 
     // Private methods
+    const mb = menuButton;
     my.initButton = function(spec) {
         let dispatch = new Map(
-            [["menuSelector", menuButton.makeMenuSelectorButton],
-             ["start", menuButton.makeStartButton],
-             ["request", menuButton.makeRequestButton],
-             ["letter", menuButton.makeLetterButton],
-             ["space", menuButton.makeSpaceButton],
-             ["terminalPunctuation", menuButton.makeTerminalPunctuationButton],
-             ["nonTerminalPunctuation", menuButton.makeNonTerminalPunctuationButton],
-             ["bufferAction", menuButton.makeBufferActionButton],
-             ["return", menuButton.makeReturnButton],
-             ["guess", menuButton.makeGuessButton],
-             ["email", menuButton.makeEmailButton],
-             ["notImplemented", menuButton.makeNotImplementedButton]]
+            [["menuSelector", mb.makeMenuSelectorButton],
+             ["start", mb.makeStartButton],
+             ["request", mb.makeRequestButton],
+             ["letter", mb.makeLetterButton],
+             ["space", mb.makeSpaceButton],
+             ["terminalPunctuation", mb.makeTerminalPunctuationButton],
+             ["nonTerminalPunctuation", mb.makeNonTerminalPunctuationButton],
+             ["bufferAction", mb.makeBufferActionButton],
+             ["guess", mb.makeGuessButton],
+             ["email", mb.makeEmailButton],
+             ["notImplemented", mb.makeNotImplementedButton]]
         );
         let maker = dispatch.get(spec.elem.dataset.buttonType);
         return maker(spec);
@@ -86,11 +104,14 @@ function makeMenu(spec, my) {
     // };
 
     // Private data
+    my.menuName = spec.menuName;
+    my.hide = spec.hide;
+    my.scan = spec.scan;
     my.buffer = spec.buffer;
     my.soundToggle = spec.soundToggle;
-    my.divElem = document.querySelector(`div#${spec.menuName}`);
+    my.divElem = document.querySelector(`div#${my.menuName}`);
     my.buttonElems = document.querySelectorAll(
-        `input[type=button][data-menu="${spec.menuName}"]`);
+        `input[type=button][data-menu="${my.menuName}"]`);
     my.buttons = my.initButtons();
     my.nButtons = my.buttons.length;
     my.children = null;
@@ -127,22 +148,10 @@ function makeMenu(spec, my) {
     return that;
 }
 
-function makeCommboardMenu(spec, my) {
-    // Commboard menus are always present; no sliding up and down
-    my = my || {};
-    let that = makeMenu(spec, my);
 
-    my.menuType = "commboard";
-}
+////////////////////////////////////////////////////////////////////////////////
 
-function makeSlidingMenu(spec, my) {
-    // Sliding menus are hidden; they slide down when they're being scanned or
-    // when a button targeting them has been pressed.
-    my = my || {};
-    let that = makeMenu(spec, my);
-
-    my.menuType = "sliding";
-}
+// Old. Work into new scanner.
 
 
 
