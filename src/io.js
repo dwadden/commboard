@@ -7,7 +7,7 @@
 // npm imports
 const jQuery = require("jquery");
 require("jquery-ui");
-const EventEmitter = require("wolfy87-eventemitter");
+const EventEmitter = require("events");
 const moment = require("moment");
 
 // File imports

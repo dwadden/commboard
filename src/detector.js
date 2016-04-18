@@ -1,6 +1,11 @@
 "use strict";
 
-const EventEmitter = require("wolfy87-eventemitter");
+// The constructor exported by this module makes a detector object. The detector
+// recognizes gazes, currently via template matching. When the "start" button on
+// the UI is pressed, it fires events when it recognizes the beginning or end of
+// an upward gaze.
+
+const EventEmitter = require("events");
 
 module.exports = { makeDetector };
 
