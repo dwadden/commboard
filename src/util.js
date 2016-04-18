@@ -23,10 +23,9 @@ function speak(text) {
 // Speak the text. Instead of returning, invoke a callback when speech is
 // finished. Bind the utterance to an element in the dom so that it doesn't get
 // garbage-collected.
-function read(text, cb, element) {
-    const AFTER_READ = 1000;    // After reading, wait a second before continuing
+function read(text, cb, element, delay = 1000) {
     function afterRead() {
-        setTimeout(cb, AFTER_READ);
+        setTimeout(cb, delay);
     }
     let utterance = speak(text);
     utterance.onend = afterRead;
