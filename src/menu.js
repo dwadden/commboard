@@ -147,11 +147,9 @@ function makeMenu(spec, my) {
         children.forEach(setParent);
     };
     that.slideUp = function() {
-        // For debugging, keep all menus visible.
-        // if (my.menuElem !== null) {
-        //     jQuery(my.menuElem).slideUp();
-        // }
-        ;
+        if (my.menuElem !== null) {
+            jQuery(my.menuElem).slideUp();
+        }
     };
     that.slideDown = function() {
         if (my.menuElem !== null) {

@@ -304,13 +304,16 @@ function makeEmailButton(spec, my) {
 
     // Private data
     my.buffer = spec.buffer;
-    my.recipients = my.buttonElem.dataset.recipients;
-    my.name = window.sessionStorage.getItem("name");
-    my.address = window.sessionStorage.getItem("address");
-    my.password = window.sessionStorage.getItem("password");
+    my.settings = spec.settings;
 
     // Public methods
     that.action = function() {
+        // Email variables
+        const signature = my.settings.getEmailSignature();
+        const address = my.settings.getEmailAddress();
+        const password = my.settings.getEmailPassword();
+        const recipients = my.buttonElem.dataset.recipients;
+
         const warningText = `This message was sent using experimental software
 for individuals with Completely Locked-in Syndrome. Due to the immaturity of the
 software, the password for this email account may not be stored securely. What
@@ -333,14 +336,14 @@ it is perfectly fine to send messages to this address.`;
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: my.address,
-                pass: my.password
+                user: address,
+                pass: password
             }
         });
         const mailOptions = {
-            from: `"${my.name}" <${my.address}>`,
-            to: `${my.recipients}`, // list of receivers
-            subject: `A message from ${my.name}`, // Subject line
+            from: `"${signature}" <${address}>`,
+            to: `${recipients}`, // list of receivers
+            subject: `A message from ${signature}`, // Subject line
             text: my.buffer.getText() + "\n\n\n" + warningText // plaintext body
         };
 
