@@ -88,6 +88,8 @@ function makeScanner(mainMenu, detector, settings) {
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
+                    detector.removeBeginListener(gazeBegin);
+                    detector.removeEndListener(gazeEnd);
                     cb();       // If it was a long gaze, cancel the scan of the current menu and return to caller.
                 }
             }

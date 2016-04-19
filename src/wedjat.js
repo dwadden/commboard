@@ -14,7 +14,7 @@ const util = require("./util.js");
 const scan = require("./scan.js");
 
 // Setup
-// window.onload = setup;
+window.onload = setup;
 
 function setup() {
     // Top-level setup to initialize the objects of the program.
