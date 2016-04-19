@@ -14,7 +14,7 @@ const moment = require("moment");
 const util = require("./util.js");
 
 // Exports
-module.exports = { makeBuffer, makeGeneralSettings };
+module.exports = { makeBuffer, makeSettings };
 
 function makeBuffer() {
     // Constructor for text buffer.
@@ -153,12 +153,15 @@ function makeBuffer() {
     return that;
 }
 
-function makeGeneralSettings() {
+function makeSettings() {
     // General settings object. Handles the following:
     //   Toggle sound.
     //   Toggle display menu.
     //   Language. Currently only English is implemented.
-    //   Slider controlling scan speed..
+    //   Slider controlling scan speed.
+    // TODO: Is this the right way to do this? Maybe I should access the
+    // settings as a simple object without the method calls? Maybe it should be
+    // a map?
     let that = {};
 
     // Internal variables
@@ -167,6 +170,7 @@ function makeGeneralSettings() {
     let layoutElem = document.querySelector("select[name=layout]");
     let languageElem = document.querySelector("select[name=language]");
     let slider = makeSlider();
+    let emailSettings = makeEmailSettings();
 
     // Public methods
     that.useSoundP = function() {
@@ -184,6 +188,9 @@ function makeGeneralSettings() {
     that.getScanSpeed = function() {
         return slider.getms();
     };
+    that.getEmailSignature = emailSettings.getSignature;
+    that.getEmailAddress = emailSettings.getAddress;
+    that.getEmailPassword = emailSettings.getPassword;
 
     // Return the object
     return that;
@@ -203,8 +210,8 @@ function makeSlider() {
     // Internal variables
     let sliderValue = V0;
     let containerElem = document.getElementById("sliderContainer");
-    let sliderElem = containerElem.querySelector("#slider");
-    let valueElem = containerElem.querySelector("#sliderValue");
+    let sliderElem = document.getElementById("slider");
+    let valueElem = document.getElementById("sliderValue");
     let s = jQuery(sliderElem).slider({ min: VMIN * SCALE,
                                         max: VMAX * SCALE,
                                         value: sliderValue * SCALE,
@@ -233,5 +240,37 @@ function makeEmailSettings() {
     //   Signature (the user's name)
     //   Email address
     //   Password
-    ;
+    // I'm not sure if it's secure to store variables this way. For now, use a
+    // dedicated email account that won't be used for sensitive communications.
+    let that = {};
+
+    // Internal variables
+    let signature, address, password = null;
+    let signatureButton = document.querySelector("input[type=text][name=signature]");
+    let addressButton = document.querySelector("input[type=text][name=address]");
+    let passwordButton = document.querySelector("input[type=password][name=password]");
+    let storeButton = document.querySelector("input[type=button][value=Store]");
+
+    // Private methods
+    function store() {
+        signature = signatureButton.value;
+        address = addressButton.value;
+        password = passwordButton.value;
+        passwordButton.value = ""; // Remove the password text once it's been assigned.
+    }
+
+    // Public methods
+    that.getSignature = function() {
+        return signature;
+    };
+    that.getAddress = function() {
+        return address;
+    };
+    that.getPassword = function() {
+        return password;
+    };
+
+    // Initialize and return
+    storeButton.onclick = store;
+    return that;
 }

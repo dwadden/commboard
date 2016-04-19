@@ -284,6 +284,7 @@ function makeBufferActionButton(spec, my) {
     my.actionName = my.buttonValue.toLowerCase();
 
     that.action = function() {
+        that.hideDropdown();
         my.buffer.executeAction(my.actionName, my.finished); // Pass the callback along to the buffer method
     };
 
