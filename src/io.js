@@ -188,6 +188,9 @@ function makeSettings() {
     that.getScanSpeed = function() {
         return slider.getms();
     };
+    that.addShowMenuListener = function(listener) {
+        showElem.addEventListener("change", listener);
+    };
     that.getEmailSignature = emailSettings.getSignature;
     that.getEmailAddress = emailSettings.getAddress;
     that.getEmailPassword = emailSettings.getPassword;

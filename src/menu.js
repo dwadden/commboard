@@ -55,6 +55,18 @@ function initMenus(spec) {
         menu.setMenus(menus);
     });
 
+    // Register event listener for "show menu checkbox"
+    // TODO: Encapsulate in a procedure
+    let container = document.getElementById("menuContainer");
+    function onChange(event) {
+        if (event.target.checked) {
+            jQuery(container).show();
+        } else {
+            jQuery(container).hide();
+        }
+    }
+    spec.settings.addShowMenuListener(onChange);
+
     return menus;
 }
 

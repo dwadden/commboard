@@ -82,16 +82,16 @@ table {
 }
 
 /* Commboard styling */
-#commboard { /* The commboard buttons */
+#menuContainer { /* The menuContainer buttons */
   width: 1190px;
 }
-#commboard tr {
+#menuContainer tr {
   height: 60px;
 }
-#commboard td {
+#menuContainer td {
   padding: 3px;
 }
-#commboard input[type=button] {
+#menuContainer input[type=button] {
   height: 100%;
   width: 100%;
   font-size: 150%;
