@@ -2,10 +2,6 @@
 
 // *****************************************************************************
 
-// npm imports
-const jQuery = require("jquery"); // Shouldn't need this, but bootstrap gets cranky without it.
-require("jquery-ui");
-
 // File imports
 const menu = require("./menu.js");
 const det = require("./detector.js");

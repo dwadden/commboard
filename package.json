@@ -8,12 +8,10 @@
     },
     "homepage": "https://github.com/dwadden/wedjat#readme",
     "dependencies": {
-        "bootbox": "^4.4.0",
         "bootstrap": "^3.3.6",
+        "electron-prebuilt": "^0.37.6",
         "jquery": "^2.2.1",
         "jquery-ui": "^1.10.5",
-        "moment": "^2.12.0",
-        "nodemailer": "^2.3.0",
-        "requirejs": "^2.1.22"
+        "nodemailer": "^2.3.0"
     }
 }

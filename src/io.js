@@ -8,7 +8,6 @@
 const jQuery = require("jquery");
 require("jquery-ui");
 const EventEmitter = require("events");
-const moment = require("moment");
 
 // File imports
 const util = require("./util.js");
