@@ -14,15 +14,10 @@ const moment = require("moment");
 const util = require("./util.js");
 
 // Exports
-module.exports = { makeBuffer, makeSlider };
-/**
- * Constructor for text buffer.
- * @returns {Object} A buffer object.
- */
+module.exports = { makeBuffer, makeGeneralSettings };
+
 function makeBuffer() {
-    /**
-     * @namespace Buffer
-     */
+    // Constructor for text buffer.
     let that = Object.create(EventEmitter.prototype);
 
     // Constants
@@ -121,14 +116,8 @@ function makeBuffer() {
     }
 
     // Public methods
-    /**
-     * Write to the buffer.
-     * @param {string} text - The text to write.
-     * @param {string} textCategory - The type of text (e.g. punctuation,
-     * letter).
-     * @memberof Buffer
-     */
     that.write = function(text, textCategory) {
+        // Write to the buffer.
         let dispatch = new Map([["letter", writeLetter],
                                 ["space", writeSpace],
                                 ["word", writeWord],
@@ -138,41 +127,24 @@ function makeBuffer() {
         writer(text);
         emitChange();
     };
-    /**
-     * Perform buffer action
-     * @param {string} actionName - The name of the action to be performed.
-     * @param {Function} cbpressed - The callback to invoke after completion.
-     * @memberof Buffer
-     */
     that.executeAction = function(actionName, cbpressed) {
+        // Perform buffer action.
         let dispatch = new Map([["delete", deleteText],
                                 ["read", readBuffer],
                                 ["clear", clear]]);
         let action = dispatch.get(actionName);
         action(cbpressed);
     };
-    /**
-     * Get buffer text.
-     * @returns {string} The buffer text
-     * @memberof Buffer
-     */
     that.getText = function() {
+        // Retrieve buffer text.
         return bufferText.slice(0, -1);
     };
-    /**
-     * Add listener for buffer change event.
-     * @param {Function} listener - The listener.
-     * @memberof Buffer
-     */
     that.addChangeListener = function(listener) {
+        // Add listener for buffer change event.
         that.addListener("bufferChange", listener);
     };
-    /**
-     * Remove listener for buffer change event.
-     * @param {Function} listener - The listener.
-     * @memberof Buffer
-     */
     that.removeChangeListener = function(listener) {
+        // Remove listener for buffer change event.
         that.removeListener("bufferChange", listener);
     };
 
@@ -181,13 +153,45 @@ function makeBuffer() {
     return that;
 }
 
-/**
- * Constructor for slider objects.
- */
+function makeGeneralSettings() {
+    // General settings object. Handles the following:
+    //   Toggle sound.
+    //   Toggle display menu.
+    //   Language. Currently only English is implemented.
+    //   Slider controlling scan speed..
+    let that = {};
+
+    // Internal variables
+    let soundElem = document.querySelector("input[type=checkbox][value=sound]");
+    let showElem = document.querySelector("input[type=checkbox][value=showMenu]");
+    let layoutElem = document.querySelector("select[name=layout]");
+    let languageElem = document.querySelector("select[name=language]");
+    let slider = makeSlider();
+
+    // Public methods
+    that.useSoundP = function() {
+        return soundElem.checked;
+    };
+    that.showMenuP = function() {
+        return showElem.checked;
+    };
+    that.getLayout = function() {
+        return layoutElem.value;
+    };
+    that.getLanguage = function() {
+        return languageElem.value;
+    };
+    that.getScanSpeed = function() {
+        return slider.getms();
+    };
+
+    // Return the object
+    return that;
+}
+
 function makeSlider() {
-    /**
-     * @namespace Slider
-     */
+    // Constructor for slider object.
+    // Encapsulated by the generalSettings object.
     let that = {};
 
     // Constants
@@ -215,12 +219,6 @@ function makeSlider() {
         valueElem.textContent = `${stringValue} s`;
     }
 
-    // Public methods.
-    /**
-     * Get the wait time specified by the slider.
-     * @returns {number} Wait time in milliseconds.
-     * @memberof Slider
-     */
     that.getms = function() {
         return sliderValue * 1000;
     };
@@ -228,4 +226,12 @@ function makeSlider() {
     // Initialize and return.
     updateValue();
     return that;
+}
+
+function makeEmailSettings() {
+    //  Email settings object. Handles the following:
+    //   Signature (the user's name)
+    //   Email address
+    //   Password
+    ;
 }
