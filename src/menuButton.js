@@ -74,6 +74,15 @@ function makeButton(spec, my) {
         };
         util.read(my.announcementText, afterRead, my.buttonElem, 0);
     };
+    that.hideDropdown = function() {
+        // TODO: Right now, this method has to be called explicitly from each
+        // action method that calls it. This should be re-factored in a more
+        // compositional way after things are working.
+        // It should also probably be a private method instead of public.
+        if (my.menu.getInfo().hide === "dropdown") {
+            my.menu.slideUp();
+        }
+    };
     that.scan = function(cbpassed, cbpressed) {
         let onPress = function() {
             // To be executed if the button is pressed
@@ -124,6 +133,7 @@ function makeMenuSelectorButton(spec, my) {
         if (target.getInfo().hide === "dropdown") {
             target.slideDown();
         }
+        that.hideDropdown();
     };
     that.getTargetMenu = function() {
         // Return a pointer to the target menu
@@ -185,6 +195,7 @@ function makeRequestButton(spec, my) {
     that.action = function() {
         let afterBeep = function() {
             let afterSpeech = function() {
+                that.hideDropdown();
                 setTimeout(my.finished, my.slider.getms());
             };
             let utterance = util.speak(my.message);
@@ -208,6 +219,7 @@ function makeTextButton(spec, my) {
 
     that.action = function() {
         my.buffer.write(my.text, my.textCategory);
+        that.hideDropdown();
         my.finished();
     };
 
@@ -295,6 +307,7 @@ function makeGuessButton(spec, my) {
     };
     that.action = function(cbpressed) {
         my.buffer.write(my.buttonValue, my.textCategory);
+        that.hideDropdown();
         my.finished();
     };
 
@@ -349,6 +362,8 @@ it is perfectly fine to send messages to this address.`;
 
         // Send it off
         transporter.sendMail(mailOptions, afterSend);
+        that.hideDropdown();
+        my.finished();
     };
 
     return that;
