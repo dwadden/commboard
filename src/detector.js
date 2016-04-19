@@ -90,8 +90,8 @@ function makeDetector() {
     };
 
     // Initialize and return.
-    startButton.onclick = start;
-    stopButton.onclick = stop;
+    startButton.addEventListener("click", start);
+    stopButton.addEventListener("click", stop);
     return that;
 }
 

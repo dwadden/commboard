@@ -15,6 +15,11 @@ function makeScanner(mainMenu, detector, settings) {
     const LONG_GAZE_TIME = 2000;     // A long gaze must last for 2 s.
     const BEEP_DURATION = 250;       // Length of beep informing user that the gaze has lasted 2s
 
+    // Local variables
+    let startButton = document.querySelector("input[type=button][value=Start]");
+    let stopButton = document.querySelector("input[type=button][value=Stop]");
+
+    // Procedures
     function signalLongGaze() {
         // TODO: Refactor this into a single beep function.
         let context = new window.AudioContext();
@@ -24,7 +29,6 @@ function makeScanner(mainMenu, detector, settings) {
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     }
-
 
     function scanMenu(menu, cb) {
         // Scan a menu. The second argument specifies the callback to be invoked
@@ -77,6 +81,9 @@ function makeScanner(mainMenu, detector, settings) {
             clearTimeout(longGazeTimeout);
             let elapsed = new Date() - startTime;
             if (elapsed >= SHORT_GAZE_TIME) {
+                if (currentButton !== gazeButton) {
+                    currentButton.toggle(); // Turn off the current button if it won't be turned off otherwise.
+                }
                 clearTimeout(timeout);
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
@@ -102,7 +109,9 @@ function makeScanner(mainMenu, detector, settings) {
             }
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
-            button.toggle();
+            if (currentButton === gazeButton) {
+                button.toggle();
+            }
             button.addFinishedListener(afterCompletion);
             button.pressed();
         }
@@ -118,7 +127,9 @@ function makeScanner(mainMenu, detector, settings) {
         // callback need be invoked.
         scanMenu(mainMenu, function() { ; });
     };
-
+    // register buttons
+    startButton.addEventListener("click", that.scan);
+    console.log("Here");
     return that;
 }
 
