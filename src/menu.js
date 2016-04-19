@@ -8,7 +8,7 @@ const menuButton = require("./menuButton.js");
 const util = require("./util.js");
 
 // Exports
-module.exports = { makeMenu, makeBranchMenu, makeLeafMenu, makeGuessMenu, initMenus };
+module.exports = { initMenus };
 
 function initMenus(spec) {
     // Create all the menus and return
@@ -47,7 +47,9 @@ function initMenus(spec) {
     function each(key) {
         let newSpec = jQuery.extend(names.get(key), spec);
         newSpec.menuName = key;
-        menus.set(key, makeMenu(newSpec));
+        // TODO: This isn't the right way to do this. Fix it later.
+        let maker = key ==="guess" ? makeGuessMenu : makeMenu;
+        menus.set(key, maker(newSpec));
     }
     Array.from(names.keys()).forEach(each);
 
@@ -145,9 +147,11 @@ function makeMenu(spec, my) {
         children.forEach(setParent);
     };
     that.slideUp = function() {
-        if (my.menuElem !== null) {
-            jQuery(my.menuElem).slideUp();
-        }
+        // For debugging, keep all menus visible.
+        // if (my.menuElem !== null) {
+        //     jQuery(my.menuElem).slideUp();
+        // }
+        ;
     };
     that.slideDown = function() {
         if (my.menuElem !== null) {
@@ -180,62 +184,12 @@ function makeMenu(spec, my) {
     return that;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-// Old. Work into new scanner.
-
-
-
-function makeBranchMenu(spec, my) {
-    my = my || {};
-    let that = makeMenu(spec, my);
-
-    my.scanAt = function(buttonIx) {
-        let cbpassed = function() { my.scanAt(my.nextButton(buttonIx)); };
-        let cbpressed = that.scan;
-        let button = my.buttons[buttonIx];
-        button.scan(cbpassed, cbpressed);
-    };
-
-    return that;
-}
-
-function makeLeafMenu(spec, my) {
-    my = my || {};
-    let that = makeMenu(spec, my);
-    const LEAF_LOOPS = 2;            // # loops through leaf menu before jumping to parent
-
-    my.isLastLoop = function(loopIx) {
-        return loopIx === LEAF_LOOPS - 1;
-    };
-    my.nextLoop = function(buttonIx, loopIx) {
-        return my.isLastButton(buttonIx) ? loopIx + 1 : loopIx;
-    };
-    my.scanAt = function(buttonIx, loopIx) {
-        let cbpressed = function() {
-            that.slideUp();
-            that.parent.scan();
-        };
-        let cbnext = function() {
-            my.scanAt(my.nextButton(buttonIx),
-                      my.nextLoop(buttonIx, loopIx));
-        };
-        let cbpassed = (my.isLastButton(buttonIx) && my.isLastLoop(loopIx) ?
-                        cbpressed : cbnext);
-        let button = my.buttons[buttonIx];
-        button.scan(cbpassed, cbpressed);
-    };
-
-    return that;
-}
-
 function makeGuessMenu(spec, my) {
     my = my || {};
-    let that = makeLeafMenu(spec, my);
+    let that = makeMenu(spec, my);
 
     // internal constants
-    const N_GUESSES = 7;        // Number of guesses to be offered to user
+    const N_GUESSES = 8;        // Number of guesses to be offered to user
     const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
 
     // private methods
