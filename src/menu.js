@@ -55,7 +55,6 @@ function initMenus(spec) {
         menu.setMenus(menus);
     });
 
-    debugger;
     return menus;
 }
 
@@ -92,9 +91,8 @@ function makeMenu(spec, my) {
             return { elem: buttonElem,
                      menu: that,
                      detector: my.detector,
-                     slider: my.slider,
                      buffer: my.buffer,
-                     soundToggle: my.soundToggle
+                     settings: my.settings
                    };
         };
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
@@ -108,11 +106,12 @@ function makeMenu(spec, my) {
     // };
 
     // Private data
+    // TODO: Copy these over more efficiently
     my.menuName = spec.menuName;
     my.hide = spec.hide;
     my.scan = spec.scan;
     my.buffer = spec.buffer;
-    my.soundToggle = spec.soundToggle;
+    my.settings = spec.settings;
     // Some, but not all menus have elements corresponding to them. These menus
     // can slide up and down.
     my.menuElem = document.getElementById(my.menuName);

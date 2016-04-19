@@ -39,7 +39,7 @@ function makeButton(spec, my) {
     my.buttonValue = my.buttonElem.value;
     my.announcementText = my.buttonValue; // By default, announce the button text
     my.menu = spec.menu;
-    my.soundToggle = spec.soundToggle;
+    my.settings = spec.settings;
     my.timeout = null;
 
     // Private methods
@@ -60,7 +60,7 @@ function makeButton(spec, my) {
         return my.buttonValue;
     };
     that.announce = function() {
-        if (my.soundToggle.isSoundOn()) {
+        if (my.settings.useSoundP()) {
             util.speak(my.announcementText);
         }
     };
@@ -83,37 +83,13 @@ function makeButton(spec, my) {
             my.menu.slideUp();
         }
     };
-    that.scan = function(cbpassed, cbpressed) {
-        let onPress = function() {
-            // To be executed if the button is pressed
-            let afterPress = function() {
-                that.announce();
-                let afterAnnouncement = function() {
-                    that.toggle();
-                    that.action(cbpressed);
-                };
-                setTimeout(afterAnnouncement, my.slider.getms());
-            };
-            my.detector.removeGazeListener(onPress);
-            clearTimeout(my.timeout);
-            setTimeout(afterPress, PRESS_WAIT);
-        };
-        let onTimeout = function() {
-            // To be executed if button is not pressed
-            that.toggle();
-            my.detector.removeGazeListener(onPress);
-            cbpassed();
-        };
-        that.addFinishedListener = function(listener) {
-            that.once("buttonFinished", listener);
-        };
-        // Initialization
-        that.toggle();
-        that.announce();
-        my.detector.addGazeListener(onPress);
-        my.timeout = setTimeout(onTimeout, my.slider.getms());
+    that.addFinishedListener = function(listener) {
+        // The listener will fire once when the button says it's finished.
+        that.once("buttonFinished", listener);
     };
+    that.buttonType = "button";
 
+    // Initialize and return
     my.buttonElem.onclick = that.pressed;
     return that;
 }
@@ -134,6 +110,7 @@ function makeMenuSelectorButton(spec, my) {
             target.slideDown();
         }
         that.hideDropdown();
+        setTimeout(my.finished, my.settings.getScanSpeed());
     };
     that.getTargetMenu = function() {
         // Return a pointer to the target menu
@@ -141,6 +118,7 @@ function makeMenuSelectorButton(spec, my) {
         let menus = my.menu.getMenus();
         return menus.get(targetName);
     };
+    that.buttonType = "menuSelector";
     return that;
 }
 
@@ -161,6 +139,7 @@ function makeStartButton(spec, my) {
         my.buttonElem.value = my.buttonValue;
         that.toggle();
     };
+    that.buttonType = "start";
 
     // Initialize
     that.toggle();
@@ -184,6 +163,7 @@ function makeRequestButton(spec, my) {
     my.message = MESSAGES[my.buttonValue];
 
     // Public methods
+    // TODO: Refactor this, since it's used elsewhere.
     that.beep = function() {
         let context = new window.AudioContext();
         let oscillator = context.createOscillator();
@@ -196,7 +176,7 @@ function makeRequestButton(spec, my) {
         let afterBeep = function() {
             let afterSpeech = function() {
                 that.hideDropdown();
-                setTimeout(my.finished, my.slider.getms());
+                setTimeout(my.finished, my.settings.getScanSpeed());
             };
             let utterance = util.speak(my.message);
             utterance.onend = afterSpeech;
@@ -205,6 +185,7 @@ function makeRequestButton(spec, my) {
         that.beep();
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
     };
+    that.buttonType = "request";
     return that;
 }
 
@@ -222,7 +203,7 @@ function makeTextButton(spec, my) {
         that.hideDropdown();
         my.finished();
     };
-
+    that.buttonType = "text";
     return that;
 }
 
@@ -230,15 +211,14 @@ function makeLetterButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
 
-    my.textCategory = "letter";
-
+    that.buttonType = my.textCategory = "letter";
     return that;
 }
 
 function makeSpaceButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
-    my.textCategory = "space";
+    that.buttonType = my.textCategory = "space";
     my.text = " ";   // Button text is just " "
     return that;
 };
@@ -254,6 +234,7 @@ function makePunctuationButton(spec, my) {
                      ['"', "quote"],
                      ["@", "at"]]);
     my.announcementText = m.get(my.buttonValue);
+    that.buttonType = "punctuation";
 
     return that;
 }
@@ -262,7 +243,7 @@ function makeNonTerminalPunctuationButton(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
 
-    my.textCategory = "nonTerminalPunctuation";
+    that.buttonType = my.textCategory = "nonTerminalPunctuation";
 
     return that;
 }
@@ -271,7 +252,7 @@ function makeTerminalPunctuationButton(spec, my) {
     my = my || {};
     let that = makePunctuationButton(spec, my);
 
-    my.textCategory = "terminalPunctuation";
+    that.buttonType = my.textCategory = "terminalPunctuation";
 
     return that;
 }
@@ -287,6 +268,7 @@ function makeBufferActionButton(spec, my) {
         that.hideDropdown();
         my.buffer.executeAction(my.actionName, my.finished); // Pass the callback along to the buffer method
     };
+    that.buttonType = "bufferAction";
 
     return that;
 }
@@ -311,6 +293,7 @@ function makeGuessButton(spec, my) {
         that.hideDropdown();
         my.finished();
     };
+    that.buttonType = "guess";
 
     return that;
 }
@@ -366,6 +349,7 @@ it is perfectly fine to send messages to this address.`;
         that.hideDropdown();
         my.finished();
     };
+    that.buttonType = "email";
 
     return that;
 }
@@ -385,5 +369,6 @@ function makeNotImplementedButton(spec, my) {
         utterance.onend = afterRead;
         my.buttonElem.utternce = utterance;
     };
+    that.buttonType = "notImplemented";
     return that;
 }
