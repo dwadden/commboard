@@ -76,6 +76,19 @@ function makeDetector() {
         that.removeListener("gazeEnd", listener);
     };
 
+    // Listen key presses as alternatives to gazes
+    // TODO: May want to factor this out into separate detectors.
+    window.onkeyup = function(event) {
+        if (event.keyIdentifier === "Up") {
+            emitGazeEnd();
+        }
+    };
+    window.onkeydown = function(event) {
+        if (event.keyIdentifier === "Up") {
+            emitGazeStart();
+        }
+    };
+
     // Initialize and return.
     startButton.onclick = start;
     stopButton.onclick = stop;
