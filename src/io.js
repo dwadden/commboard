@@ -29,13 +29,14 @@ function makeBuffer() {
     const CURSOR = "_";          // Cursor character. Could be |, for instance
 
     // Local variables
-    let bufferElem = document.getElementById("buffer");
+    let bufferElem = document.getElementById("bufferContainer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = CURSOR;
 
     // Elementary buffer operations
     // Update element text to match text stored in JS variable
     function update() {
+        // TODO: fix this
         textElem.textContent = bufferText;
     }
     // Push to buffer

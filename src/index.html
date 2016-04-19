@@ -113,7 +113,7 @@
         <div class="padTop">
           <table><tbody>
             <!-- Guesses -->
-            <tr>
+            <tr id="guess">
               <td><input type="button" class="buttonOff" value="guess0"
                          data-menu="guess" data-button-type="guess" data-guess-id="0"></td>
               <td><input type="button" class="buttonOff" value="guess1"
@@ -132,7 +132,7 @@
                          data-menu="guess" data-button-type="guess" data-guess-id="7"></td>
             </tr>
             <!-- Punctuation -->
-            <tr>
+            <tr id="punctuation">
               <td><input type="button" class="buttonOff" value="."
                          data-menu="punctuation" data-button-type="terminalPunctuation"></td>
               <td><input type="button" class="buttonOff" value="?"
@@ -151,7 +151,7 @@
                          data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
             </tr>
             <!-- Buffer actions (e.g. read, delete, clear). -->
-            <tr>
+            <tr id="buffer">
               <td><input type="button" class="buttonOff" value="Read"
                          data-menu="buffer" data-button-type="bufferAction"></td>
               <td><input type="button" class="buttonOff" value="Delete"
@@ -167,7 +167,7 @@
               <td colspan="2"></td>
             </tr>
             <!-- Email. -->
-            <tr>
+            <tr id="email">
               <td><input type="button" class="buttonOff" value="Dad"
                          data-menu="email" data-button-type="email"
                          data-recipients="kmozersky@gmail.com"></td>
@@ -180,7 +180,7 @@
               <td colspan="5"></td>
             </tr>
             <!-- Call bell requests. -->
-            <tr>
+            <tr id="callBell">
               <td><input type="button" class="buttonOff" value="Cold"
                          data-menu="callBell" data-button-type="request"></td>
               <td><input type="button" class="buttonOff" value="Hot"
@@ -196,7 +196,7 @@
       <!-- IO. -->
       <div id="io" class="marginSurround">
         <!-- The text buffer -->
-        <div id="buffer" class="container floatLeft borderLine borderSurround padSurround marginRight"> <!-- The user's text. -->
+        <div id="bufferContainer" class="container floatLeft borderLine borderSurround padSurround marginRight"> <!-- The user's text. -->
           <p id="bufferText"></p>
         </div>
         <!-- All settings. -->
@@ -237,9 +237,7 @@
               <p>
                 Layout:
                 <select name="layout">
-                  <option value="layout1">layout1</option>
-                  <option value="layout2">layout2</option>
-                  <option value="layout3">layout3</option>
+                  <option value="default">Default</option>
                 </select>
               </p>
               <p></p>
@@ -247,7 +245,6 @@
                 Language:
                 <select name="language">
                   <option value="english">English</option>
-                  <option value="french">French</option>
                 </select>
               </p>
               <p></p>

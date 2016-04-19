@@ -109,7 +109,7 @@ table {
   height: 515px;
   width: 1190px;
 }
-#buffer {
+#bufferContainer {
   height: 100%;
   width: 495px;
   font-size: 150%;

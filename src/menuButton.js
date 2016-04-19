@@ -50,6 +50,9 @@ function makeButton(spec, my) {
     };
 
     // Public methods
+    that.getMenu = function() {
+        return my.menu;
+    };
     that.getButtonElem = function() {
         return my.buttonElem;
     };
@@ -111,18 +114,23 @@ function makeMenuSelectorButton(spec, my) {
     let that = makeButton(spec, my);
 
     // Private data
-    my.slide = JSON.parse(my.buttonElem.dataset.slide); // converts to boolean
+    // my.slide = JSON.parse(my.buttonElem.dataset.slide); // converts to boolean
+
 
     // Public methods
-    that.action = function(cbpressed) {
-        let nextMenuName = my.buttonValue.toLowerCase();
-        let nextMenu = my.menu.getChildren().get(nextMenuName);
-        if (my.slide) {
-            my.menu.slideUp();
+    that.action = function() {
+        // Unhide the next menu if it's a dropdown. Otherwise do nothing.
+        let target = that.getTargetMenu();
+        if (target.getInfo().hide === "dropdown") {
+            target.slideDown();
         }
-        nextMenu.scan();
     };
-
+    that.getTargetMenu = function() {
+        // Return a pointer to the target menu
+        let targetName = my.buttonElem.dataset.target;
+        let menus = my.menu.getMenus();
+        return menus.get(targetName);
+    };
     return that;
 }
 

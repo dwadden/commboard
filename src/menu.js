@@ -41,17 +41,21 @@ function initMenus(spec) {
                          ["callBell",    { hide: "dropdown",
                                            scan: "finish" }]]
                        );
-    function mapped(key) {
+
+    // Populate the menu dictionary
+    let menus = new Map();
+    function each(key) {
         let newSpec = jQuery.extend(names.get(key), spec);
         newSpec.menuName = key;
-        return makeMenu(newSpec);
+        menus.set(key, makeMenu(newSpec));
     }
-    debugger;
-    let menus = Array.from(names.keys()).map(mapped);
+    Array.from(names.keys()).forEach(each);
+
     menus.forEach(function(menu) { // Give each menu a pointer to all other menus
-        menu.menus = menus;
+        menu.setMenus(menus);
     });
 
+    debugger;
     return menus;
 }
 
@@ -109,7 +113,9 @@ function makeMenu(spec, my) {
     my.scan = spec.scan;
     my.buffer = spec.buffer;
     my.soundToggle = spec.soundToggle;
-    my.divElem = document.querySelector(`div#${my.menuName}`);
+    // Some, but not all menus have elements corresponding to them. These menus
+    // can slide up and down.
+    my.menuElem = document.getElementById(my.menuName);
     my.buttonElems = document.querySelectorAll(
         `input[type=button][data-menu="${my.menuName}"]`);
     my.buttons = my.initButtons();
@@ -128,13 +134,13 @@ function makeMenu(spec, my) {
         children.forEach(setParent);
     };
     that.slideUp = function() {
-        if (my.divElem !== null) {
-            jQuery(my.divElem).slideUp();
+        if (my.menuElem !== null) {
+            jQuery(my.menuElem).slideUp();
         }
     };
     that.slideDown = function() {
-        if (my.divElem !== null) {
-            jQuery(my.divElem).slideDown();
+        if (my.menuElem !== null) {
+            jQuery(my.menuElem).slideDown();
         }
     };
     that.getButtons = function() {
@@ -143,8 +149,23 @@ function makeMenu(spec, my) {
     that.getNButtons = function() {
         return my.nButtons;
     };
+    that.setMenus = function(menus) {
+        my.menus = menus;
+    };
+    that.getMenus = function() {
+        return my.menus;
+    };
+    that.getInfo = function() {
+        return { menuName: my.menuName,
+                 hide: my.hide,
+                 scan: my.scan };
+    };
+
     // Initialize and return
-    // that.slideUp();
+    // If it's a sliding menu, hide it
+    if (my.hide === "dropdown") {
+        that.slideUp();
+    }
     return that;
 }
 
