@@ -16,7 +16,7 @@
       <!-- Compose text. The user will spend most of his time here. -->
       <div id="menuContainer" class="container borderLine borderSurround padSurround marginSurround">
         <!-- The main 5 rows of the commboard -->
-        <div class="padBottom borderLine borderBottom">
+        <div class="padBottom borderLine borderBottom hideable">
           <table><tbody>
             <tr> <!-- Letters. This and the next 3 rows. -->
               <td><input type="button" class="buttonOff" value="1"
@@ -109,28 +109,32 @@
             </tr>
           </tbody></table>
         </div>
-        <!-- Dropdown menus. -->
-        <div class="padTop">
+        <!-- Guesses -->
+        <div class="padTop borderLine borderBottom">
           <table><tbody>
-            <!-- Guesses -->
-            <tr id="guess">
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="0"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="1"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="2"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="3"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="4"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="5"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="6"></td>
-              <td><input type="button" class="buttonOff" value=""
-                         data-menu="guess" data-button-type="guess" data-guess-id="7"></td>
-            </tr>
+          <tr id="guess">
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="0"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="1"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="2"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="3"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="4"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="5"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="6"></td>
+            <td><input type="button" class="buttonOff" value=""
+                       data-menu="guess" data-button-type="guess" data-guess-id="7"></td>
+          </tr>
+          </tbody></table>
+        </div>
+        <!-- Dropdown menus. -->
+        <div class="padTop hideable">
+          <table><tbody>
             <!-- Punctuation -->
             <tr id="punctuation">
               <td><input type="button" class="buttonOff" value="."

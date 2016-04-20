@@ -30,7 +30,7 @@ function initMenus(spec) {
                                            scan: "finish" }],
                          ["compose5",    { hide: "commboard",
                                            scan: "finish" }],
-                         ["guess",       { hide: "dropdown",
+                         ["guess",       { hide: "commboard",
                                            scan: "finish" }],
                          ["punctuation", { hide: "dropdown",
                                            scan: "finish" }],
@@ -59,12 +59,12 @@ function initMenus(spec) {
 
     // Register event listener for "show menu checkbox"
     // TODO: Encapsulate in a procedure
-    let container = document.getElementById("menuContainer");
+    let containers = document.querySelectorAll(".hideable");
     function onChange(event) {
         if (event.target.checked) {
-            jQuery(container).show();
+            jQuery(containers).show();
         } else {
-            jQuery(container).hide();
+            jQuery(containers).hide();
         }
     }
     spec.settings.addShowMenuListener(onChange);
