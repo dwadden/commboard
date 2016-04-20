@@ -69,10 +69,12 @@ function makeButton(spec, my) {
         my.buttonElem.classList.toggle("buttonOff");
     };
     that.pressed = function() {
-        let afterRead = function() {
+        // If sound, read the button name. Else just perform the action.
+        if (my.settings.useSoundP()) {
+            util.read(my.announcementText, that.action, my.buttonElem, 0);
+        } else {
             that.action();
-        };
-        util.read(my.announcementText, afterRead, my.buttonElem, 0);
+        }
     };
     that.hideDropdown = function() {
         // TODO: Right now, this method has to be called explicitly from each
