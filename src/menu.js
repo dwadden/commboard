@@ -201,7 +201,7 @@ function makeGuessMenu(spec, my) {
             url: queryURL,
             data: { minCorpusCount: MIN_COUNT,
                     api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
-                    caseSensitive: true,
+                    caseSensitive: false,
                     limit: N_GUESSES },
             type: "GET",
             dataType: "json",
@@ -225,7 +225,8 @@ function makeGuessMenu(spec, my) {
         if (text === "") {          // If no text, no guesses.
             cb(util.repeat("", N_GUESSES));
         } else {
-            my.wordnik(text, success, failure);
+            // Add a wildcard so guesses will be retrieved even if "text" is a completed word.
+            my.wordnik(text + "*", success, failure);
         }
     };
     // Update word guesses based on changes to buffer
