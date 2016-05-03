@@ -27,10 +27,4 @@ function setup() {
     let scanner = scan.makeScanner(menus.get("composeMain"), detector, settings);
 
     // TODO: For debugging purposes only, so I have access to the relevant
-    // objects.
-    window.det = det;
-    window.buffer = buffer;
-    window.settings = settings;
-    window.menus = menus;
-    window.scanner = scanner;
 }

@@ -68,3 +68,6 @@ function zip(xs, ys) {
                                       zip(xs.slice(1), ys.slice(1)));
     }
 }
+function pass() {
+    ; 
+}

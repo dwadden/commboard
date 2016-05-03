@@ -112,7 +112,7 @@ function makeMenuSelectorButton(spec, my) {
             target.slideDown();
         }
         that.hideDropdown();
-        setTimeout(my.finished, my.settings.getScanSpeed());
+        my.finished();
     };
     that.getTargetMenu = function() {
         // Return a pointer to the target menu

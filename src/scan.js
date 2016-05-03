@@ -2,6 +2,9 @@
 
 // Code to handle aural commboard scanning
 
+// File imports
+const util = require("./util.js");
+
 module.exports = { makeScanner };
 
 function makeScanner(mainMenu, detector, settings) {
@@ -102,12 +105,11 @@ function makeScanner(mainMenu, detector, settings) {
                 const dispatch = new Map([["repeat", function() { scanMenu(menu, cb); }],
                                           ["finish", cb]]);
                 let scanType = menu.getInfo().scan;
-                let cb2 = dispatch.get(scanType);
-                if (button.buttonType === "menuSelector") {
-                    scanMenu(button.getTargetMenu(), cb2);
-                } else {
-                    cb2();
-                }
+                let cb1 = dispatch.get(scanType);
+                let cb2 = (button.buttonType === "menuSelector" ?
+                           function() { scanMenu(button.getTargetMenu(), cb1); } :
+                           cb1);
+                cb2();
             }
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
@@ -127,20 +129,11 @@ function makeScanner(mainMenu, detector, settings) {
     that.scan = function() {
         // Kick off by scanning the main menu. If scanning completes, no
         // callback need be invoked.
-        scanMenu(mainMenu, function() { ; });
+        scanMenu(mainMenu, util.pass);
     };
     // register buttons
     startButton.addEventListener("click", that.scan);
-    console.log("Here");
     return that;
-}
-
-function scanMenu(menu, detector, settings) {
-    ;
-}
-
-function scanButton(button, detector, settings) {
-    ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
