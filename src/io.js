@@ -55,7 +55,7 @@ function makeBuffer() {
     function isBufferSentenceStart() {
         // This will break if user backspaces after a sentence finishes.
         let text = that.getText();
-        return (text == "" ||
+        return (text === "" ||
                 (text.slice(-1) === " " &&
                  isTerminalPunctuation(text.slice(-2))));
     }
@@ -104,7 +104,7 @@ function makeBuffer() {
     }
     // Clear the buffer.
     function clear(cb) {
-        bufferText = CURSOR;;
+        bufferText = CURSOR;
         update();
         emitChange();
         cb();
