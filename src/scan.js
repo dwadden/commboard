@@ -150,36 +150,3 @@ function makeScanner(mainMenu, detector, settings) {
     startButton.addEventListener("click", that.scan);
     return that;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-
-// that.scan = function(cbpassed, cbpressed) {
-//     let onPress = function() {
-//         // To be executed if the button is pressed
-//         let afterPress = function() {
-//             that.announce();
-//             let afterAnnouncement = function() {
-//                 that.toggle();
-//                 that.action(cbpressed);
-//             };
-//             setTimeout(afterAnnouncement, my.slider.getms());
-//         };
-//         my.detector.removeGazeListener(onPress);
-//         clearTimeout(my.timeout);
-//         setTimeout(afterPress, PRESS_WAIT);
-//     };
-//     let onTimeout = function() {
-//         // To be executed if button is not pressed
-//         that.toggle();
-//         my.detector.removeGazeListener(onPress);
-//         cbpassed();
-//     };
-//     that.addFinishedListener = function(listener) {
-//         that.once("buttonFinished", listener);
-//     };
-//     // Initialization
-//     that.toggle();
-//     that.announce();
-//     my.detector.addGazeListener(onPress);
-//     my.timeout = setTimeout(onTimeout, my.slider.getms());
-// };
