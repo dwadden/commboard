@@ -76,15 +76,6 @@ function makeButton(spec, my) {
             that.action();
         }
     };
-    that.hideDropdown = function() {
-        // TODO: Right now, this method has to be called explicitly from each
-        // action method that calls it. This should be re-factored in a more
-        // compositional way after things are working.
-        // It should also probably be a private method instead of public.
-        if (my.menu.getInfo().hide === "dropdown") {
-            my.menu.slideUp();
-        }
-    };
     that.addFinishedListener = function(listener) {
         // The listener will fire once when the button says it's finished.
         that.once("buttonFinished", listener);
@@ -111,7 +102,6 @@ function makeMenuSelectorButton(spec, my) {
         if (target.getInfo().hide === "dropdown") {
             target.slideDown();
         }
-        that.hideDropdown();
         my.finished();
     };
     that.getTargetMenu = function() {
@@ -177,7 +167,6 @@ function makeRequestButton(spec, my) {
     that.action = function() {
         let afterBeep = function() {
             let afterSpeech = function() {
-                that.hideDropdown();
                 setTimeout(my.finished, my.settings.getScanSpeed());
             };
             let utterance = util.speak(my.message);
@@ -202,7 +191,6 @@ function makeTextButton(spec, my) {
 
     that.action = function() {
         my.buffer.write(my.text, my.textCategory);
-        that.hideDropdown();
         my.finished();
     };
     that.buttonType = "text";
@@ -267,7 +255,6 @@ function makeBufferActionButton(spec, my) {
     my.actionName = my.buttonValue.toLowerCase();
 
     that.action = function() {
-        that.hideDropdown();
         my.buffer.executeAction(my.actionName, my.finished); // Pass the callback along to the buffer method
     };
     that.buttonType = "bufferAction";
@@ -292,7 +279,6 @@ function makeGuessButton(spec, my) {
     };
     that.action = function(cbpressed) {
         my.buffer.write(my.buttonValue, my.textCategory);
-        that.hideDropdown();
         my.finished();
     };
     that.buttonType = "guess";
@@ -351,7 +337,6 @@ it is perfectly fine to send messages to this address.`;
 
         // Send it off
         transporter.sendMail(mailOptions, afterSend);
-        that.hideDropdown();
         my.finished();
     };
     that.buttonType = "email";

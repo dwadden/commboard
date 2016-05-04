@@ -102,8 +102,23 @@ function makeScanner(mainMenu, detector, settings) {
             // Press button. After it's been pressed, either resume control of
             // program or pass control to selected menu.
             function afterCompletion() {
-                const dispatch = new Map([["repeat", function() { scanMenu(menu, cb); }],
-                                          ["finish", cb]]);
+                // This needs to be cleaned up. For now, here's what's going on.
+                // When we scan a sliding menu, it needs to slide up when it
+                // exists. The way to do that is interecept the callback passed
+                // from the invoking menu, and slide up the dropdown before
+                // invoking that callback.
+                let slidecb;
+                let target = button.getTargetMenu && button.getTargetMenu();
+                if (target !== undefined && target.getInfo().hide === "dropdown") {
+                    slidecb = function() {
+                        target.slideUp();
+                        cb();
+                    };
+                } else {
+                    slidecb = cb;
+                }
+                const dispatch = new Map([["repeat", function() { scanMenu(menu, slidecb); }],
+                                          ["finish", slidecb]]);
                 let scanType = menu.getInfo().scan;
                 let cb1 = dispatch.get(scanType);
                 let cb2 = (button.buttonType === "menuSelector" ?
