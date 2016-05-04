@@ -45,7 +45,6 @@ function makeScanner(mainMenu, detector, settings) {
         let longGazeTimeout = null;
 
         // Procedures
-
         function nextButton(ix) {
             return (ix + 1) % menu.getNButtons();
         }
@@ -97,7 +96,6 @@ function makeScanner(mainMenu, detector, settings) {
                 }
             }
         }
-
         function pressButton(button) {
             // Press button. After it's been pressed, either resume control of
             // program or pass control to selected menu.
@@ -128,16 +126,24 @@ function makeScanner(mainMenu, detector, settings) {
             }
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
+            stopButton.removeEventListener("click", pressStop);
             if (currentButton === gazeButton) {
                 button.toggle();
             }
             button.addFinishedListener(afterCompletion);
             button.pressed();
         }
-
+        function pressStop() {
+            clearTimeout(timeout);
+            detector.removeBeginListener(gazeBegin);
+            detector.removeEndListener(gazeEnd);
+            stopButton.removeEventListener("click", pressStop);
+            currentButton.toggle();
+        }
         // Kick off the function
         detector.addBeginListener(gazeBegin);
         detector.addEndListener(gazeEnd);
+        stopButton.addEventListener("click", pressStop);
         loop(0, 0);
     }
 
