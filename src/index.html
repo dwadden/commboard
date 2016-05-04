@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="cbstyle.css" type="text/css">
     <!-- Commboard script -->
     <script src="./wedjat.js"></script>
-    <script src="./scratch.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -137,22 +136,22 @@
           <table><tbody>
             <!-- Punctuation -->
             <tr id="punctuation">
-              <td><input type="button" class="buttonOff" value="."
+              <td><input type="button" class="buttonOff" value="." data-announcement="period"
                          data-menu="punctuation" data-button-type="terminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value="?"
+              <td><input type="button" class="buttonOff" value="," data-announcement="comma"
                          data-menu="punctuation" data-button-type="terminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value="!"
+              <td><input type="button" class="buttonOff" value="?" data-announcement="question"
                          data-menu="punctuation" data-button-type="terminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value="'"
+              <td><input type="button" class="buttonOff" value="!" data-announcement="exclamation"
+                         data-menu="punctuation" data-button-type="terminalPunctuation"></td>
+              <td><input type="button" class="buttonOff" value="'" data-announcement="apostrophe"
                          data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value='"'
+              <td><input type="button" class="buttonOff" value='"' data-announcement="quote"
                          data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value="@"
+              <td><input type="button" class="buttonOff" value="@" data-announcement="at"
                          data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value=";"
-                         data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
-              <td><input type="button" class="buttonOff" value=":"
-                         data-menu="punctuation" data-button-type="nonTerminalPunctuation"></td>
+              <td><input type="button" class="buttonOff" value=":" data-announcement="colon"
+                         data-menu="punctuation" data-button-type="terminalPunctuation"></td>
             </tr>
             <!-- Buffer actions (e.g. read, delete, clear). -->
             <tr id="buffer">

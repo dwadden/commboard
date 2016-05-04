@@ -88,6 +88,10 @@ function makeBuffer() {
         writeText(text);
     }
     function writeTerminalPunctuation(text) {
+        if (isBufferWordStart() && !isBufferSentenceStart()) {
+            // This covers the case where the last word was autocompleted and a space inserted.
+            pop();
+        }
         writeText(text);
         writeSpace();           // Add space to start new word
     }

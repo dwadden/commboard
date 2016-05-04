@@ -217,14 +217,7 @@ function makeSpaceButton(spec, my) {
 function makePunctuationButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
-
-    let m = new Map([[".", "period"],
-                     ["?", "question"],
-                     ["!", "exclamation"],
-                     ["'", "apostrophe"],
-                     ['"', "quote"],
-                     ["@", "at"]]);
-    my.announcementText = m.get(my.buttonValue);
+    my.announcementText = my.buttonElem.dataset.announcement;
     that.buttonType = "punctuation";
 
     return that;
