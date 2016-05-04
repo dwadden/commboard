@@ -159,8 +159,7 @@ function makeRequestButton(spec, my) {
     // Public methods
     // TODO: Refactor this, since it's used elsewhere.
     that.beep = function() {
-        let context = new window.AudioContext();
-        let oscillator = context.createOscillator();
+        let oscillator = util.audioContext.createOscillator();
         oscillator.frequency.value = 400;
         oscillator.connect(context.destination);
         oscillator.start();

@@ -25,10 +25,9 @@ function makeScanner(mainMenu, detector, settings) {
     // Procedures
     function signalLongGaze() {
         // TODO: Refactor this into a single beep function.
-        let context = new window.AudioContext();
-        let oscillator = context.createOscillator();
+        let oscillator = util.audioContext.createOscillator();
         oscillator.frequency.value = 300;
-        oscillator.connect(context.destination);
+        oscillator.connect(util.audioContext.destination);
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     }

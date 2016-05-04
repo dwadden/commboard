@@ -2,8 +2,12 @@
 
 // Helper procedures
 
+// A shared audio context
+const audioContext = new window.AudioContext();
+
 // Exports
-module.exports = { speak,
+module.exports = { audioContext,
+                   speak,
                    read,
                    notImplemented,
                    curry,
