@@ -218,7 +218,7 @@ function makeGuessMenu(spec, my) {
         };
         // TODO: Figure out how to handle this properly
         let failure = function(data, status) {
-            debugger;
+            util.notImplemented();
         };
 
         let text = inputText.split(" ").slice(-1)[0];

@@ -6,6 +6,7 @@
 // an upward gaze.
 
 const EventEmitter = require("events");
+const util = require("./util.js");
 
 module.exports = { makeDetector };
 
@@ -125,7 +126,7 @@ function makeVideoStream() {
         video.src = window.URL.createObjectURL(videoStream);
     }
     function videoError(e) {
-        debugger;
+
     }
 
     // Public methods
@@ -180,7 +181,7 @@ function getVideoSource() {
         devices.forEach(appendIfVideo);
     }
     function failure(err) {
-        debugger;
+        util.notImplemented();
     }
     // Initialize and return
     navigator.mediaDevices.enumerateDevices().then(success).catch(failure);

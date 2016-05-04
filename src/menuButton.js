@@ -161,7 +161,7 @@ function makeRequestButton(spec, my) {
     that.beep = function() {
         let oscillator = util.audioContext.createOscillator();
         oscillator.frequency.value = 400;
-        oscillator.connect(context.destination);
+        oscillator.connect(util.audioContext.destination);
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     };
@@ -212,7 +212,7 @@ function makeSpaceButton(spec, my) {
     that.buttonType = my.textCategory = "space";
     my.text = " ";   // Button text is just " "
     return that;
-};
+}
 
 function makePunctuationButton(spec, my) {
     my = my || {};
