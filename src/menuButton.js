@@ -91,16 +91,18 @@ function makeMenuSelectorButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
-    // Private data
-    // my.slide = JSON.parse(my.buttonElem.dataset.slide); // converts to boolean
-
-
     // Public methods
     that.action = function() {
-        // Unhide the next menu if it's a dropdown. Otherwise do nothing.
+        // Unhide the next menu if it's a dropdown. Also register an event
+        // handler so the menu will slide back up on a mouse click.
         let target = that.getTargetMenu();
         if (target.getInfo().hide === "dropdown") {
             target.slideDown();
+            let onClick = function() {
+                target.slideUp();
+                document.removeEventListener("click", onClick);
+            };
+            document.addEventListener("click", onClick);
         }
         my.finished();
     };
