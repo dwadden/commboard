@@ -13,5 +13,11 @@
         "jquery": "^2.2.1",
         "jquery-ui": "^1.10.5",
         "nodemailer": "^2.3.0"
+    },
+    "scripts": {
+        "lint": "jshint src/*.js",
+        "prebuild": "npm run lint",
+        "build": "electron-packager . wedjat --platform=darwin --arch=x64 --out dist --icon=img/horus.svg",
+        "clean": "rm -r dist"
     }
 }
