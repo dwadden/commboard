@@ -17,7 +17,7 @@
     "scripts": {
         "lint": "jshint src/*.js",
         "prebuild": "npm run lint",
-        "build": "electron-packager . wedjat --platform=darwin --arch=x64 --out=dist",
+        "build": "electron-zip-packager . wedjat --platform=darwin --arch=x64 --out=dist",
         "clean": "rm -r dist"
     }
 }
