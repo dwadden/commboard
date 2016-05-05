@@ -166,3 +166,15 @@ table {
 #startStop input[type=button][value=Stop] {
   color: var(--magenta);
 }
+#detectorStatus {
+    font-size: 150%;
+}
+#detectorStatus.scanning {
+    color: var(--green);
+}
+#detectorStatus.listening {
+    color: var(--orange);
+}
+#detectorStatus.idle {
+    color: var(--magenta);
+}
