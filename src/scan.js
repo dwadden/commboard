@@ -51,7 +51,7 @@ function makeScanner(mainMenu, detector, settings) {
             return buttonIx === menu.getNButtons() - 1;
         }
         function nextLoop(buttonIx, loopIx) {
-            return isLastButton(menu, buttonIx) ? loopIx + 1 : loopIx;
+            return isLastButton(buttonIx) ? loopIx + 1 : loopIx;
         }
         function isLoopOver(loopIx) {
             return loopIx === N_LOOPS;
@@ -66,7 +66,7 @@ function makeScanner(mainMenu, detector, settings) {
                 button.announce();
                 let next = function() {
                     button.toggle();
-                    loop(nextButton(buttonIx), nextLoop(loopIx));
+                    loop(nextButton(buttonIx), nextLoop(buttonIx, loopIx));
                 };
                 timeout = setTimeout(next, settings.getScanSpeed());
             }
