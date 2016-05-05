@@ -37,11 +37,7 @@ function makeScanner(mainMenu, detector, settings) {
         // when scanning is complete.
 
         // State variables
-        let currentButton = null;
-        let gazeButton = null;
-        let startTime = null;
-        let timeout = null;
-        let longGazeTimeout = null;
+        let currentButton, gazeButton, startTime, timeout, longGazeTimeout;
 
         // Procedures
         function nextButton(ix) {
@@ -101,6 +97,7 @@ function makeScanner(mainMenu, detector, settings) {
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
+                    stopButton.removeEventListener("click", pressStop);
                     detector.removeBeginListener(gazeBegin);
                     detector.removeEndListener(gazeEnd);
                     cb();       // If it was a long gaze, cancel the scan of the current menu and return to caller.
@@ -146,8 +143,10 @@ function makeScanner(mainMenu, detector, settings) {
         }
         function pressStop() {
             clearTimeout(timeout);
+            detector.idleMode();
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
+            util.speak("Stopping");
             stopButton.removeEventListener("click", pressStop);
             currentButton.toggle();
         }
@@ -158,12 +157,46 @@ function makeScanner(mainMenu, detector, settings) {
         loop(0, 0);
     }
 
+    function listen() {
+        // Listen for user input.
+        // TODO: Refactor some of the shared functionality between this and the scanner.
+        // TODO: The refresh rate on the webcam should be lower when we're in this mode.
+        let startTime, longGazeTimeout;
+        function gazeBegin() {
+            // Beginning of gaze detected
+            startTime = new Date();
+            longGazeTimeout = setTimeout(signalLongGaze, LONG_GAZE_TIME); // Tell the user when they've gazed long enough
+        }
+        function gazeEnd() {
+            clearTimeout(longGazeTimeout);
+            let elapsed = new Date() - startTime;
+            if (elapsed >= LONG_GAZE_TIME) {
+                stopButton.removeEventListener("click", pressStop);
+                detector.removeBeginListener(gazeBegin);
+                detector.removeEndListener(gazeEnd);
+                that.scan();
+                }
+            }
+        function pressStop() {
+            util.speak("stopping.");
+            stopButton.removeEventListener("click", pressStop);
+            detector.idleMode();
+            detector.removeBeginListener(gazeBegin);
+            detector.removeEndListener(gazeEnd);
+        }
+        util.speak("listening.");
+        detector.listenMode();
+        stopButton.addEventListener("click", pressStop);
+        detector.addBeginListener(gazeBegin);
+        detector.addEndListener(gazeEnd);
+    }
     that.scan = function() {
         // Kick off by scanning the main menu. If scanning completes, no
         // callback need be invoked.
-        scanMenu(mainMenu, util.pass);
+        detector.scanMode();
+        scanMenu(mainMenu, listen);
     };
     // register buttons
-    startButton.addEventListener("click", that.scan);
+    startButton.addEventListener("click", listen);
     return that;
 }

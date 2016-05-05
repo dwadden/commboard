@@ -18,18 +18,17 @@ function makeDetector() {
     let that = Object.create(EventEmitter.prototype);
 
     // Constants
-    const REFRESH_RATE = 20;        // Check the video feed 20 times a second.
     const REST = Symbol("rest");
     const GAZE = Symbol("gaze");
+    const REFRESH_RATE_LISTEN = 5; // When listening, check the camera 5 times a second.
+    const REFRESH_RATE_SCAN = 20; // When scanning, check 20 times a second.
 
     // Locals
     let vs = makeVideoStream();
     let rest = makeTemplate("rest", vs);
     let gaze = makeTemplate("gaze", vs);
-    let startButton = document.querySelector("input[type=button][value=Start]");
-    let stopButton = document.querySelector("input[type=button][value=Stop]");
     let state = REST;
-    let interval = null;
+    let interval, refreshRate;
 
     // Private methods
     function detect() {
@@ -54,7 +53,7 @@ function makeDetector() {
     }
     function start() {
         // Listen for detections.
-        let intervalTime = 1000 / REFRESH_RATE;
+        let intervalTime = 1000 / refreshRate;
         interval = window.setInterval(detect, intervalTime);
     }
     function stop() {
@@ -64,6 +63,20 @@ function makeDetector() {
     }
 
     // Public methods
+    that.idleMode = function() {
+        // Detector is idle.
+        window.clearInterval(interval);
+    };
+    that.listenMode = function() {
+        // When user isn't scanning, listen for input 5 times a second.
+        window.clearInterval(interval);
+        interval = window.setInterval(detect, 1000 / REFRESH_RATE_LISTEN);
+    };
+    that.scanMode = function() {
+        // When user is scanning, listen for input 20 times a second.
+        window.clearInterval(interval);
+        interval = window.setInterval(detect, 1000 / REFRESH_RATE_SCAN);
+    };
     that.addBeginListener = function(listener) {
         that.addListener("gazeBegin", listener);
     };
@@ -91,8 +104,7 @@ function makeDetector() {
     };
 
     // Initialize and return.
-    startButton.addEventListener("click", start);
-    stopButton.addEventListener("click", stop);
+    that.idleMode();
     return that;
 }
 
