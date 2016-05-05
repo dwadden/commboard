@@ -87,7 +87,7 @@ function makeMenu(spec, my) {
         let dispatch = new Map(
             [["menuSelector", mb.makeMenuSelectorButton],
              ["start", mb.makeStartButton],
-             ["request", mb.makeRequestButton],
+             ["callBell", mb.makeCallBellButton],
              ["letter", mb.makeLetterButton],
              ["space", mb.makeSpaceButton],
              ["terminalPunctuation", mb.makeTerminalPunctuationButton],

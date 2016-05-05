@@ -13,7 +13,7 @@ const util = require("./util.js");
 module.exports = { makeButton,
                    makeMenuSelectorButton,
                    makeStartButton,
-                   makeRequestButton,
+                   makeCallBellButton,
                    makeTextButton,
                    makeLetterButton,
                    makeSpaceButton,
@@ -141,20 +141,13 @@ function makeStartButton(spec, my) {
     return that;
 }
 
-function makeRequestButton(spec, my) {
+function makeCallBellButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
     // internal constants
-    const BEEP_DURATION = 1000;      // Length in ms of request beep
-    const AFTER_BEEP_WAIT = 500;     // Wait this long after beep before making request
-    const MESSAGES = { Cold: "I am cold.",
-                       Hot: "I am hot.",
-                       Company: "I'd like some company." };
-
-    // Private variables
-    my.utterance = null;
-    my.message = MESSAGES[my.buttonValue];
+    const BEEP_DURATION = 2000;      // Length in ms of request beep
+    const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program
 
     // Public methods
     // TODO: Refactor this, since it's used elsewhere.
@@ -166,18 +159,10 @@ function makeRequestButton(spec, my) {
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     };
     that.action = function() {
-        let afterBeep = function() {
-            let afterSpeech = function() {
-                setTimeout(my.finished, my.settings.getScanSpeed());
-            };
-            let utterance = util.speak(my.message);
-            utterance.onend = afterSpeech;
-            my.buttonElem.utterance = utterance; // Not extraneous, but subtle. See issue 1.
-        };
         that.beep();
-        setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
+        setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
     };
-    that.buttonType = "request";
+    that.buttonType = "callBell";
     return that;
 }
 
