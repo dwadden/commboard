@@ -271,7 +271,7 @@ function makeGuessButton(spec, my) {
         // TODO: Too many variables.
         my.buttonValue = my.announcementText = my.buttonElem.value = value;
     };
-    that.action = function(cbpressed) {
+    that.action = function() {
         my.buffer.write(my.buttonValue, my.textCategory);
         my.finished();
     };
@@ -345,12 +345,9 @@ function makeNotImplementedButton(spec, my) {
     my = my || {};
     let that = makeButton(spec, my);
 
-    that.action = function(cbpressed) {
-        function afterRead() {
-            setTimeout(cbpressed, PAUSE);
-        }
+    that.action = function() {
         let utterance = util.speak("Not implemented");
-        utterance.onend = afterRead;
+        utterance.onend = my.finished;
         my.buttonElem.utternce = utterance;
     };
     that.buttonType = "notImplemented";
