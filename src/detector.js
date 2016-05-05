@@ -28,7 +28,8 @@ function makeDetector() {
     let rest = makeTemplate("rest", vs);
     let gaze = makeTemplate("gaze", vs);
     let state = REST;
-    let interval, refreshRate;
+    let statusElem = document.getElementById("detectorStatus");
+    let interval, refreshRate, status;
 
     // Private methods
     function detect() {
@@ -61,19 +62,31 @@ function makeDetector() {
         window.clearInterval(interval);
         interval = null;
     }
-
+    function setStatus(newStatus) {
+        let p = statusElem.querySelector("p");
+        let oldStatus = status;
+        status = newStatus;
+        p.innerHTML = util.capitalize(status);
+        if (oldStatus !== undefined) {
+            statusElem.classList.toggle(oldStatus);
+        }
+        statusElem.classList.toggle(status);
+    }
     // Public methods
     that.idleMode = function() {
         // Detector is idle.
+        setStatus("idle");
         window.clearInterval(interval);
     };
     that.listenMode = function() {
         // When user isn't scanning, listen for input 5 times a second.
+        setStatus("listening");
         window.clearInterval(interval);
         interval = window.setInterval(detect, 1000 / REFRESH_RATE_LISTEN);
     };
     that.scanMode = function() {
         // When user is scanning, listen for input 20 times a second.
+        setStatus("scanning")
         window.clearInterval(interval);
         interval = window.setInterval(detect, 1000 / REFRESH_RATE_SCAN);
     };
