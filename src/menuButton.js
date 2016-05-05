@@ -275,6 +275,10 @@ function makeGuessButton(spec, my) {
         my.buffer.write(my.buttonValue, my.textCategory);
         my.finished();
     };
+    that.isEmpty = function() {
+        // TODO: My is my.text empy here, while my.buttonValue has the actual button text?
+        return my.buttonValue === "";
+    };
     that.buttonType = "guess";
 
     return that;

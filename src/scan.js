@@ -57,10 +57,13 @@ function makeScanner(mainMenu, detector, settings) {
             return loopIx === N_LOOPS;
         }
         function loop(buttonIx, loopIx) {
+            let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
                 cb();
+            } else if (isEmptyGuess(button)) {
+                // Special edge case for dealing with guess menus.
+                loop(0, loopIx + 1);
             } else {
-                let button = menu.getButtons()[buttonIx];
                 currentButton = button;
                 button.toggle();
                 button.announce();
@@ -68,10 +71,19 @@ function makeScanner(mainMenu, detector, settings) {
                     button.toggle();
                     loop(nextButton(buttonIx), nextLoop(buttonIx, loopIx));
                 };
-                timeout = setTimeout(next, settings.getScanSpeed());
+                let waitTime = getWaitTime(button.buttonType);
+                timeout = setTimeout(next, waitTime);
             }
         }
-
+        function isEmptyGuess(button) {
+            return button.buttonType === "guess" && button.isEmpty();
+        }
+        function getWaitTime(buttonType) {
+            // Wait twice as long when scanning guess buttons, to give user time.
+            const GUESS_MULTIPLIER = 2;
+            let waitTime = settings.getScanSpeed();
+            return buttonType === "guess" ? waitTime * 2 : waitTime;
+        }
         function gazeBegin() {
             // Beginning of gaze detected
             gazeButton = currentButton; // The button that was active at the moment the gaze started
