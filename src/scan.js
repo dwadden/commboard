@@ -55,6 +55,10 @@ function makeScanner(mainMenu, detector, settings) {
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
+                // TODO: This code is repeated verbatim below. Need to refactor.
+                stopButton.removeEventListener("click", pressStop);
+                detector.removeBeginListener(gazeBegin);
+                detector.removeEndListener(gazeEnd);
                 cb();
             } else if (isEmptyGuess(button)) {
                 // Special edge case for dealing with guess menus.
