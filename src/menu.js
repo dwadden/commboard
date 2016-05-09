@@ -4,7 +4,7 @@
 const jQuery = require("jquery");
 
 // File imports
-const menuButton = require("./menuButton.js");
+const menuButton = require("./menu-button.js");
 const util = require("./util.js");
 
 // Exports
