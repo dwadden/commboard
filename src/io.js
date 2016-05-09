@@ -210,7 +210,7 @@ function makeSlider() {
     // Constants
     const VMIN = 0;
     const VMAX = 3;
-    const V0 = 1;               // Initial slider setting
+    const V0 = 1.5;               // Initial slider setting
     const SCALE = 10;
 
     // Internal variables
