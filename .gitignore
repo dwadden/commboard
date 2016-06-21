@@ -2,3 +2,4 @@ node_modules
 dist
 .jshintrc
 .tern-project
+.tern-port
