@@ -26,6 +26,7 @@ function makeBuffer() {
     let bufferElem = document.getElementById("bufferContainer");
     let textElem = bufferElem.querySelector("p");
     let bufferText = CURSOR;
+    let fontSizeElem = document.querySelector("input[type=number][name=fontSize]");
 
     // Elementary buffer operations
     // Update element text to match text stored in JS variable
@@ -118,6 +119,13 @@ function makeBuffer() {
         that.emit("bufferChange");
     }
 
+    // Procedures to change the font size on input from user.
+    function updateFontSize() {
+        let size = fontSizeElem.value + "px";
+        bufferElem.style.fontSize = size;
+    }
+    fontSizeElem.onchange = updateFontSize; // Listen for font size changes and update as needed.
+
     // Public methods
     that.write = function(text, textCategory) {
         // Write to the buffer.
@@ -152,6 +160,7 @@ function makeBuffer() {
     };
 
     // Initialize and return
+    updateFontSize();
     update();
     return that;
 }
