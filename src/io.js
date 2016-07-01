@@ -8,6 +8,7 @@
 const jQuery = require("jquery");
 require("jquery-ui");
 const EventEmitter = require("events");
+const _ = require("underscore");
 
 // File imports
 const util = require("./util.js");
@@ -209,6 +210,57 @@ function makeSettings() {
 
     // Return the object
     return that;
+}
+
+function makeVoiceSelector() {
+    // Constructor for voice selector.
+    // Small wrinkle: voices are loaded asynchronously. So, this object can only
+    // initialize fully after the "onvoiceschanged" event has fired. For more
+    // details see :
+    // http://stackoverflow.com/questions/21513706/getting-the-list-of-voices-in-speechsynthesis-of-chrome-web-speech-api
+    let that = {};
+
+    // Internal variables
+    let voiceElem = document.querySelector("select[name=voice]");
+    let demoElem = document.querySelector("input[type=button][value=Demo]");
+    let voices = null;          // The initial voice list and current voice are null.
+    let voice = null;           // Initially, the current
+
+
+    function initVoices() {
+        // Update the voice dropdown menu.
+        function each(entry, ix) {
+            // Performed for each entry in the array of voices.
+            let name = entry.name;
+            let opt = document.createElement("option");
+            opt.value = ix;
+            opt.text = name;
+            voiceElem.add(opt);
+        }
+        function inEnglish(voice) {
+            return voice.lang.includes("en");
+        }
+        voices = window.speechSynthesis.getVoices().filter(inEnglish);
+        voices.forEach(each);
+        updateVoice();
+    }
+
+    function updateVoice() {
+        // Call this whenever the user changes the voice button.
+        let ix = parseInt(voiceElem.value);
+        voice = voices[ix];
+    }
+
+    function demo() {
+        // Speak a demo with the current voice.
+        let msg = `Hello, my name is ${voice.name}`;
+        util.speak(msg, voice);
+    }
+
+    // Initialize
+    window.speechSynthesis.onvoiceschanged = initVoices; // Set options once voices load.
+    voiceElem.onchange = updateVoice;                    // Update voice when selection made.
+    demoElem.onclick = demo;                             // Speak current voice as demo.
 }
 
 function makeSlider() {

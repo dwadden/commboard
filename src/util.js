@@ -17,11 +17,12 @@ module.exports = { audioContext,
                    zip,
                    pass };
 
-// Speak text out loud
-function speak(text) {
+// Speak text out loud, using the supplied voice..
+function speak(text, voice) {
     const LANG = "en-US";            // Dialect for speech synthesis
     let utterance = new window.SpeechSynthesisUtterance(text);
     utterance.lang = LANG;
+    utterance.voice = voice;
     window.speechSynthesis.speak(utterance);
     return utterance;
 }
