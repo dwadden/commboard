@@ -223,7 +223,6 @@
           <div id="controls" class="container borderLine borderSurround padSurround">
             <!-- General settings. Sound, layout, scan speed, etc. -->
             <div id="generalSettings" class="padSurround borderLine borderRight floatLeft">
-              <h2>General Settings</h2>
               <input type="checkbox" checked=true value="sound"> Sound
               <input type="checkbox" checked=true value="showMenu"> Show Menu
               <p></p>
@@ -242,9 +241,15 @@
               </p>
               <p></p>
               <p>
+                Voice:
+                <select name="voice"></select>
+              </p>
+              <p></p>
+              <p>
                 Font size:
                 <input type="number" name="fontSize" value="40">
               </p>
+              <p</p>
               <p>
                 Scan speed:
                 <div id="sliderContainer">
@@ -255,7 +260,7 @@
             </div>
             <!-- Email settings. Allows aid to enter email info for user. -->
             <div id="emailSettings" class="padSurround floatRight borderLine borderBottom">
-              <h2>Email Settings</h2>
+              <h2>Email</h2>
               <p>
                 Signature:
                 <input type="text" name="signature" class="floatRight">
