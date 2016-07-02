@@ -2,14 +2,8 @@
 
 // Helper procedures
 
-// A shared audio context
-const audioContext = new window.AudioContext();
-
 // Exports
-module.exports = { audioContext,
-                   speak,
-                   read,
-                   notImplemented,
+module.exports = { notImplemented,
                    curry,
                    repeat,
                    pad,
@@ -17,26 +11,8 @@ module.exports = { audioContext,
                    zip,
                    pass };
 
-// Speak text out loud, using the supplied voice..
-function speak(text, voice) {
-    const LANG = "en-US";            // Dialect for speech synthesis
-    let utterance = new window.SpeechSynthesisUtterance(text);
-    utterance.lang = LANG;
-    utterance.voice = voice;
-    window.speechSynthesis.speak(utterance);
-    return utterance;
-}
-// Speak the text. Instead of returning, invoke a callback when speech is
-// finished. Bind the utterance to an element in the dom so that it doesn't get
-// garbage-collected.
-function read(text, cb, element, delay = 1000) {
-    function afterRead() {
-        setTimeout(cb, delay);
-    }
-    let utterance = speak(text);
-    utterance.onend = afterRead;
-    element.utterance = utterance;
-}
+// Speak text out loud, using the supplied voice.
+
 function notImplemented () {
     throw new Error("Not implemented.");
 }

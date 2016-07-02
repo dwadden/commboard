@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 
 // File imports
 const util = require("./util.js");
+const speech = require("./speech.js");
 
 // Exports
 module.exports = { makeButton,
@@ -61,7 +62,7 @@ function makeButton(spec, my) {
     };
     that.announce = function() {
         if (my.settings.useSoundP()) {
-            util.speak(my.announcementText);
+            speech.speak(my.announcementText);
         }
     };
     that.toggle = function() {
@@ -71,7 +72,7 @@ function makeButton(spec, my) {
     that.pressed = function() {
         // If sound, read the button name. Else just perform the action.
         if (my.settings.useSoundP()) {
-            util.read(my.announcementText, that.action, my.buttonElem, 0);
+            speech.read(my.announcementText, that.action, my.buttonElem, 0);
         } else {
             that.action();
         }
@@ -152,9 +153,9 @@ function makeCallBellButton(spec, my) {
     // Public methods
     // TODO: Refactor this, since it's used elsewhere.
     that.beep = function() {
-        let oscillator = util.audioContext.createOscillator();
+        let oscillator = speech.audioContext.createOscillator();
         oscillator.frequency.value = 400;
-        oscillator.connect(util.audioContext.destination);
+        oscillator.connect(speech.audioContext.destination);
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     };
@@ -295,12 +296,12 @@ it is perfectly fine to send messages to this address.`;
         function afterSend(error, info) {
             if (error) {
                 // If something goes wrong, inform user and dump the error info
-                util.read("An error ocurred.", my.finished, my.buttonElem);
+                speech.read("An error ocurred.", my.finished, my.buttonElem);
                 console.log(error);
             } else {
                 // Otherwise, inform user of success and continue program
-                util.read(`Message sent to ${my.buttonValue}`,
-                          my.finished, my.buttonElem);
+                speech.read(`Message sent to ${my.buttonValue}`,
+                            my.finished, my.buttonElem);
             }
         }
         // For details, see https://nodemailer.com/
@@ -335,7 +336,7 @@ function makeNotImplementedButton(spec, my) {
     let that = makeButton(spec, my);
 
     that.action = function() {
-        let utterance = util.speak("Not implemented");
+        let utterance = speech.speak("Not implemented");
         utterance.onend = my.finished;
         my.buttonElem.utternce = utterance;
     };

@@ -4,6 +4,7 @@
 
 // File imports
 const util = require("./util.js");
+const speech = require("./speech.js");
 
 module.exports = { makeScanner };
 
@@ -25,9 +26,9 @@ function makeScanner(mainMenu, detector, settings) {
     // Procedures
     function signalLongGaze() {
         // TODO: Refactor this into a single beep function.
-        let oscillator = util.audioContext.createOscillator();
+        let oscillator = speech.audioContext.createOscillator();
         oscillator.frequency.value = 300;
-        oscillator.connect(util.audioContext.destination);
+        oscillator.connect(speech.audioContext.destination);
         oscillator.start();
         setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
     }
@@ -150,7 +151,7 @@ function makeScanner(mainMenu, detector, settings) {
             detector.idleMode();
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
-            util.speak("Stopping");
+            speech.speak("Stopping");
             stopButton.removeEventListener("click", pressStop);
             currentButton.toggle();
         }
@@ -182,13 +183,13 @@ function makeScanner(mainMenu, detector, settings) {
                 }
             }
         function pressStop() {
-            util.speak("stopping.");
+            speech.speak("Stopping.");
             stopButton.removeEventListener("click", pressStop);
             detector.idleMode();
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
         }
-        util.speak("listening.");
+        speech.speak("listening.");
         detector.listenMode();
         stopButton.addEventListener("click", pressStop);
         detector.addBeginListener(gazeBegin);
