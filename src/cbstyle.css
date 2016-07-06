@@ -106,7 +106,7 @@ table {
 
 /* IO styling */
 #io {
-  height: 515px;
+  height: 625px;
   width: 1190px;
 }
 #bufferContainer {
@@ -118,7 +118,7 @@ table {
   width: 690px;
   font-size: 125%;
 }
-#settings h2 {
+#settings h4 {
   color: var(--cyan);
 }
 #settings input[type=button] {
@@ -142,7 +142,7 @@ table {
   font-size: 125%;
 }
 #controls {
-  height: 280px;
+  height: 390px;
   width: 690px;
 }
 #generalSettings {
@@ -156,8 +156,14 @@ table {
   width: 200px;
 }
 #emailSettings {
-  height: 220px;
+  height: 330px;
   width: 340px;
+}
+#userConfig {
+  height: 165px;
+}
+#addRecipient {
+  height: 135px;
 }
 #startStop {
   font-size: 150%;

@@ -171,16 +171,7 @@
             </tr>
             <!-- Email. -->
             <tr id="email">
-              <td><input type="button" class="buttonOff" value="Dad"
-                         data-menu="email" data-button-type="email"
-                         data-recipients="kmozersky@gmail.com"></td>
-              <td><input type="button" class="buttonOff" value="David"
-                         data-menu="email" data-button-type="email"
-                         data-recipients="dmozersky@yahoo.com"></td>
-              <td><input type="button" class="buttonOff" value="Developers"
-                         data-menu="email" data-button-type="email"
-                         data-recipients="dave.wadden@gmail.com"></td>
-              <td colspan="5"></td>
+              <td colspan="8"></td>
             </tr>
           </tbody></table>
         </div>
@@ -223,7 +214,9 @@
           <div id="controls" class="container borderLine borderSurround padSurround">
             <!-- General settings. Sound, layout, scan speed, etc. -->
             <div id="generalSettings" class="padSurround borderLine borderRight floatLeft">
+              <h4>Settings</h4>
               <input type="checkbox" checked=true value="sound"> Sound
+              <p></p>
               <input type="checkbox" checked=true value="showMenu"> Show Menu
               <p></p>
               <p>
@@ -261,22 +254,37 @@
             </div>
             <!-- Email settings. Allows aid to enter email info for user. -->
             <div id="emailSettings" class="padSurround floatRight borderLine borderBottom">
-              <h2>Email</h2>
-              <p>
-                Signature:
-                <input type="text" name="signature" class="floatRight">
-              </p>
-              <p></p>
-              <p>
-                Address:
-                <input type="text" name="address" class="floatRight">
-              </p>
-              <p>
-                Password:
-                <input type="password" name="password" class="floatRight">
-              </p>
-              <p></p>
-              <input type="button" value="Store" class="floatRight">
+              <div id ="userConfig">
+                <h4>Configure Email</h4>
+                <p>
+                  Signature:
+                  <input type="text" name="signature" class="floatRight">
+                </p>
+                <p></p>
+                <p>
+                  Address:
+                  <input type="text" name="address" class="floatRight">
+                </p>
+                <p>
+                  Password:
+                  <input type="password" name="password" class="floatRight">
+                </p>
+                <p></p>
+                <input type="button" value="Store" class="floatRight">
+              </div>
+              <div id="addRecipient">
+                <h4>Add Recipient</h4>
+                <p>
+                  Name:
+                  <input type="text" name="recipientName" class="floatRight">
+                </p>
+                <p>
+                  Address:
+                  <input type="text" name="recipientAddress" class="floatRight">
+                </p>
+                <p></p>
+                <input type="button" value="Add" class="floatRight">
+              </div>
             </div>
             <div id="detectorStatus" class="padSurround floatLeft">
               <p></p>

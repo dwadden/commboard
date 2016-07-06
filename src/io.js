@@ -265,17 +265,17 @@ function makeEmailSettings() {
 
     // Internal variables
     let signature, address, password = null;
-    let signatureButton = document.querySelector("input[type=text][name=signature]");
-    let addressButton = document.querySelector("input[type=text][name=address]");
-    let passwordButton = document.querySelector("input[type=password][name=password]");
+    let signatureField = document.querySelector("input[type=text][name=signature]");
+    let addressField = document.querySelector("input[type=text][name=address]");
+    let passwordField = document.querySelector("input[type=password][name=password]");
     let storeButton = document.querySelector("input[type=button][value=Store]");
 
     // Private methods
     function store() {
-        signature = signatureButton.value;
-        address = addressButton.value;
-        password = passwordButton.value;
-        passwordButton.value = ""; // Remove the password text once it's been assigned.
+        signature = signatureField.value;
+        address = addressField.value;
+        password = passwordField.value;
+        passwordField.value = ""; // Remove the password text once it's been assigned.
     }
 
     // Public methods
