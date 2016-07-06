@@ -48,7 +48,7 @@ function initMenus(spec) {
         let newSpec = jQuery.extend(names.get(key), spec);
         newSpec.menuName = key;
         // TODO: This isn't the right way to do this. Fix it later.
-        let maker = key ==="guess" ? makeGuessMenu : makeMenu;
+        let maker = key === "guess" ? makeGuessMenu : makeMenu;
         menus.set(key, maker(newSpec));
     }
     Array.from(names.keys()).forEach(each);
@@ -112,12 +112,6 @@ function makeMenu(spec, my) {
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
         return specs.map(my.initButton);
     };
-    // my.nextButton = function(ix) {
-    //     return (ix + 1) % my.nButtons;
-    // };
-    // my.isLastButton = function(buttonIx) {
-    //     return buttonIx === my.nButtons - 1;
-    // };
 
     // Private data
     // TODO: Copy these over more efficiently
