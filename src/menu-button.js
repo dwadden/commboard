@@ -277,13 +277,14 @@ function makeEmailButton(spec, my) {
     // Private data
     my.buffer = spec.buffer;
     my.settings = spec.settings;
+    my.emailSettings = my.settings.getEmailSettings();
 
     // Public methods
     that.action = function() {
         // Email variables
-        const signature = my.settings.getEmailSignature();
-        const address = my.settings.getEmailAddress();
-        const password = my.settings.getEmailPassword();
+        const signature = my.emailSettings.getSignature();
+        const address = my.emailSettings.getAddress();
+        const password = my.emailSettings.getPassword();
         const recipients = my.buttonElem.dataset.recipients;
 
         const warningText = `This message was sent using experimental software

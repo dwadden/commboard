@@ -205,9 +205,9 @@ function makeSettings() {
     that.addShowMenuListener = function(listener) {
         showElem.addEventListener("change", listener);
     };
-    that.getEmailSignature = emailSettings.getSignature;
-    that.getEmailAddress = emailSettings.getAddress;
-    that.getEmailPassword = emailSettings.getPassword;
+    that.getEmailSettings = function() {
+        return emailSettings;
+    };
 
     // Return the object
     return that;
@@ -255,27 +255,34 @@ function makeSlider() {
 }
 
 function makeEmailSettings() {
-    //  Email settings object. Handles the following:
-    //   Signature (the user's name)
-    //   Email address
-    //   Password
-    // I'm not sure if it's secure to store variables this way. For now, use a
-    // dedicated email account that won't be used for sensitive communications.
-    let that = {};
+    //  Email settings object. Stores user email information, and acts as the
+    //  interface through which new email contacts can be added.
+    // TODO: I'm not sure if it's secure to store variables this way. For now,
+    // use a dedicated email account that won't be used for sensitive
+    // communications.
+    let that = Object.create(EventEmitter.prototype);
 
-    // Internal variables
+    // Internal variables for user configuration and recipients.
     let signature, address, password = null;
     let signatureField = document.querySelector("input[type=text][name=signature]");
     let addressField = document.querySelector("input[type=text][name=address]");
     let passwordField = document.querySelector("input[type=password][name=password]");
     let storeButton = document.querySelector("input[type=button][value=Store]");
+    let recipientNameField = document.querySelector("input[type=text][name=recipientName]");
+    let recipientAdressField = document.querySelector("input[type=text][name=recipientAddress]");
+    let addButton = document.querySelector("input[type=button][value=Add]");
 
     // Private methods
     function store() {
+        // Store user email information.
         signature = signatureField.value;
         address = addressField.value;
         password = passwordField.value;
         passwordField.value = ""; // Remove the password text once it's been assigned.
+    }
+    function emitAddRecipient() {
+        // To be emitted when the "add" button is pushed.
+        that.emit("addRecipient");
     }
 
     // Public methods
@@ -288,8 +295,29 @@ function makeEmailSettings() {
     that.getPassword = function() {
         return password;
     };
+    that.getRecipientName = function() {
+        return recipientNameField.value;
+    };
+    that.getRecipientAddress = function() {
+        // Return a list of addresses, split on spaces.
+        return recipientAdressField.value.split(" ");
+    };
+    that.clearRecipientInfo = function() {
+        // Clear the recipient info (to be used after a recipient has been added).
+        recipientNameField.value = "";
+        recipientAdressField.value = "";
+    };
+    that.addRecipientListener = function(listener) {
+        // Listen for the event that the user has added a new email recipient.
+        that.addListener("addRecipient", listener);
+    };
+    that.removeRecipientListener = function(listener) {
+        // Clear a listener.
+        that.removeListener("addRecipient", listener);
+    };
 
     // Initialize and return
+    addButton.onclick = emitAddRecipient;
     storeButton.onclick = store;
     return that;
 }
