@@ -1,24 +1,27 @@
 {
-    "name": "wedjat",
-    "main": "./src/main.js",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/dwadden/wedjat.git"
-    },
-    "homepage": "https://github.com/dwadden/wedjat#readme",
-    "dependencies": {
-        "bootstrap": "^3.3.6",
-        "electron-prebuilt": "^0.37.6",
-        "jquery": "^2.2.1",
-        "jquery-ui": "^1.10.5",
-        "nodemailer": "^2.3.0",
-        "underscore": "^1.8.3"
-    },
-    "scripts": {
-        "lint": "jshint src/*.js",
-        "prebuild": "npm run lint",
-        "build": "electron-zip-packager . wedjat --platform=darwin --arch=x64 --out=dist",
-        "clean": "rm -r dist"
-    }
+  "name": "wedjat",
+  "main": ".\/src\/main.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https:\/\/github.com\/dwadden\/wedjat.git"
+  },
+  "homepage": "https:\/\/github.com\/dwadden\/wedjat#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "electron-prebuilt": "^0.37.8",
+    "jquery": "^2.2.4",
+    "jquery-ui": "^1.10.5",
+    "nodemailer": "^2.3.0",
+    "underscore": "^1.8.3"
+  },
+  "scripts": {
+    "lint": "jshint src\/*.js",
+    "prebuild": "npm run lint",
+    "build": "electron-zip-packager . wedjat --platform=darwin --arch=x64 --out=dist",
+    "clean": "rm -r dist"
+  },
+  "devDependencies": {
+    "devtron": "^1.2.1"
+  }
 }
