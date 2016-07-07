@@ -272,7 +272,6 @@ function makeEmailMenu(spec, my) {
     };
 
     // Initialization.
-    console.log("Here");
     my.emailSettings.addRecipientListener(my.addRecipient);
     return that;
 }

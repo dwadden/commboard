@@ -15,7 +15,7 @@ function makeScanner(mainMenu, detector, settings) {
 
     // Constants
     const N_LOOPS = 2;          // Loop through a menu twice before exiting.
-    const SHORT_GAZE_TIME = 100;     // A short gaze must last for 100 ms
+    const SHORT_GAZE_TIME = 200;     // A short gaze must last for 200 ms
     const LONG_GAZE_TIME = 2000;     // A long gaze must last for 2 s.
     const BEEP_DURATION = 250;       // Length of beep informing user that the gaze has lasted 2s
 
