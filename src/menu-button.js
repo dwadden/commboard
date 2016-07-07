@@ -278,14 +278,20 @@ function makeEmailButton(spec, my) {
     my.buffer = spec.buffer;
     my.settings = spec.settings;
     my.emailSettings = my.settings.getEmailSettings();
+    my.address = null;
 
     // Public methods
+    that.setRecipient = function(name, address) {
+        // Add a recipient for this (initially empty) button.
+        my.buttonValue = my.announcementText = my.buttonElem.value = name;
+        my.address = address;
+    };
+
     that.action = function() {
         // Email variables
         const signature = my.emailSettings.getSignature();
         const address = my.emailSettings.getAddress();
         const password = my.emailSettings.getPassword();
-        const recipients = my.buttonElem.dataset.recipients;
 
         const warningText = `This message was sent using experimental software
 for individuals with Completely Locked-in Syndrome. Due to the immaturity of the
@@ -315,7 +321,7 @@ it is perfectly fine to send messages to this address.`;
         });
         const mailOptions = {
             from: `"${signature}" <${address}>`,
-            to: `${recipients}`, // list of receivers
+            to: `${my.address}`, // list of receivers
             subject: `A message from ${signature}`, // Subject line
             text: my.buffer.getText() + "\n\n\n" + warningText // plaintext body
         };

@@ -19,27 +19,38 @@ function initMenus(spec) {
     // scan: "repeat" menus should be repeated when scanned to the end
     //       "finish" menus return to their calling menu when scanning is finished
     let names = new Map([["composeMain", { hide: "commboard",
-                                           scan: "repeat" }],
+                                           scan: "repeat",
+                                           constructor: makeMenu }],
                          ["compose1",    { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["compose2",    { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["compose3",    { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["compose4",    { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["compose5",    { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["guess",       { hide: "commboard",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeGuessMenu }],
                          ["punctuation", { hide: "dropdown",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["buffer",      { hide: "dropdown",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeMenu }],
                          ["email",       { hide: "dropdown",
-                                           scan: "finish" }],
+                                           scan: "finish",
+                                           constructor: makeEmailMenu }],
                          ["callBell",    { hide: "dropdown",
-                                           scan: "finish" }]]
+                                           scan: "finish",
+                                           constructor: makeMenu} ]]
                        );
 
     // Populate the menu dictionary
@@ -48,8 +59,8 @@ function initMenus(spec) {
         let newSpec = jQuery.extend(names.get(key), spec);
         newSpec.menuName = key;
         // TODO: This isn't the right way to do this. Fix it later.
-        let maker = key === "guess" ? makeGuessMenu : makeMenu;
-        menus.set(key, maker(newSpec));
+        let constructor = names.get(key)["constructor"];
+        menus.set(key, constructor(newSpec));
     }
     Array.from(names.keys()).forEach(each);
 
@@ -235,5 +246,33 @@ function makeGuessMenu(spec, my) {
 
     // Initialization
     my.buffer.addChangeListener(my.update);
+    return that;
+}
+
+function makeEmailMenu(spec, my) {
+    my = my || {};
+    let that = makeMenu(spec, my);
+
+    // Constants
+    const N_RECIPIENTS = 8;     // The number of recipients that can be stored.
+
+    // Private data.
+    my.emailSettings = my.settings.getEmailSettings();
+    my.buttonIx = 0;            // Index of current open button.
+
+    // Private methods.
+    my.addRecipient = function() {
+        console.log("Here");
+        // Add a new recipient.
+        let button = my.buttons[my.buttonIx];
+        button.setRecipient(my.emailSettings.getRecipientName(),
+                            my.emailSettings.getRecipientAddress());
+        my.emailSettings.clearRecipientInfo();
+        my.buttonIx = (my.buttonIx + 1) % N_RECIPIENTS;
+    };
+
+    // Initialization.
+    console.log("Here");
+    my.emailSettings.addRecipientListener(my.addRecipient);
     return that;
 }
