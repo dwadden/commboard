@@ -97,7 +97,7 @@ function makeMenuSelectorButton(spec, my) {
     let that = makeButton(spec, my);
 
     // Additional exposed methods and data to be assigned to object.
-    let toAssign = {
+    let assignments = {
         buttonType: "menuSelector",
         action: function() {
             // Unhide the next menu if it's a dropdown. Also register an event
@@ -120,9 +120,8 @@ function makeMenuSelectorButton(spec, my) {
             return menus.get(targetName);
         }
     };
-    Object.assign(that, toAssign);
+    Object.assign(that, assignments);
 
-    // Return the object.
     return that;
 }
 
@@ -138,29 +137,44 @@ function makeCallBellButton(spec, my) {
     const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program.
     const BEEP_FREQ = 400;            // Oscillator beep frequency.
 
-    // Public methods
-    that.action = function() {
-        speech.beep(BEEP_FREQ, BEEP_DURATION);
-        setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
+    // Additional methods.
+    let assignments = {
+        buttonType: "callBell",
+        action: function() {
+            speech.beep(BEEP_FREQ, BEEP_DURATION);
+            setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
+        }
     };
-    that.buttonType = "callBell";
+    Object.assign(that, assignments);
+
     return that;
 }
 
 function makeTextButton(spec, my) {
+    // Constructor for general text button. Invoked by more specific
+    // constructors for letters, numbers, etc.
+
     my = my || {};
     let that = makeButton(spec, my);
 
-    // Private data
-    my.textCategory = null;     // Set by subclasses
-    my.buffer = spec.buffer;
-    my.text = my.buttonValue.toLowerCase();
-
-    that.action = function() {
-        my.buffer.write(my.text, my.textCategory);
-        my.finished();
+    // Additional private data.
+    let myAssignments = {
+        textCategory: null,     // This is set by subclasses.
+        buffer: spec.buffer,
+        text: my.buttonValue.toLowerCase()
     };
-    that.buttonType = "text";
+    Object.assign(my, myAssignments);
+
+    // Additional public data.
+    let thatAssignments = {
+        buttonType: "text",
+        action: function() {
+            my.buffer.write(my.text, my.textCategory);
+            my.finished();
+        }
+    };
+    Object.assign(that, thatAssignments);
+
     return that;
 }
 
