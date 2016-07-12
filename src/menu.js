@@ -2,6 +2,7 @@
 
 // npm imports
 const jQuery = require("jquery");
+const _ = require("underscore");
 
 // File imports
 const menuButton = require("./menu-button.js");
@@ -237,7 +238,7 @@ function makeGuessMenu(spec, my) {
     // Update word guesses based on changes to buffer
     my.update = function() {
         let callback = function(guesses) {
-            util.zip(my.buttons, guesses).forEach(function([button, guess])
+            _.zip(my.buttons, guesses).forEach(function([button, guess])
                                                   { button.setValue(guess); });
         };
         let inputText = my.buffer.getText();
