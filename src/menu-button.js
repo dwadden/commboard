@@ -93,7 +93,6 @@ function makeMenuSelectorButton(spec, my) {
     // Constructor for buttons whose job it is to kick off other menus. For
     // example: the first column on the main commboard.
 
-    // Invoke "parent" constructor.
     my = my || {};
     let that = makeButton(spec, my);
 
@@ -128,24 +127,20 @@ function makeMenuSelectorButton(spec, my) {
 }
 
 function makeCallBellButton(spec, my) {
+    // Constructor for call bell button. When pressed, emits a tone to inform a
+    // caretaker that the user requires attention.
+
     my = my || {};
     let that = makeButton(spec, my);
 
-    // internal constants
-    const BEEP_DURATION = 2000;      // Length in ms of request beep
-    const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program
+    // Internal constants.
+    const BEEP_DURATION = 2000;      // Length in ms of request beep.
+    const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program.
+    const BEEP_FREQ = 400;            // Oscillator beep frequency.
 
     // Public methods
-    // TODO: Refactor this, since it's used elsewhere.
-    that.beep = function() {
-        let oscillator = speech.audioContext.createOscillator();
-        oscillator.frequency.value = 400;
-        oscillator.connect(speech.audioContext.destination);
-        oscillator.start();
-        setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
-    };
     that.action = function() {
-        that.beep();
+        speech.beep(BEEP_FREQ, BEEP_DURATION);
         setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
     };
     that.buttonType = "callBell";

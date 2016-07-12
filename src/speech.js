@@ -1,6 +1,6 @@
 "use strict";
 
-// Code pertaining to voice synthesis and speech for the program.
+// Code pertaining to speech synthesis and other sounds.
 
 // A shared audio context
 const audioContext = new window.AudioContext();
@@ -73,9 +73,18 @@ function demo() {
     speak(msg, voice);
 }
 
+function beep(freq, duration) {
+    // Emit a pure tone of the requested frequency and duration.
+    let oscillator = audioContext.createOscillator();
+    oscillator.frequency.value = freq;
+    oscillator.connect(audioContext.destination);
+    oscillator.start();
+    setTimeout(function () { oscillator.stop(); }, duration);
+}
+
 
 // Initialize once voices are loaded.
 window.speechSynthesis.onvoiceschanged = initVoices;
 
 // Exports.
-module.exports = { audioContext, speak, read };
+module.exports = { audioContext, speak, read, beep };

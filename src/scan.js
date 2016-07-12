@@ -18,6 +18,7 @@ function makeScanner(mainMenu, detector, settings) {
     const SHORT_GAZE_TIME = 200;     // A short gaze must last for 200 ms
     const LONG_GAZE_TIME = 2000;     // A long gaze must last for 2 s.
     const BEEP_DURATION = 250;       // Length of beep informing user that the gaze has lasted 2s
+    const BEEP_FREQ = 300;
 
     // Local variables
     let startButton = document.querySelector("input[type=button][value=Start]");
@@ -25,12 +26,7 @@ function makeScanner(mainMenu, detector, settings) {
 
     // Procedures
     function signalLongGaze() {
-        // TODO: Refactor this into a single beep function.
-        let oscillator = speech.audioContext.createOscillator();
-        oscillator.frequency.value = 300;
-        oscillator.connect(speech.audioContext.destination);
-        oscillator.start();
-        setTimeout(function () { oscillator.stop(); }, BEEP_DURATION);
+        speech.beep(BEEP_FREQ, BEEP_DURATION);
     }
 
     function scanMenu(menu, cb) {
