@@ -8,11 +8,14 @@ module.exports = { notImplemented,
                    repeat,
                    pad,
                    capitalize,
-                   pass };
+                   pass,
+                   renameKeys };
 
 function notImplemented () {
+    // Throw not implemented error.
     throw new Error("Not implemented.");
 }
+
 function curry(func, ...first) {
     // Curry a function.
     return function(...second) {
@@ -45,4 +48,16 @@ function capitalize(text) {
 
 function pass() {
     // Do nothing.
+}
+
+function renameKeys(obj, keys) {
+    // keys is a list of [old, replacement] pairs.
+    function each(pair) {
+        let oldKey = pair[0];
+        let newKey = pair[1];
+        obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+    }
+    keys.forEach(each);
+    return obj;
 }
