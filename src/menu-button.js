@@ -29,59 +29,61 @@ module.exports = { makeButton,
 // Buttons
 
 function makeButton(spec, my) {
+    // Factory function for a general commboard button. Constructors for more
+    // specific button types begin by invoking this one.
+    // The object "my" contains data required by buttons further down in the
+    // button hierarchy, but that should not be visible outside.
+    // The object "that" is returned, and exposes the public methods for the
+    // button.
+
+    // Shared secrets.
     my = my || {};
-    let that = Object.create(EventEmitter.prototype);
-
-    // Internal constants
-    const PRESS_WAIT = 350;          // After button is pressed, wait this many ms before its action
-
-    // Private data
-    my.buttonElem = spec.elem;
-    my.buttonValue = my.buttonElem.value;
-    my.announcementText = my.buttonValue; // By default, announce the button text
-    my.menu = spec.menu;
-    my.settings = spec.settings;
-    my.timeout = null;
-
-    // Private methods
-    my.finished = function() {
-        // Event to be emitted when button is finished with whatever actions it
-        // takes.
-        that.emit("buttonFinished");
-    };
-
-    // Public methods
-    that.getMenu = function() {
-        return my.menu;
-    };
-    that.getButtonElem = function() {
-        return my.buttonElem;
-    };
-    that.getButtonValue = function() {
-        return my.buttonValue;
-    };
-    that.announce = function() {
-        if (my.settings.useSoundP()) {
-            speech.speak(my.announcementText);
+    Object.assign(my, spec);
+    util.renameKeys(my, [["elem", "buttonElem"]]);
+    let toAssign = {
+        // Additional fields to be added as shared secrets.
+        emitter: new EventEmitter(),
+        buttonValue: my.buttonElem.value, // TODO: These are duplicates. Fix.
+        announcementText: my.buttonElem.value,
+        timeout: null,
+        finished: function() {
+            my.emitter.emit("buttonFinished");
         }
     };
-    that.toggle = function() {
-        my.buttonElem.classList.toggle("buttonOn");
-        my.buttonElem.classList.toggle("buttonOff");
-    };
-    that.pressed = function() {
-        // If sound, read the button name. Else just perform the action.
-        if (my.settings.useSoundP()) {
-            speech.read(my.announcementText, that.action, my.buttonElem, 0);
-        } else {
-            that.action();
+    Object.assign(my, toAssign);
+
+    // Public.
+    let that = {
+        buttonType: "button",
+        getMenu: () => my.menu,
+        getButtonElem: () => my.buttonElem,
+        getButtonValue: () => my.buttonValue,
+        announce: function() {
+            // Have the button state its name.
+            if (my.settings.useSoundP()) {
+                speech.speak(my.announcementText);
+            }
+        },
+        toggle: function() {
+            // Turn button on and off.
+            my.buttonElem.classList.toggle("buttonOn");
+            my.buttonElem.classList.toggle("buttonOff");
+        },
+        pressed: function() {
+            // Read button name (if sound is on) and perform button action. This
+            // method is "abstract" in the sense that "that.action" must be
+            // implemented on a descendant.
+            if (my.settings.useSoundP()) {
+                speech.read(my.announcementText, that.action, my.buttonElem, 0);
+            } else {
+                that.action();
+            }
+        },
+        addFinishedListener: function(listener) {
+            // Add a procedure to listen for when this button is finished its action.
+            my.emitter.once("buttonFinished", listener);
         }
     };
-    that.addFinishedListener = function(listener) {
-        // The listener will fire once when the button says it's finished.
-        that.once("buttonFinished", listener);
-    };
-    that.buttonType = "button";
 
     // Initialize and return
     my.buttonElem.onclick = that.pressed;
