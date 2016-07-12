@@ -13,7 +13,6 @@ const speech = require("./speech.js");
 // Exports
 module.exports = { makeButton,
                    makeMenuSelectorButton,
-                   makeStartButton,
                    makeCallBellButton,
                    makeTextButton,
                    makeLetterButton,
@@ -91,56 +90,40 @@ function makeButton(spec, my) {
 }
 
 function makeMenuSelectorButton(spec, my) {
+    // Constructor for buttons whose job it is to kick off other menus. For
+    // example: the first column on the main commboard.
+
+    // Invoke "parent" constructor.
     my = my || {};
     let that = makeButton(spec, my);
 
-    // Public methods
-    that.action = function() {
-        // Unhide the next menu if it's a dropdown. Also register an event
-        // handler so the menu will slide back up on a mouse click.
-        let target = that.getTargetMenu();
-        if (target.getInfo().hide === "dropdown") {
-            target.slideDown();
-            let onClick = function() {
-                target.slideUp();
-                document.removeEventListener("click", onClick);
-            };
-            document.addEventListener("click", onClick);
+    // Additional exposed methods and data to be assigned to object.
+    let toAssign = {
+        buttonType: "menuSelector",
+        action: function() {
+            // Unhide the next menu if it's a dropdown. Also register an event
+            // handler so the menu will slide back up on a mouse click.
+            let target = that.getTargetMenu();
+            if (target.getInfo().hide === "dropdown") {
+                target.slideDown();
+                let onClick = function() {
+                    target.slideUp();
+                    document.removeEventListener("click", onClick);
+                };
+                document.addEventListener("click", onClick);
+            }
+            my.finished();
+        },
+        getTargetMenu: function() {
+            // Return a pointer to the target menu
+            let targetName = my.buttonElem.dataset.target;
+            let menus = my.menu.getMenus();
+            return menus.get(targetName);
         }
-        my.finished();
     };
-    that.getTargetMenu = function() {
-        // Return a pointer to the target menu
-        let targetName = my.buttonElem.dataset.target;
-        let menus = my.menu.getMenus();
-        return menus.get(targetName);
-    };
-    that.buttonType = "menuSelector";
-    return that;
-}
+    Object.assign(that, toAssign);
 
-function makeStartButton(spec, my) {
-    my = my || {};
-    let that = makeButton(spec, my);
-
-    // Public
-    that.start = function() {
-        my.detector.removeExtendedGazeListener(that.start);
-        my.buttonValue = my.announcementText = my.buttonElem.value = "Stop";
-        my.menu.scan();
-        that.toggle();
-    };
-    that.action = function() {
-        my.detector.addExtendedGazeListener(that.start);
-        my.buttonValue = my.announcementText = my.buttonElem.value = "Start";
-        my.buttonElem.value = my.buttonValue;
-        that.toggle();
-    };
-    that.buttonType = "start";
-
-    // Initialize
-    that.toggle();
-    my.detector.addExtendedGazeListener(that.start);
+    // Return the object.
     return that;
 }
 

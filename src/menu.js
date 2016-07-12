@@ -98,7 +98,6 @@ function makeMenu(spec, my) {
     my.initButton = function(spec) {
         let dispatch = new Map(
             [["menuSelector", mb.makeMenuSelectorButton],
-             ["start", mb.makeStartButton],
              ["callBell", mb.makeCallBellButton],
              ["letter", mb.makeLetterButton],
              ["space", mb.makeSpaceButton],
