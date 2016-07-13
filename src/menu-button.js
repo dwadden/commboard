@@ -42,7 +42,6 @@ function makeButton(spec, my) {
     let assignments = {
         // Additional fields to be added as shared secrets.
         emitter: new EventEmitter(),
-        getAnnouncementText: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         timeout: null,
         finished: function() {
             my.emitter.emit("buttonFinished");
@@ -56,10 +55,11 @@ function makeButton(spec, my) {
         getMenu: () => my.menu,
         getButtonValue: () => my.buttonElem.value,
         setButtonValue: (value) => my.buttonElem.value = value,
+        getAnnouncement: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSoundP()) {
-                speech.speak(my.getAnnouncementText());
+                speech.speak(that.getAnnouncement());
             }
         },
         toggle: function() {
@@ -72,7 +72,7 @@ function makeButton(spec, my) {
             // method is "abstract" in the sense that "that.action" must be
             // implemented on a descendant.
             if (my.settings.useSoundP()) {
-                speech.read(my.getAnnouncementText(), that.action, my.buttonElem, 0);
+                speech.read(that.getAnnouncement(), that.action, my.buttonElem, 0);
             } else {
                 that.action();
             }
@@ -159,65 +159,54 @@ function makeTextButton(spec, my) {
     // Additional private data.
     let myAssignments = {
         textCategory: null,     // This is set by subclasses.
-        buffer: spec.buffer,
-        getText: () => that.getButtonValue().toLowerCase()
+        buffer: spec.buffer
     };
     Object.assign(my, myAssignments);
 
     // Additional public data.
-    let thatAssignments = {
+    let thatAssignments1 = {
         buttonType: "text",
+        getText: () => that.getButtonValue().toLowerCase()
+    };
+    Object.assign(that, thatAssignments1);
+    let thatAssignments2 = {    // Need to assign separately since "action" uses that.getText.
         action: function() {
-            my.buffer.write(my.getText(), my.textCategory);
+            my.buffer.write(that.getText(), that.buttonType);
             my.finished();
         }
     };
-    Object.assign(that, thatAssignments);
+    Object.assign(that, thatAssignments2);
 
     return that;
 }
 
-function makeLetterButton(spec, my) {
-    my = my || {};
-    let that = makeTextButton(spec, my);
-
-    that.buttonType = my.textCategory = "letter";
-    return that;
+function makeLetterButton(spec, my) { // Button that writes a letter to buffer.
+    return Object.assign(makeTextButton(spec, my || {}),
+                         { buttonType: "letter" });
 }
 
-function makeSpaceButton(spec, my) {
-    my = my || {};
-    let that = makeTextButton(spec, my);
-    that.buttonType = my.textCategory = "space";
-    my.getText = () => " ";   // Button text is just " "
-    return that;
+function makeSpaceButton(spec, my) { // Writes a space to the buffer.
+    return Object.assign(makeTextButton(spec, my || {}),
+                         { buttonType: "space",
+                           getText: () => " " });
 }
 
 function makePunctuationButton(spec, my) {
-    my = my || {};
-    let that = makeTextButton(spec, my);
-    my.getAnnouncementText = () => my.buttonElem.dataset.announcement;
-    that.buttonType = "punctuation";
-
-    return that;
+    // General constructor for punctuation characters. Invoked by more specific
+    // constructors.
+    return Object.assign(makeTextButton(spec, my || {}),
+                         { buttonType: "punctuation",
+                           getAnnouncement: () => my.buttonElem.dataset.announcement });
 }
 
-function makeNonTerminalPunctuationButton(spec, my) {
-    my = my || {};
-    let that = makePunctuationButton(spec, my);
-
-    that.buttonType = my.textCategory = "nonTerminalPunctuation";
-
-    return that;
+function makeNonTerminalPunctuationButton(spec, my) { // Writes non-terminal punctuation (e.g. a ' character).
+    return Object.assign(makePunctuationButton(spec, my || {}),
+                         { buttonType: "nonTerminalPunctuation" });
 }
 
-function makeTerminalPunctuationButton(spec, my) {
-    my = my || {};
-    let that = makePunctuationButton(spec, my);
-
-    that.buttonType = my.textCategory = "terminalPunctuation";
-
-    return that;
+function makeTerminalPunctuationButton(spec, my) { // Writes terminal punctuation (e.g. a ! character).
+    return Object.assign(makePunctuationButton(spec, my || {}),
+                         { buttonType: "terminalPunctuation" });
 }
 
 function makeBufferActionButton(spec, my) {
