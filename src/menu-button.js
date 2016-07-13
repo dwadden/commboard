@@ -210,16 +210,28 @@ function makeTerminalPunctuationButton(spec, my) { // Writes terminal punctuatio
 }
 
 function makeBufferActionButton(spec, my) {
+    // Constructor for buttons that invoke an action from the buffer other than
+    // simple writing text (e.g. reading buffer contents out load). The buffer
+    // object does the actual work, the buttons just serve to dispatch to the
+    // buffer.
+
     my = my || {};
     let that = makeButton(spec, my);
 
-    my.buffer = spec.buffer;
-    my.actionName = that.getButtonValue().toLowerCase();
-
-    that.action = function() {
-        my.buffer.executeAction(my.actionName, my.finished); // Pass the callback along to the buffer method
+    // Private additions.
+    let myAssignments = {
+        getActionName: () => that.getButtonValue().toLowerCase()
     };
-    that.buttonType = "bufferAction";
+    Object.assign(my, myAssignments);
+
+    // Public additions.
+    let thatAssignments= {
+        buttonType: "bufferAction",
+        action: function() {
+            my.buffer.executeAction(my.getActionName(), my.finished); // Pass the callback along to the buffer method
+        }
+    };
+    Object.assign(that, thatAssignments);
 
     return that;
 }
