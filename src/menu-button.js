@@ -166,12 +166,13 @@ function makeTextButton(spec, my) {
     // Additional public data.
     let thatAssignments1 = {
         buttonType: "text",
-        getText: () => that.getButtonValue().toLowerCase()
+        getText: () => that.getButtonValue().toLowerCase(),
+        getTextCategory: () => that.buttonType
     };
     Object.assign(that, thatAssignments1);
     let thatAssignments2 = {    // Need to assign separately since "action" uses that.getText.
         action: function() {
-            my.buffer.write(that.getText(), that.buttonType);
+            my.buffer.write(that.getText(), that.getTextCategory());
             my.finished();
         }
     };
@@ -209,6 +210,23 @@ function makeTerminalPunctuationButton(spec, my) { // Writes terminal punctuatio
                          { buttonType: "terminalPunctuation" });
 }
 
+function makeGuessButton(spec, my) {
+    // Constructor for buttons that handle guesses retrieved from web API or
+    // elsewhere. To work correctly these buttons must be part of a GuessMenu.
+
+    my = my || {};
+    let that = makeTextButton(spec, my);
+
+    let assignment = {
+        buttonType: "guess",
+        getTextCategory: () => "word",
+        isEmpty: () => that.getText() === ""
+    };
+    Object.assign(that, assignment);
+
+    return that;
+}
+
 function makeBufferActionButton(spec, my) {
     // Constructor for buttons that invoke an action from the buffer other than
     // simple writing text (e.g. reading buffer contents out load). The buffer
@@ -232,26 +250,6 @@ function makeBufferActionButton(spec, my) {
         }
     };
     Object.assign(that, thatAssignments);
-
-    return that;
-}
-
-function makeGuessButton(spec, my) {
-    my = my || {};
-    let that = makeTextButton(spec, my);
-
-    // Private data
-    my.textCategory = "word";
-
-    // Public methods
-    that.action = function() {
-        my.buffer.write(that.getButtonValue(), my.textCategory);
-        my.finished();
-    };
-    that.isEmpty = function() {
-        return that.getButtonValue() === "";
-    };
-    that.buttonType = "guess";
 
     return that;
 }
