@@ -238,7 +238,7 @@ function makeGuessMenu(spec, my) {
     my.update = function() {
         let callback = function(guesses) {
             _.zip(my.buttons, guesses).forEach(function([button, guess])
-                                                  { button.setValue(guess); });
+                                                  { button.setButtonValue(guess); });
         };
         let inputText = my.buffer.getText();
         my.guessWord(inputText, callback);

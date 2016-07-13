@@ -39,28 +39,27 @@ function makeButton(spec, my) {
     my = my || {};
     Object.assign(my, spec);
     util.renameKeys(my, [["elem", "buttonElem"]]);
-    let toAssign = {
+    let assignments = {
         // Additional fields to be added as shared secrets.
         emitter: new EventEmitter(),
-        buttonValue: my.buttonElem.value, // TODO: These are duplicates. Fix.
-        announcementText: my.buttonElem.value,
+        getAnnouncementText: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         timeout: null,
         finished: function() {
             my.emitter.emit("buttonFinished");
         }
     };
-    Object.assign(my, toAssign);
+    Object.assign(my, assignments);
 
     // Public.
     let that = {
         buttonType: "button",
         getMenu: () => my.menu,
-        getButtonElem: () => my.buttonElem,
-        getButtonValue: () => my.buttonValue,
+        getButtonValue: () => my.buttonElem.value,
+        setButtonValue: (value) => my.buttonElem.value = value,
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSoundP()) {
-                speech.speak(my.announcementText);
+                speech.speak(my.getAnnouncementText());
             }
         },
         toggle: function() {
@@ -73,7 +72,7 @@ function makeButton(spec, my) {
             // method is "abstract" in the sense that "that.action" must be
             // implemented on a descendant.
             if (my.settings.useSoundP()) {
-                speech.read(my.announcementText, that.action, my.buttonElem, 0);
+                speech.read(my.getAnnouncementText(), that.action, my.buttonElem, 0);
             } else {
                 that.action();
             }
@@ -161,7 +160,7 @@ function makeTextButton(spec, my) {
     let myAssignments = {
         textCategory: null,     // This is set by subclasses.
         buffer: spec.buffer,
-        text: my.buttonValue.toLowerCase()
+        getText: () => that.getButtonValue().toLowerCase()
     };
     Object.assign(my, myAssignments);
 
@@ -169,7 +168,7 @@ function makeTextButton(spec, my) {
     let thatAssignments = {
         buttonType: "text",
         action: function() {
-            my.buffer.write(my.text, my.textCategory);
+            my.buffer.write(my.getText(), my.textCategory);
             my.finished();
         }
     };
@@ -190,14 +189,14 @@ function makeSpaceButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
     that.buttonType = my.textCategory = "space";
-    my.text = " ";   // Button text is just " "
+    my.getText = () => " ";   // Button text is just " "
     return that;
 }
 
 function makePunctuationButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
-    my.announcementText = my.buttonElem.dataset.announcement;
+    my.getAnnouncementText = () => my.buttonElem.dataset.announcement;
     that.buttonType = "punctuation";
 
     return that;
@@ -226,7 +225,7 @@ function makeBufferActionButton(spec, my) {
     let that = makeButton(spec, my);
 
     my.buffer = spec.buffer;
-    my.actionName = my.buttonValue.toLowerCase();
+    my.actionName = that.getButtonValue().toLowerCase();
 
     that.action = function() {
         my.buffer.executeAction(my.actionName, my.finished); // Pass the callback along to the buffer method
@@ -244,20 +243,12 @@ function makeGuessButton(spec, my) {
     my.textCategory = "word";
 
     // Public methods
-    that.getValue = function() {
-        return my.buttonValue;
-    };
-    that.setValue = function(value) {
-        // TODO: Too many variables.
-        my.buttonValue = my.announcementText = my.buttonElem.value = value;
-    };
     that.action = function() {
-        my.buffer.write(my.buttonValue, my.textCategory);
+        my.buffer.write(that.getButtonValue(), my.textCategory);
         my.finished();
     };
     that.isEmpty = function() {
-        // TODO: My is my.text empy here, while my.buttonValue has the actual button text?
-        return my.buttonValue === "";
+        return that.getButtonValue() === "";
     };
     that.buttonType = "guess";
 
@@ -277,7 +268,7 @@ function makeEmailButton(spec, my) {
     // Public methods
     that.setRecipient = function(name, address) {
         // Add a recipient for this (initially empty) button.
-        my.buttonValue = my.announcementText = my.buttonElem.value = name;
+        that.setButtonValue(name);
         my.address = address;
     };
 
@@ -301,7 +292,7 @@ it is perfectly fine to send messages to this address.`;
                 console.log(error);
             } else {
                 // Otherwise, inform user of success and continue program
-                speech.read(`Message sent to ${my.buttonValue}`,
+                speech.read(`Message sent to ${that.getButtonValue()}`,
                             my.finished, my.buttonElem);
             }
         }
