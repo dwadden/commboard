@@ -10,26 +10,44 @@ const nodemailer = require("nodemailer");
 const util = require("./util.js");
 const speech = require("./speech.js");
 
-// Exports
-module.exports = { makeButton,
-                   makeMenuSelectorButton,
-                   makeCallBellButton,
-                   makeTextButton,
-                   makeLetterButton,
-                   makeSpaceButton,
-                   makePunctuationButton,
-                   makeNonTerminalPunctuationButton,
-                   makeTerminalPunctuationButton,
-                   makeBufferActionButton,
-                   makeGuessButton,
-                   makeEmailButton,
-                   makeNotImplementedButton };
+// ************************************************************************** //
+
+// The module exposes a single procedure called menuButton. This procedure
+// creates a button object of the requested type (e.g. a button to write letters
+// to the buffer) by retrieving the desired constructor from the global
+// "constructors" object.
+// A constructor is added to this object by invoking "registerConstructor",
+// which takes two arguments: the name of the type tag for the button, and the
+// button constructor procedure. The procedure first decorates the original
+// constructor by making sure that every object it returns is given the
+// appropriate type tag. It then adds the decorated constructor to the global
+// constructor dispatch table.
+
+let constructors = {};          // The global constructor table.
+
+function registerConstructor(type, constructor) {
+    // Register a constructor in the global table.
+    function decoratedConstructor(spec, my) {
+        // Decorate the constructor by tagging all buttons it makes with their type.
+        return Object.assign(constructor(spec, my),
+                             { buttonType: type });
+    }
+    constructors[type] = decoratedConstructor;
+}
+
+function menuButton(type, spec) {
+    // Top-level button constructor. Dispatches on buttonType to create a button
+    // of the appropriate type.
+    return constructors[type](spec);
+}
+
+module.exports = menuButton;
 
 // ************************************************************************** //
 
 // The base constructor for all other buttons
 
-function makeButton(spec, my) {
+function makeGenericButton(spec, my) {
     // Factory function for a general commboard button. Constructors for more
     // specific button types begin by invoking this one.
     // The object "my" contains data required by buttons further down in the
@@ -53,7 +71,6 @@ function makeButton(spec, my) {
 
     // Public.
     let that = {
-        buttonType: "button",
         getMenu: () => my.menu,
         getButtonValue: () => my.buttonElem.value,
         setButtonValue: (value) => my.buttonElem.value = value,
@@ -101,7 +118,7 @@ function makeTextButton(spec, my) {
     // constructors for letters, numbers, etc.
 
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Additional private data.
     let myAssignments = {
@@ -112,7 +129,6 @@ function makeTextButton(spec, my) {
 
     // Additional public data.
     let thatAssignments1 = {
-        buttonType: "text",
         getText: () => that.getButtonValue().toLowerCase(),
         getTextCategory: () => that.buttonType
     };
@@ -127,35 +143,25 @@ function makeTextButton(spec, my) {
 
     return that;
 }
-
-function makeLetterButton(spec, my) { // Button that writes a letter to buffer.
-    return Object.assign(makeTextButton(spec, my || {}),
-                         { buttonType: "letter" });
-}
+// Register a letter button, which works like a text button but is named more specifically.
+registerConstructor("letter", makeTextButton); //
 
 function makeSpaceButton(spec, my) { // Writes a space to the buffer.
     return Object.assign(makeTextButton(spec, my || {}),
-                         { buttonType: "space",
-                           getText: () => " " });
+                         { getText: () => " " });
 }
+registerConstructor("space", makeSpaceButton);
 
 function makePunctuationButton(spec, my) {
     // General constructor for punctuation characters. Invoked by more specific
     // constructors.
-    return Object.assign(makeTextButton(spec, my || {}),
-                         { buttonType: "punctuation",
-                           getAnnouncement: () => my.buttonElem.dataset.announcement });
+    my = my || {};          // Need to assign "my" first since "getAnnouncement" needs access to it.
+    return Object.assign(makeTextButton(spec, my),
+                         { getAnnouncement: () => my.buttonElem.dataset.announcement });
 }
-
-function makeNonTerminalPunctuationButton(spec, my) { // Writes non-terminal punctuation (e.g. a ' character).
-    return Object.assign(makePunctuationButton(spec, my || {}),
-                         { buttonType: "nonTerminalPunctuation" });
-}
-
-function makeTerminalPunctuationButton(spec, my) { // Writes terminal punctuation (e.g. a ! character).
-    return Object.assign(makePunctuationButton(spec, my || {}),
-                         { buttonType: "terminalPunctuation" });
-}
+// Register terminal and non-terminal punctuation buttons. The buffer handles differently based on their tag.
+registerConstructor("nonTerminalPunctuation", makePunctuationButton);
+registerConstructor("terminalPunctuation", makePunctuationButton);
 
 function makeGuessButton(spec, my) {
     // Constructor for buttons that handle guesses retrieved from web API or
@@ -165,7 +171,6 @@ function makeGuessButton(spec, my) {
     let that = makeTextButton(spec, my);
 
     let assignment = {
-        buttonType: "guess",
         getTextCategory: () => "word",
         isEmpty: () => that.getText() === ""
     };
@@ -173,6 +178,7 @@ function makeGuessButton(spec, my) {
 
     return that;
 }
+registerConstructor("guess", makeGuessButton);
 
 // ************************************************************************** //
 
@@ -185,7 +191,7 @@ function makeBufferActionButton(spec, my) {
     // buffer.
 
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Private additions.
     let myAssignments = {
@@ -195,7 +201,6 @@ function makeBufferActionButton(spec, my) {
 
     // Public additions.
     let thatAssignments= {
-        buttonType: "bufferAction",
         action: function() {
             my.buffer.executeAction(my.getActionName(), my.finished); // Pass the callback along to the buffer method
         }
@@ -204,17 +209,17 @@ function makeBufferActionButton(spec, my) {
 
     return that;
 }
+registerConstructor("bufferAction", makeBufferActionButton);
 
 function makeMenuSelectorButton(spec, my) {
     // Constructor for buttons whose job it is to kick off other menus. For
     // example: the first column on the main commboard.
 
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Additional exposed methods and data to be assigned to object.
     let assignments = {
-        buttonType: "menuSelector",
         action: function() {
             // Unhide the next menu if it's a dropdown. Also register an event
             // handler so the menu will slide back up on a mouse click.
@@ -240,13 +245,14 @@ function makeMenuSelectorButton(spec, my) {
 
     return that;
 }
+registerConstructor("menuSelector", makeMenuSelectorButton);
 
 function makeCallBellButton(spec, my) {
     // Constructor for call bell button. When pressed, emits a tone to inform a
     // caretaker that the user requires attention.
 
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Internal constants.
     const BEEP_DURATION = 2000;      // Length in ms of request beep.
@@ -255,7 +261,6 @@ function makeCallBellButton(spec, my) {
 
     // Additional methods.
     let assignments = {
-        buttonType: "callBell",
         action: function() {
             speech.beep(BEEP_FREQ, BEEP_DURATION);
             setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
@@ -265,6 +270,7 @@ function makeCallBellButton(spec, my) {
 
     return that;
 }
+registerConstructor("callBell", makeCallBellButton);
 
 function makeEmailButton(spec, my) {
     // Constructor for buttons that send email. These buttons have two important
@@ -274,7 +280,7 @@ function makeEmailButton(spec, my) {
     // action: send the email.
 
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Private additions.
     let myAssignments = {
@@ -284,8 +290,6 @@ function makeEmailButton(spec, my) {
 
     // Public additions.
     let thatAssignments = {
-        buttonType: "email",
-
         setRecipient: function(name, address) {
             // Add a recipient for this (initially empty) button.
             that.setButtonValue(name);
@@ -338,16 +342,16 @@ function makeEmailButton(spec, my) {
 
     return that;
 }
+registerConstructor("email", makeEmailButton);
 
 function makeNotImplementedButton(spec, my) {
     // Button for features not yet implemented. Notifies the user and continues.
     const PAUSE = 500;
     my = my || {};
-    let that = makeButton(spec, my);
+    let that = makeGenericButton(spec, my);
 
     // Public additions.
     let assignment = {
-        buttonType: "notImplemented",
         action: function() {
             speech.read("Not implemented.", my.finished, my.buttonElem, PAUSE);
         }
@@ -356,3 +360,4 @@ function makeNotImplementedButton(spec, my) {
 
     return that;
 }
+registerConstructor("notImplemented", makeNotImplementedButton);
