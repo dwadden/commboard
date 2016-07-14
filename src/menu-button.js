@@ -255,66 +255,74 @@ function makeBufferActionButton(spec, my) {
 }
 
 function makeEmailButton(spec, my) {
+    // Constructor for buttons that send email. These buttons have two important
+    // methods:
+    // setRecipient: sets the email recipient for the button, which allows for
+    //     each user to customize who he / she sends emails to.
+    // action: send the email.
+
     my = my || {};
     let that = makeButton(spec, my);
 
-    // Private data
-    my.buffer = spec.buffer;
-    my.settings = spec.settings;
-    my.emailSettings = my.settings.getEmailSettings();
-    my.address = null;
-
-    // Public methods
-    that.setRecipient = function(name, address) {
-        // Add a recipient for this (initially empty) button.
-        that.setButtonValue(name);
-        my.address = address;
+    // Private additions.
+    let myAssignments = {
+        address: null
     };
+    Object.assign(my, myAssignments);
 
-    that.action = function() {
-        // Email variables
-        const signature = my.emailSettings.getSignature();
-        const address = my.emailSettings.getAddress();
-        const password = my.emailSettings.getPassword();
+    // Public additions.
+    let thatAssignments = {
+        buttonType: "email",
 
-        const warningText = `This message was sent using experimental software
-for individuals with Completely Locked-in Syndrome. Due to the immaturity of the
-software, the password for this email account may not be stored securely. What
-this means for you is that you should NEVER send sensitive information
-(e.g. bank accounts, social security numbers, etc) to this email address, as a
-malicious person could be able to gain access to it. For normal conversations,
-it is perfectly fine to send messages to this address.`;
-        function afterSend(error, info) {
-            if (error) {
-                // If something goes wrong, inform user and dump the error info
-                speech.read("An error ocurred.", my.finished, my.buttonElem);
-                console.log(error);
-            } else {
-                // Otherwise, inform user of success and continue program
-                speech.read(`Message sent to ${that.getButtonValue()}`,
-                            my.finished, my.buttonElem);
+        setRecipient: function(name, address) {
+            // Add a recipient for this (initially empty) button.
+            that.setButtonValue(name);
+            my.address = address;
+        },
+
+        action: function() {
+            // The procedure that sends the email.
+            const emailSettings = my.settings.getEmailSettings();
+            const signature = emailSettings.getSignature();
+            const address = emailSettings.getAddress();
+            const password = emailSettings.getPassword();
+            const signoffText = (`This message was sent for ${signature} using ` +
+                                 "wedjat, experimental software to enable people " +
+                                 "with disabilities to use a computer.");
+
+            function afterSend(error, info) {
+                // Callback to invoke after message has been sent.
+                if (error) {
+                    // If something goes wrong, inform user and dump the error info.
+                    speech.read("An error ocurred.", my.finished, my.buttonElem);
+                    console.log(error);
+                } else {
+                    // Otherwise, inform user of success and continue program.
+                    speech.read(`Message sent to ${that.getButtonValue()}`,
+                                my.finished,
+                                my.buttonElem);
+                }
             }
+            const transporter = nodemailer.createTransport({  // For details, see https://nodemailer.com/
+                service: 'gmail',
+                auth: {
+                    user: address,
+                    pass: password
+                }
+            });
+            const mailOptions = {
+                from: `"${signature}" <${address}>`,
+                to: `${my.address}`, // list of receivers
+                subject: `A message from ${signature}`, // Subject line
+                text: my.buffer.getText() + "\n\n\n" + signoffText // plaintext body
+            };
+
+            // Send the email.
+            transporter.sendMail(mailOptions, afterSend);
+            my.finished();
         }
-        // For details, see https://nodemailer.com/
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: address,
-                pass: password
-            }
-        });
-        const mailOptions = {
-            from: `"${signature}" <${address}>`,
-            to: `${my.address}`, // list of receivers
-            subject: `A message from ${signature}`, // Subject line
-            text: my.buffer.getText() + "\n\n\n" + warningText // plaintext body
-        };
-
-        // Send it off
-        transporter.sendMail(mailOptions, afterSend);
-        my.finished();
     };
-    that.buttonType = "email";
+    Object.assign(that, thatAssignments);
 
     return that;
 }
