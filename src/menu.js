@@ -87,87 +87,91 @@ function initMenus(spec) {
 // Menus
 
 function makeMenu(spec, my) {
-    // Constructor for generic menu objects
+    // The factory function for menu objects not requiring extra functionality.
+    //
+    // The object "my" contains shared data required by menus further down the
+    // hierarchy but not exposed externally. It is created by three separate
+    // Object.assign's. The first retrieves data from the DOM. The second
+    // specifies methods for constructing menu buttons by passing specs
+    // containing the appropriate DOM information into the menu button
+    // constructor. The third creates the child menu buttons and attaches the
+    // menu.
+    //
+    // The object "that" is returned and exposes public methods; for instance,
+    // to get pointers to all the buttons contained by the menu.
 
-    // Private and public objects
+    // Objects to hold shared secrets and to be returned.
     my = my || {};
     let that = {};
 
-    // Private methods
-    my.initButtons = function() {
-        function initButton(spec) {
-            return menuButton(spec.elem.dataset.buttonType, spec);
-        }
-        let mapped = function(buttonElem) {
-            return { elem: buttonElem,
-                     menu: that,
-                     detector: my.detector,
-                     buffer: my.buffer,
-                     settings: my.settings
-                   };
-        };
-        let specs = Array.prototype.map.call(my.buttonElems, mapped);
-        return specs.map(initButton);
+    // Initialize shared secrets.
+    Object.assign(my, spec);
+    let myData1 = {             // Menu and button objects from the DOM
+        menuElem: document.getElementById(my.menuName),
+        buttonElems: document.querySelectorAll(
+            `input[type=button][data-menu="${my.menuName}"]`)
     };
+    Object.assign(my, myData1);
+    let myMethods = {
+        initButtons : function() { // Pass type tag and spec to menu button constructor.
+            // Note on design: in principle, could just pass the spec and have
+            // the constructor get the type from the DOM element attached to the
+            // spec.  In general, however, we want to be able to dispatch on
+            // button type if it came from a different source.
+            function initButton(spec) {
+                return menuButton(spec.elem.dataset.buttonType, spec);
+            }
+            let makeSpec = function(buttonElem) { // Create a spec passed to a single button constructor.
+                return { elem: buttonElem,
+                         menu: that,
+                         detector: my.detector,
+                         buffer: my.buffer,
+                         settings: my.settings
+                       };
+            };
+            let specs = [].map.call(my.buttonElems, makeSpec);
+            return specs.map(initButton);
+        }
+    };
+    Object.assign(my, myMethods);
+    let myData2 = {             // Initialize child buttons and attach to menu object.
+        buttons: my.initButtons(),
+        children: null
+    };
+    Object.assign(my, myData2);
 
-    // Private data
-    // TODO: Copy these over more efficiently
-    my.menuName = spec.menuName;
-    my.hide = spec.hide;
-    my.scan = spec.scan;
-    my.buffer = spec.buffer;
-    my.settings = spec.settings;
-    // Some, but not all menus have elements corresponding to them. These menus
-    // can slide up and down.
-    my.menuElem = document.getElementById(my.menuName);
-    my.buttonElems = document.querySelectorAll(
-        `input[type=button][data-menu="${my.menuName}"]`);
-    my.buttons = my.initButtons();
-    my.nButtons = my.buttons.length;
-    my.children = null;
-
-    // Public methods
-    that.getChildren = function() {
-        return my.children;
-    };
-    that.setChildren = function(children) {
-        my.children = children;
-        let setParent = function(child) {
-            child.parent = that;
-        };
-        children.forEach(setParent);
-    };
-    that.slideUp = function() {
-        if (my.menuElem !== null) {
-            jQuery(my.menuElem).slideUp();
+    // The returned object.
+    let thatAssignments = {
+        slideUp: function() {
+            if (my.menuElem !== null) {
+                jQuery(my.menuElem).slideUp();
+            }
+        },
+        slideDown: function() {
+            if (my.menuElem !== null) {
+                jQuery(my.menuElem).slideDown();
+            }
+        },
+        setChildren: function(children) {
+            my.children = children;
+            const setParent = (child) => child.parent = that;
+            children.forEach(setParent);
+        },
+        getChildren: () => my.children,
+        getButtons: () => my.buttons,
+        getNButtons: () => my.buttons.length,
+        setMenus: (menus) => my.menus = menus,
+        getMenus: () => my.menus,
+        getInfo: function() {
+            return { menuName: my.menuName,
+                     hide: my.hide,
+                     scan: my.scan };
         }
     };
-    that.slideDown = function() {
-        if (my.menuElem !== null) {
-            jQuery(my.menuElem).slideDown();
-        }
-    };
-    that.getButtons = function() {
-        return my.buttons;
-    };
-    that.getNButtons = function() {
-        return my.nButtons;
-    };
-    that.setMenus = function(menus) {
-        my.menus = menus;
-    };
-    that.getMenus = function() {
-        return my.menus;
-    };
-    that.getInfo = function() {
-        return { menuName: my.menuName,
-                 hide: my.hide,
-                 scan: my.scan };
-    };
+    Object.assign(that, thatAssignments);
 
     // Initialize and return
-    // If it's a sliding menu, hide it
-    if (my.hide === "dropdown") {
+    if (my.hide === "dropdown") {     // If it's a sliding menu, hide it
         that.slideUp();
     }
     return that;
