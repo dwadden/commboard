@@ -94,24 +94,10 @@ function makeMenu(spec, my) {
     let that = {};
 
     // Private methods
-    const mb = menuButton;
-    my.initButton = function(spec) {
-        let dispatch = new Map(
-            [["menuSelector", mb.makeMenuSelectorButton],
-             ["callBell", mb.makeCallBellButton],
-             ["letter", mb.makeLetterButton],
-             ["space", mb.makeSpaceButton],
-             ["terminalPunctuation", mb.makeTerminalPunctuationButton],
-             ["nonTerminalPunctuation", mb.makeNonTerminalPunctuationButton],
-             ["bufferAction", mb.makeBufferActionButton],
-             ["guess", mb.makeGuessButton],
-             ["email", mb.makeEmailButton],
-             ["notImplemented", mb.makeNotImplementedButton]]
-        );
-        let maker = dispatch.get(spec.elem.dataset.buttonType);
-        return maker(spec);
-    };
     my.initButtons = function() {
+        function initButton(spec) {
+            return menuButton(spec.elem.dataset.buttonType, spec);
+        }
         let mapped = function(buttonElem) {
             return { elem: buttonElem,
                      menu: that,
@@ -121,7 +107,7 @@ function makeMenu(spec, my) {
                    };
         };
         let specs = Array.prototype.map.call(my.buttonElems, mapped);
-        return specs.map(my.initButton);
+        return specs.map(initButton);
     };
 
     // Private data
@@ -262,7 +248,6 @@ function makeEmailMenu(spec, my) {
 
     // Private methods.
     my.addRecipient = function() {
-        console.log("Here");
         // Add a new recipient.
         let button = my.buttons[my.buttonIx];
         button.setRecipient(my.emailSettings.getRecipientName(),
