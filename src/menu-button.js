@@ -25,7 +25,9 @@ module.exports = { makeButton,
                    makeEmailButton,
                    makeNotImplementedButton };
 
-// Buttons
+// ************************************************************************** //
+
+// The base constructor for all other buttons
 
 function makeButton(spec, my) {
     // Factory function for a general commboard button. Constructors for more
@@ -88,66 +90,11 @@ function makeButton(spec, my) {
     return that;
 }
 
-function makeMenuSelectorButton(spec, my) {
-    // Constructor for buttons whose job it is to kick off other menus. For
-    // example: the first column on the main commboard.
+// ************************************************************************** //
 
-    my = my || {};
-    let that = makeButton(spec, my);
-
-    // Additional exposed methods and data to be assigned to object.
-    let assignments = {
-        buttonType: "menuSelector",
-        action: function() {
-            // Unhide the next menu if it's a dropdown. Also register an event
-            // handler so the menu will slide back up on a mouse click.
-            let target = that.getTargetMenu();
-            if (target.getInfo().hide === "dropdown") {
-                target.slideDown();
-                let onClick = function() {
-                    target.slideUp();
-                    document.removeEventListener("click", onClick);
-                };
-                document.addEventListener("click", onClick);
-            }
-            my.finished();
-        },
-        getTargetMenu: function() {
-            // Return a pointer to the target menu
-            let targetName = my.buttonElem.dataset.target;
-            let menus = my.menu.getMenus();
-            return menus.get(targetName);
-        }
-    };
-    Object.assign(that, assignments);
-
-    return that;
-}
-
-function makeCallBellButton(spec, my) {
-    // Constructor for call bell button. When pressed, emits a tone to inform a
-    // caretaker that the user requires attention.
-
-    my = my || {};
-    let that = makeButton(spec, my);
-
-    // Internal constants.
-    const BEEP_DURATION = 2000;      // Length in ms of request beep.
-    const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program.
-    const BEEP_FREQ = 400;            // Oscillator beep frequency.
-
-    // Additional methods.
-    let assignments = {
-        buttonType: "callBell",
-        action: function() {
-            speech.beep(BEEP_FREQ, BEEP_DURATION);
-            setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
-        }
-    };
-    Object.assign(that, assignments);
-
-    return that;
-}
+// Constructors for all buttons responsible for sending input to the buffer. The
+// base constructor is makeTextButton; all others call this constructor first
+// and then add on additional behavior using Object.assign.
 
 function makeTextButton(spec, my) {
     // Constructor for general text button. Invoked by more specific
@@ -227,6 +174,10 @@ function makeGuessButton(spec, my) {
     return that;
 }
 
+// ************************************************************************** //
+
+// Buttons to perform other types of actions.
+
 function makeBufferActionButton(spec, my) {
     // Constructor for buttons that invoke an action from the buffer other than
     // simple writing text (e.g. reading buffer contents out load). The buffer
@@ -250,6 +201,67 @@ function makeBufferActionButton(spec, my) {
         }
     };
     Object.assign(that, thatAssignments);
+
+    return that;
+}
+
+function makeMenuSelectorButton(spec, my) {
+    // Constructor for buttons whose job it is to kick off other menus. For
+    // example: the first column on the main commboard.
+
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    // Additional exposed methods and data to be assigned to object.
+    let assignments = {
+        buttonType: "menuSelector",
+        action: function() {
+            // Unhide the next menu if it's a dropdown. Also register an event
+            // handler so the menu will slide back up on a mouse click.
+            let target = that.getTargetMenu();
+            if (target.getInfo().hide === "dropdown") {
+                target.slideDown();
+                let onClick = function() {
+                    target.slideUp();
+                    document.removeEventListener("click", onClick);
+                };
+                document.addEventListener("click", onClick);
+            }
+            my.finished();
+        },
+        getTargetMenu: function() {
+            // Return a pointer to the target menu
+            let targetName = my.buttonElem.dataset.target;
+            let menus = my.menu.getMenus();
+            return menus.get(targetName);
+        }
+    };
+    Object.assign(that, assignments);
+
+    return that;
+}
+
+function makeCallBellButton(spec, my) {
+    // Constructor for call bell button. When pressed, emits a tone to inform a
+    // caretaker that the user requires attention.
+
+    my = my || {};
+    let that = makeButton(spec, my);
+
+    // Internal constants.
+    const BEEP_DURATION = 2000;      // Length in ms of request beep.
+    const AFTER_BEEP_WAIT = 1000;     // Time after beep before continuing program.
+    const BEEP_FREQ = 400;            // Oscillator beep frequency.
+
+    // Additional methods.
+    let assignments = {
+        buttonType: "callBell",
+        action: function() {
+            speech.beep(BEEP_FREQ, BEEP_DURATION);
+            setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
+        }
+    };
+    Object.assign(that, assignments);
 
     return that;
 }
