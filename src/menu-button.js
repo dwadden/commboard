@@ -328,17 +328,19 @@ function makeEmailButton(spec, my) {
 }
 
 function makeNotImplementedButton(spec, my) {
-    // Internal constants
+    // Button for features not yet implemented. Notifies the user and continues.
     const PAUSE = 500;
-
     my = my || {};
     let that = makeButton(spec, my);
 
-    that.action = function() {
-        let utterance = speech.speak("Not implemented");
-        utterance.onend = my.finished;
-        my.buttonElem.utternce = utterance;
+    // Public additions.
+    let assignment = {
+        buttonType: "notImplemented",
+        action: function() {
+            speech.read("Not implemented.", my.finished, my.buttonElem, PAUSE);
+        }
     };
-    that.buttonType = "notImplemented";
+    Object.assign(that, assignment);
+
     return that;
 }
