@@ -16,7 +16,7 @@ function setup() {
     // Top-level setup to initialize the objects of the program.
 
     // Create utility objects
-    let detector = det.makeDetector();
+    let detector = det();
     let buffer = io.makeBuffer();
     let settings = io.makeSettings();
 

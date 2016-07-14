@@ -1,21 +1,22 @@
 "use strict";
 
-// The constructor exported by this module makes a detector object. The detector
-// recognizes gazes, currently via template matching. When the "start" button on
-// the UI is pressed, it fires events when it recognizes the beginning or end of
-// an upward gaze.
+// The constructor exported by this module creates a detector object. The
+// detector recognizes gazes, currently via template matching. After the "start"
+// button on the UI is pressed, it fires events when it recognizes the beginning
+// or end of an upward gaze.
 
 const EventEmitter = require("events");
 const util = require("./util.js");
 
-module.exports = { makeDetector };
+module.exports = detector;
 
-function makeDetector() {
-    // Top-level constructor. Makes a detector object that fires events when the
-    // gaze state changes.
-
-    // Inherit from EventEmitter
-    let that = Object.create(EventEmitter.prototype);
+function detector() {
+    // Constructor for a detector object that fires events when the gaze state
+    // changes.
+    // To determine whether the user is gazing upward or not, this
+    // implementation computes the L1 distances between the current video frame
+    // and each of the templates, and takes the closer. Many other ideas are
+    // possible, but this one is quite simple and seems to work pleasingly well.
 
     // Constants
     const REST = Symbol("rest");
@@ -24,6 +25,7 @@ function makeDetector() {
     const REFRESH_RATE_SCAN = 20; // When scanning, check 20 times a second.
 
     // Locals
+    let emitter = new EventEmitter();
     let vs = makeVideoStream();
     let rest = makeTemplate("rest", vs);
     let gaze = makeTemplate("gaze", vs);
@@ -33,7 +35,7 @@ function makeDetector() {
 
     // Private methods
     function detect() {
-        // Compares current video frame to templates, emits events if change occurred.
+        // Compares current video frame to templates. Emits events if change occurred.
         let streamPixels = vs.getPixels();
         let dRest = l1Distance(streamPixels, rest.getPixels());
         let dGaze = l1Distance(streamPixels, gaze.getPixels());
@@ -46,12 +48,8 @@ function makeDetector() {
         }
         state = newState;
     }
-    function emitGazeStart() {
-        that.emit("gazeBegin");
-    }
-    function emitGazeEnd() {
-        that.emit("gazeEnd");
-    }
+    const emitGazeStart = () => emitter.emit("gazeBegin");
+    const emitGazeEnd = () => emitter.emit("gazeEnd");
     function start() {
         // Listen for detections.
         let intervalTime = 1000 / refreshRate;
@@ -63,6 +61,7 @@ function makeDetector() {
         interval = null;
     }
     function setStatus(newStatus) {
+        // Update the DOM element indicating detector status.
         let p = statusElem.querySelector("p");
         let oldStatus = status;
         status = newStatus;
@@ -72,48 +71,30 @@ function makeDetector() {
         }
         statusElem.classList.toggle(status);
     }
-    // Public methods
-    that.idleMode = function() {
-        // Detector is idle.
-        setStatus("idle");
-        window.clearInterval(interval);
-    };
-    that.listenMode = function() {
-        // When user isn't scanning, listen for input 5 times a second.
-        setStatus("listening");
-        window.clearInterval(interval);
-        interval = window.setInterval(detect, 1000 / REFRESH_RATE_LISTEN);
-    };
-    that.scanMode = function() {
-        // When user is scanning, listen for input 20 times a second.
-        setStatus("scanning");
-        window.clearInterval(interval);
-        interval = window.setInterval(detect, 1000 / REFRESH_RATE_SCAN);
-    };
-    that.addBeginListener = function(listener) {
-        that.addListener("gazeBegin", listener);
-    };
-    that.addEndListener = function(listener) {
-        that.addListener("gazeEnd", listener);
-    };
-    that.removeBeginListener = function(listener) {
-        that.removeListener("gazeBegin", listener);
-    };
-    that.removeEndListener = function(listener) {
-        that.removeListener("gazeEnd", listener);
-    };
 
-    // Listen key presses as alternatives to gazes
-    // TODO: May want to factor this out into separate detectors.
-    window.onkeyup = function(event) {
-        if (event.keyIdentifier === "Up") {
-            emitGazeEnd();
-        }
-    };
-    window.onkeydown = function(event) {
-        if (event.keyIdentifier === "Up") {
-            emitGazeStart();
-        }
+    // The returned object
+    let that = {
+        idleMode: function() {
+            // Detector is idle.
+            setStatus("idle");
+            window.clearInterval(interval);
+        },
+        listenMode: function() {
+            // When user isn't scanning, listen for input 5 times a second.
+            setStatus("listening");
+            window.clearInterval(interval);
+            interval = window.setInterval(detect, 1000 / REFRESH_RATE_LISTEN);
+        },
+        scanMode: function() {
+            // When user is scanning, listen for input 20 times a second.
+            setStatus("scanning");
+            window.clearInterval(interval);
+            interval = window.setInterval(detect, 1000 / REFRESH_RATE_SCAN);
+        },
+        addBeginListener: (listener) => emitter.addListener("gazeBegin", listener),
+        addEndListener: (listener) => emitter.addListener("gazeEnd", listener),
+        removeBeginListener: (listener) => emitter.removeListener("gazeBegin", listener),
+        removeEndListener: (listener) => emitter.removeListener("gazeEnd", listener)
     };
 
     // Initialize and return.
@@ -122,22 +103,35 @@ function makeDetector() {
 }
 
 function makeVideoStream() {
-    // Create video stream object.
+    // Create an object that wraps the incoming video stream.
+    // Enables the user to select the video source using the dropdown menu in
+    // the DOM.
+    // Returns an object that exposes the video DON element, and the pixels for
+    // the current video frame.
 
-    // Locals
+    // Private variables and methods.
     let video = document.querySelector("video");
     let cc = makeCanvasContainer("video");
     let sourceElem = getVideoSource();
     let stream = null;
 
-    // Private methods
     function stopCurrentStream() {
         // When a camera switch happens, stop getting data from the old camera.
         if (stream !== null) {
             stream.getTracks()[0].stop();
         }
     }
+
     function initStream() {
+        // Initialize a new camera stream (and stop the old one if it exists).
+        function handleVideo(videoStream) {
+            // Keep a pointer the video stream around so it can be stopped later.
+            stream = videoStream;
+            video.src = window.URL.createObjectURL(videoStream);
+        }
+        function videoError(e) {
+            throw new Error("Something went wrong with the video feed.");
+        }
         let constraints = { video: {
             optional: [{
                 sourceId: sourceElem.value
@@ -146,56 +140,59 @@ function makeVideoStream() {
         stopCurrentStream();
         navigator.webkitGetUserMedia(constraints, handleVideo, videoError);
     }
-    function handleVideo(videoStream) {
-        stream = videoStream;   // Keep the new stream around so it can be stopped later
-        video.src = window.URL.createObjectURL(videoStream);
-    }
-    function videoError(e) {
 
-    }
-
-    // Public methods
-    function getVideo() {
-        return video;
-    }
-    function getPixels() {
-        // To do this, we write the current video frame to a canvas and grab its pixels.
-        cc.context.drawImage(video, 0, 0, cc.width, cc.height);
-        return cc.context.getImageData(0, 0, cc.width, cc.height);
-    }
+    // The exposed object.
+    let that = {
+        getVideo: () => video,
+        getPixels: function() {
+            // Write the current video frame to an invisible canvas and grab its pixels.
+            cc.context.drawImage(video, 0, 0, cc.getWidth(), cc.getHeight());
+            return cc.context.getImageData(0, 0, cc.getWidth(), cc.getHeight());
+        }
+    };
 
     // Bind event handlers, initialize, return
     sourceElem.onchange = initStream;
     initStream();
-    return { getVideo, getPixels };
+    return that;
 }
 
 function makeTemplate(name, videoStream) {
-    // Template object constructor
+    // Constructor for a template object.
+    // Binds an event handler to the relevant "capture" button in the DOM, so
+    // that when pressed it will create a template from the current video frame.
+    // Exposes a method to retrieve the captured template's pixels.
 
-    // Local variables
+    // Local variables and methods
     let cc = makeCanvasContainer(name);
     let selector = `input[type=button][data-canvas-id=${name}]`;
     let button = document.querySelector(selector);
 
-    // Methods
     function capture() {
-        cc.context.drawImage(videoStream.getVideo(), 0, 0, cc.width, cc.height);
-    }
-    function getPixels() {
-        return cc.context.getImageData(0, 0, cc.width, cc.height);
+        // Procedure to capture the current video image as a template.
+        cc.context.drawImage(videoStream.getVideo(), 0, 0, cc.getWidth(), cc.getHeight());
     }
 
-    // Initialize and return
+    // The returned object.
+    let that = {
+        getPixels: () => cc.context.getImageData(0, 0, cc.getWidth(), cc.getHeight())
+    };
+
+    // Bind event handler and return.
     button.onclick = capture;
-    return { getPixels };
+    return that;
 }
 
 function getVideoSource() {
-    // Initialize the list of sources for the video stream and return the element.
+    // Detects all available video input sources (e.g. MacBook pro camera, USB
+    // cameras if attached, etc). Adds them as options in the relevant drop-down
+    // menu in the app. Returns the DOM object for this menu.
+
     let sourceElem = document.querySelector("select[name=videoSource]");
     function success(devices) {
+        // Invoked if the browser successfully enumerates all available media devices.
         function appendIfVideo(device) {
+            // Add video devices to the dropdown list of available input sources.
             if (device.kind === "videoinput") {
                 let option = document.createElement("option");
                 option.value = device.deviceId;
@@ -206,15 +203,16 @@ function getVideoSource() {
         devices.forEach(appendIfVideo);
     }
     function failure(err) {
-        util.notImplemented();
+        throw new Error("Video sources not correctly detected.");
     }
-    // Initialize and return
+
+    // Initialize the list of available devices, and return the DOM object.
     navigator.mediaDevices.enumerateDevices().then(success).catch(failure);
     return sourceElem;
 }
 
 function makeCanvasContainer(name) {
-    // Initialize a canvas; return the canvas, its context, and its dimensions.
+    // Initialize a canvas. Return the canvas, its context, and getters for its dimenions.
 
     // Constants
     const VIDEO_HEIGHT = 120;   // Values here should match up with values in cbstyle.css
@@ -224,7 +222,12 @@ function makeCanvasContainer(name) {
     canvas.setAttribute("height", VIDEO_HEIGHT);
     canvas.setAttribute("width", VIDEO_WIDTH);
     let context = canvas.getContext("2d");
-    return { canvas, context, width: canvas.width, height: canvas.height };
+
+    let that = { canvas,
+                 context,
+                 getWidth: () => canvas.width,
+                 getHeight: () => canvas.height };
+    return that;
 }
 
 function l1Distance(img1, img2) {
@@ -236,7 +239,7 @@ function l1Distance(img1, img2) {
     let x2 = img2.data;
     let distance = 0;
     let ixMax = width * height * 4;
-    for (let i = 0; i < ixMax; i++) {
+    for (let i = 0; i < ixMax; i += 1) {
         if (i % 4 === 3) {
             continue;           // Don't compare the alpha values.
         }
