@@ -252,27 +252,35 @@ function makeGuessMenu(spec, my) {
 }
 
 function makeEmailMenu(spec, my) {
+    // Factory function for menus offering email functionality. In addition to
+    // normal menu functionality, these menus can accept new email recipients
+    // from the DOM and assign buttons to these recpients.
+
     my = my || {};
     let that = makeMenu(spec, my);
 
     // Constants
     const N_RECIPIENTS = 8;     // The number of recipients that can be stored.
 
-    // Private data.
-    my.emailSettings = my.settings.getEmailSettings();
-    my.buttonIx = 0;            // Index of current open button.
-
-    // Private methods.
-    my.addRecipient = function() {
-        // Add a new recipient.
-        let button = my.buttons[my.buttonIx];
-        button.setRecipient(my.emailSettings.getRecipientName(),
-                            my.emailSettings.getRecipientAddress());
-        my.emailSettings.clearRecipientInfo();
-        my.buttonIx = (my.buttonIx + 1) % N_RECIPIENTS;
+    // Private additions
+    let myData = {              // Private data
+        getEmailSettings: () => my.settings.getEmailSettings(),
+        buttonIx: 0            // Index of current open button.
     };
+    Object.assign(my, myData);
+    let myMethods = {  // Private methods, depending on the new data.
+        addRecipient: function() { // Get recipient from text entry field and set the next open button accordingly.
+            let button = my.buttons[my.buttonIx];
+            let settings = my.getEmailSettings();
+            button.setRecipient(settings.getRecipientName(),
+                                settings.getRecipientAddress());
+            settings.clearRecipientInfo();
+            my.buttonIx = (my.buttonIx + 1) % N_RECIPIENTS;
+        }
+    };
+    Object.assign(my, myMethods);
 
     // Initialization.
-    my.emailSettings.addRecipientListener(my.addRecipient);
+    my.getEmailSettings().addRecipientListener(my.addRecipient);
     return that;
 }
