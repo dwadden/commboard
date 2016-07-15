@@ -27,9 +27,9 @@ let constructors = {};          // The global constructor table.
 
 function registerConstructor(type, constructor) {
     // Register a constructor in the global table.
-    function decoratedConstructor(spec, my) {
+    function decoratedConstructor(spec) {
         // Decorate the constructor by tagging all buttons it makes with their type.
-        return Object.assign(constructor(spec, my),
+        return Object.assign(constructor(spec),
                              { buttonType: type });
     }
     constructors[type] = decoratedConstructor;
@@ -238,7 +238,7 @@ function makeMenuSelectorButton(spec, my) {
             // Return a pointer to the target menu
             let targetName = my.buttonElem.dataset.target;
             let menus = my.menu.getMenus();
-            return menus.get(targetName);
+            return menus[targetName];
         }
     };
     Object.assign(that, assignments);

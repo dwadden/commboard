@@ -8,85 +8,91 @@ const _ = require("underscore");
 const menuButton = require("./menu-button.js");
 const util = require("./util.js");
 
-// Exports
-module.exports = { initMenus };
+// ************************************************************************** //
 
-function initMenus(spec) {
-    // Create all the menus and return
+// The module exposes the procedure "menus". This procedure takes a spec
+// containing detector, buffer, and settings objects, and returns an object
+// representing a hash of all menus in the program.
+//
+// The "menus" procedure invokes the "menu" procedure, which in turn creates a
+// single menu based on a menu name and a spec. The name of the menu identifies
+// all DOM button elements that are members of the menu; so, for instance,
+// calling menu("compose1", spec) creates a menu object handling all buttons
+// with data-menu=c"compose1"
+//
+// The "menu" procedure does its work by looking up the actual constructor to
+// call in the table "constructors", which is keyed by the menu's
+// name. Constructors are added this table by passing a menu and a base
+// procedure, as well as two extra behaviors, into "registerConstructor".
+//
+// The two extra behaviors specify the hiding behavior and scanning behavior of
+// the menu. Some menus (labeled "dropdown") should be hideable, while others
+// (labeled "commboard") should always be visible. Likewise, some menus (labeled
+// "repeat") should start over when finished scanning, while others (labeled
+// "finish") should return control to their calling menu.
+//
+// This is simpler to understand in code. See the calls to "registerConstructor"
+// below.
 
-    // The spec here indicates two behaviors for each menu.
-    // hide: "commboard" menus always remain showing.
-    //       "dropdown" menus are hidden unless they have been selected.
-    // scan: "repeat" menus should be repeated when scanned to the end
-    //       "finish" menus return to their calling menu when scanning is finished
-    let names = new Map([["composeMain", { hide: "commboard",
-                                           scan: "repeat",
-                                           constructor: makeMenu }],
-                         ["compose1",    { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["compose2",    { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["compose3",    { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["compose4",    { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["compose5",    { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["guess",       { hide: "commboard",
-                                           scan: "finish",
-                                           constructor: makeGuessMenu }],
-                         ["punctuation", { hide: "dropdown",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["buffer",      { hide: "dropdown",
-                                           scan: "finish",
-                                           constructor: makeMenu }],
-                         ["email",       { hide: "dropdown",
-                                           scan: "finish",
-                                           constructor: makeEmailMenu }],
-                         ["callBell",    { hide: "dropdown",
-                                           scan: "finish",
-                                           constructor: makeMenu} ]]
-                       );
+let constructors = {};
 
-    // Populate the menu dictionary
-    let menus = new Map();
-    function each(key) {
-        let newSpec = jQuery.extend(names.get(key), spec);
-        newSpec.menuName = key;
-        // TODO: This isn't the right way to do this. Fix it later.
-        let constructor = names.get(key)["constructor"];
-        menus.set(key, constructor(newSpec));
-    }
-    Array.from(names.keys()).forEach(each);
-
-    menus.forEach(function(menu) { // Give each menu a pointer to all other menus
-        menu.setMenus(menus);
-    });
-
-    // Register event listener for "show menu checkbox"
-    // TODO: Encapsulate in a procedure
-    let containers = document.querySelectorAll(".hideable");
-    function onChange(event) {
-        if (event.target.checked) {
-            jQuery(containers).show();
-        } else {
-            jQuery(containers).hide();
+function registerConstructor(name, constructor, behavior) {
+    // Add a menu constructor to the table.
+    function decoratedConstructor(spec) {
+        // The input spec consists of buffer, detector, and settings objects. It
+        // must be augmented by the name of the menu, as well as the menu's
+        // behavior.
+        let my = {};
+        let fullSpec = Object.assign({}, spec, { menuName: name });
+        let that = constructor(fullSpec, my);
+        Object.assign(my, behavior);
+        if (my.hide === "dropdown") {
+            that.slideUp();
         }
+        return that;
     }
-    spec.settings.addShowMenuListener(onChange);
-
-    return menus;
+    constructors[name] = decoratedConstructor;
 }
 
-// Menus
+function menu(name, spec) {     // Create a single menu given a menu name and a spec.
+    return constructors[name](spec);
+}
 
-function makeMenu(spec, my) {
+function menus(spec) {
+    // Create all menus for which constructors have been registered. Return an
+    // object containing these menus.
+    function initHideables() {
+        // Some DOM elements should hide when the corresponding button in the UI is selected.
+        let containers = document.querySelectorAll(".hideable");
+        function onChange(event) {
+            if (event.target.checked) {
+                jQuery(containers).show();
+            } else {
+                jQuery(containers).hide();
+            }
+        }
+        spec.settings.addShowMenuListener(onChange);
+    }
+
+    let allMenus = {};
+    const eachConstructor = (name) => allMenus[name] = menu(name, spec);
+    Object.keys(constructors).forEach(eachConstructor);
+
+    const eachMenu = (name) => allMenus[name].setMenus(allMenus);
+    Object.keys(allMenus).forEach(eachMenu);
+
+    // Initialize and return.
+    initHideables();
+    return allMenus;
+}
+
+module.exports = menus;
+
+// ************************************************************************** //
+
+// These constructors do the actual work of implementing the menu functionality.
+
+function makeGenericMenu(spec, my) {
     // The factory function for menu objects not requiring extra functionality.
     //
     // The object "my" contains shared data required by menus further down the
@@ -176,6 +182,15 @@ function makeMenu(spec, my) {
     }
     return that;
 }
+// Register menu constructors by building on the "makeGenericMenu" constructor.
+registerConstructor("composeMain", makeGenericMenu, { hide: "commboard",
+                                                      scan: "repeat" });
+["compose1", "compose2", "compose3", "compose4", "compose5"].forEach(
+    (name) => registerConstructor(name, makeGenericMenu, { hide: "commboard",
+                                                           scan: "finish" }));
+["punctuation", "buffer", "callBell"].forEach(
+    (name) => registerConstructor(name, makeGenericMenu, { hide: "dropdown",
+                                                           scan: "finish" }));
 
 function makeGuessMenu(spec, my) {
     // Factory function for menus that offer word guesses to the user.
@@ -185,7 +200,7 @@ function makeGuessMenu(spec, my) {
     // buttons to the suggested words.
 
     my = my || {};
-    let that = makeMenu(spec, my);
+    let that = makeGenericMenu(spec, my);
 
     // internal constants
     const N_GUESSES = 8;        // Number of guesses to be offered to user
@@ -250,6 +265,8 @@ function makeGuessMenu(spec, my) {
     my.buffer.addChangeListener(my.update);
     return that;
 }
+registerConstructor("guess", makeGuessMenu, { hide: "commboard", // register the guess menu constructor.
+                                              scan: "finish" });
 
 function makeEmailMenu(spec, my) {
     // Factory function for menus offering email functionality. In addition to
@@ -257,7 +274,7 @@ function makeEmailMenu(spec, my) {
     // from the DOM and assign buttons to these recpients.
 
     my = my || {};
-    let that = makeMenu(spec, my);
+    let that = makeGenericMenu(spec, my);
 
     // Constants
     const N_RECIPIENTS = 8;     // The number of recipients that can be stored.
@@ -284,3 +301,5 @@ function makeEmailMenu(spec, my) {
     my.getEmailSettings().addRecipientListener(my.addRecipient);
     return that;
 }
+registerConstructor("email", makeEmailMenu, { hide: "dropdown", // register the email menu constructor.
+                                              scan: "finish" });
