@@ -178,24 +178,31 @@ function makeMenu(spec, my) {
 }
 
 function makeGuessMenu(spec, my) {
+    // Factory function for menus that offer word guesses to the user.
+    // In addition to the normal menu functionality, this menu listens for a
+    // change to the buffer. Each time such a change occurs, it submits a word
+    // completion request to the Wordnik API. It then sets the values of its
+    // buttons to the suggested words.
+
     my = my || {};
     let that = makeMenu(spec, my);
 
     // internal constants
     const N_GUESSES = 8;        // Number of guesses to be offered to user
     const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
+    const BASE_URL = "http:api.wordnik.com:80/v4/words.json/search/";
+    const API_KEY = "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3"; // This could be set by user instead.
 
-    // private methods
-    my.wordnik = function(text, success, failure) {
-        // TODO: It's probably wrong to hard-code the api key. User will have to
-        // get his own. Deal with this later.
-        // TODO: Should treat all words as lower case, even if they're upper
-        // case in the text buffer.
-        let queryURL = "http:api.wordnik.com:80/v4/words.json/search/" + text;
+    // Internal procedures.
+    function wordnik(text, success, failure) {
+        // Given an incomplete word "text", query the wordnik API for possible
+        // completions. Invoke one of the two passed-in callbacks depending on
+        // the success of the API call.
+        let queryURL = BASE_URL + text;
         jQuery.ajax({
             url: queryURL,
             data: { minCorpusCount: MIN_COUNT,
-                    api_key: "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3",
+                    api_key: API_KEY,
                     caseSensitive: false,
                     limit: N_GUESSES },
             type: "GET",
@@ -204,16 +211,17 @@ function makeGuessMenu(spec, my) {
             error: failure
         });
     };
-    my.guessWord = function(inputText, cb) {
+
+    function guessWord(inputText, cb) {
+        // Wraps the API call and extracts the results.
         let success = function(data, status) {
             let guesses = (data.searchResults.slice(1).
-                           map(function(o) { return o.word; }));
+                           map((o) => o.word));
             let padded = util.pad(guesses, "", N_GUESSES); // Pad with proper number of guesses
             cb(padded);
         };
-        // TODO: Figure out how to handle this properly
         let failure = function(data, status) {
-            util.notImplemented();
+            console.log("Wordnik API call failed.");
         };
 
         let text = inputText.split(" ").slice(-1)[0];
@@ -221,18 +229,22 @@ function makeGuessMenu(spec, my) {
             cb(util.repeat("", N_GUESSES));
         } else {
             // Add a wildcard so guesses will be retrieved even if "text" is a completed word.
-            my.wordnik(text + "*", success, failure);
+            wordnik(text + "*", success, failure);
         }
     };
-    // Update word guesses based on changes to buffer
-    my.update = function() {
+
+    function update() {
+        // Invoked when the buffer changes. Retrieves guesses and updates buttons appropriately.
         let callback = function(guesses) {
             _.zip(my.buttons, guesses).forEach(function([button, guess])
-                                                  { button.setButtonValue(guess); });
+                                               { button.setButtonValue(guess); });
         };
         let inputText = my.buffer.getText();
-        my.guessWord(inputText, callback);
+        guessWord(inputText, callback);
     };
+
+    let myAssignments = { wordnik, guessWord, update };
+    my = Object.assign(my, myAssignments);
 
     // Initialization
     my.buffer.addChangeListener(my.update);
