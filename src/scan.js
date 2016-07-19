@@ -147,7 +147,7 @@ function makeScanner(mainMenu, detector, settings) {
             detector.idleMode();
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
-            speech.speak("Stopping");
+            speech.speakSync("Stopping");
             stopButton.removeEventListener("click", pressStop);
             currentButton.toggle();
         }
@@ -179,13 +179,13 @@ function makeScanner(mainMenu, detector, settings) {
                 }
             }
         function pressStop() {
-            speech.speak("Stopping.");
+            speech.speakSync("Stopping.");
             stopButton.removeEventListener("click", pressStop);
             detector.idleMode();
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
         }
-        speech.speak("listening.");
+        speech.speakSync("listening.");
         detector.listenMode();
         stopButton.addEventListener("click", pressStop);
         detector.addBeginListener(gazeBegin);

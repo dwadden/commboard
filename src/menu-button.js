@@ -78,7 +78,7 @@ function makeGenericButton(spec, my) {
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSoundP()) {
-                speech.speak(that.getAnnouncement());
+                speech.speakSync(that.getAnnouncement());
             }
         },
         toggle: function() {
@@ -87,11 +87,11 @@ function makeGenericButton(spec, my) {
             my.buttonElem.classList.toggle("buttonOff");
         },
         pressed: function() {
-            // Read button name (if sound is on) and perform button action. This
+            // speakAsync button name (if sound is on) and perform button action. This
             // method is "abstract" in the sense that "that.action" must be
             // implemented on a descendant.
             if (my.settings.useSoundP()) {
-                speech.read(that.getAnnouncement(), that.action, my.buttonElem, 0);
+                speech.speakAsync(that.getAnnouncement(), that.action, my.buttonElem, 0);
             } else {
                 that.action();
             }
@@ -186,7 +186,7 @@ registerConstructor("guess", makeGuessButton);
 
 function makeBufferActionButton(spec, my) {
     // Constructor for buttons that invoke an action from the buffer other than
-    // simple writing text (e.g. reading buffer contents out load). The buffer
+    // simple writing text (e.g. speakAsyncing buffer contents out load). The buffer
     // object does the actual work, the buttons just serve to dispatch to the
     // buffer.
 
@@ -310,11 +310,11 @@ function makeEmailButton(spec, my) {
                 // Callback to invoke after message has been sent.
                 if (error) {
                     // If something goes wrong, inform user and dump the error info.
-                    speech.read("An error ocurred.", my.finished, my.buttonElem);
+                    speech.speakAsync("An error ocurred.", my.finished, my.buttonElem);
                     console.log(error);
                 } else {
                     // Otherwise, inform user of success and continue program.
-                    speech.read(`Message sent to ${that.getButtonValue()}`,
+                    speech.speakAsync(`Message sent to ${that.getButtonValue()}`,
                                 my.finished,
                                 my.buttonElem);
                 }
@@ -353,7 +353,7 @@ function makeNotImplementedButton(spec, my) {
     // Public additions.
     let assignment = {
         action: function() {
-            speech.read("Not implemented.", my.finished, my.buttonElem, PAUSE);
+            speech.speakAsync("Not implemented.", my.finished, my.buttonElem, PAUSE);
         }
     };
     Object.assign(that, assignment);

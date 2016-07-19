@@ -152,7 +152,7 @@ function buffer() {
     }
     registerAction("delete", deleteText);
 
-    const readBuffer = (cb) => speech.read(getText(), cb, bufferElem);
+    const readBuffer = (cb) => speech.speakAsync(getText(), cb, bufferElem);
     registerAction("read", readBuffer);
 
     function clearBuffer(cb) {
