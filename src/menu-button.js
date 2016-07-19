@@ -77,7 +77,7 @@ function makeGenericButton(spec, my) {
         getAnnouncement: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         announce: function() {
             // Have the button state its name.
-            if (my.settings.useSoundP()) {
+            if (my.settings.useSound()) {
                 speech.speakSync(that.getAnnouncement());
             }
         },
@@ -90,7 +90,7 @@ function makeGenericButton(spec, my) {
             // speakAsync button name (if sound is on) and perform button action. This
             // method is "abstract" in the sense that "that.action" must be
             // implemented on a descendant.
-            if (my.settings.useSoundP()) {
+            if (my.settings.useSound()) {
                 speech.speakAsync(that.getAnnouncement(), that.action, my.buttonElem, 0);
             } else {
                 that.action();
