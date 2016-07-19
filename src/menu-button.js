@@ -315,8 +315,8 @@ function makeEmailButton(spec, my) {
                 } else {
                     // Otherwise, inform user of success and continue program.
                     speech.speakAsync(`Message sent to ${that.getButtonValue()}`,
-                                my.finished,
-                                my.buttonElem);
+                                      my.finished,
+                                      my.buttonElem);
                 }
             }
             const transporter = nodemailer.createTransport({  // For details, see https://nodemailer.com/

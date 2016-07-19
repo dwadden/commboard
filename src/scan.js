@@ -176,8 +176,8 @@ function makeScanner(mainMenu, detector, settings) {
                 detector.removeBeginListener(gazeBegin);
                 detector.removeEndListener(gazeEnd);
                 that.scan();
-                }
             }
+        }
         function pressStop() {
             speech.speakSync("Stopping.");
             stopButton.removeEventListener("click", pressStop);
