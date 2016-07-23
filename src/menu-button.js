@@ -335,7 +335,6 @@ function makeEmailButton(spec, my) {
 
             // Send the email.
             transporter.sendMail(mailOptions, afterSend);
-            my.finished();
         }
     };
     Object.assign(that, thatAssignments);
