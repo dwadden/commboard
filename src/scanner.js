@@ -25,6 +25,18 @@ function scanner(mainMenu, detector, settings) {
     let stopButton = document.querySelector("input[type=button][value=Stop]");
 
     // Procedures
+    function registerListeners(cbBegin, cbEnd, cbClick) {
+        detector.addBeginListener(cbBegin);
+        detector.addEndListener(cbEnd);
+        stopButton.addEventListener("click", cbClick);
+    }
+
+    function unregisterListeners(cbBegin, cbEnd, cbClick) {
+        stopButton.removeEventListener("click", cbClick);
+        detector.removeBeginListener(cbBegin);
+        detector.removeEndListener(cbEnd);
+    }
+
     function signalLongGaze() {
         speech.beep(BEEP_FREQ, BEEP_DURATION);
     }
@@ -53,9 +65,7 @@ function scanner(mainMenu, detector, settings) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
                 // TODO: This code is repeated verbatim below. Need to refactor.
-                stopButton.removeEventListener("click", pressStop);
-                detector.removeBeginListener(gazeBegin);
-                detector.removeEndListener(gazeEnd);
+                unregisterListeners(gazeBegin, gazeEnd, pressStop);
                 cb();
             } else if (isEmptyGuess(button)) {
                 // Special edge case for dealing with guess menus.
@@ -105,9 +115,7 @@ function scanner(mainMenu, detector, settings) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
                     // TODO: This is done above. Abstract it out.
-                    stopButton.removeEventListener("click", pressStop);
-                    detector.removeBeginListener(gazeBegin);
-                    detector.removeEndListener(gazeEnd);
+                    unregisterListeners(gazeBegin, gazeEnd, pressStop);
                     cb();       // If it was a long gaze, cancel the scan of the current menu and return to caller.
                 }
             }
@@ -143,9 +151,7 @@ function scanner(mainMenu, detector, settings) {
                 cb2();
             }
             // TODO: Same pattern that can be abstracted out.
-            detector.removeBeginListener(gazeBegin);
-            detector.removeEndListener(gazeEnd);
-            stopButton.removeEventListener("click", pressStop);
+            unregisterListeners(gazeBegin, gazeEnd, pressStop);
             if (currentButton === gazeButton) {
                 button.toggle();
             }
@@ -156,16 +162,12 @@ function scanner(mainMenu, detector, settings) {
             clearTimeout(timeout);
             detector.idleMode();
             // Same pattern that we can abstract out.
-            detector.removeBeginListener(gazeBegin);
-            detector.removeEndListener(gazeEnd);
-            stopButton.removeEventListener("click", pressStop);
+            unregisterListeners(gazeBegin, gazeEnd, pressStop);
             speech.speakSync("Stopping");
             currentButton.toggle();
         }
         // Kick off the function
-        detector.addBeginListener(gazeBegin);
-        detector.addEndListener(gazeEnd);
-        stopButton.addEventListener("click", pressStop);
+        registerListeners(gazeBegin, gazeEnd, pressStop);
         loop(0, 0);
     }
 
@@ -183,24 +185,18 @@ function scanner(mainMenu, detector, settings) {
             clearTimeout(longGazeTimeout);
             let elapsed = new Date() - startTime;
             if (elapsed >= LONG_GAZE_TIME) {
-                stopButton.removeEventListener("click", pressStop);
-                detector.removeBeginListener(gazeBegin);
-                detector.removeEndListener(gazeEnd);
+                unregisterListeners(gazeBegin, gazeEnd, pressStop);
                 that.scan();
             }
         }
         function pressStop() {
             speech.speakSync("Stopping.");
-            stopButton.removeEventListener("click", pressStop);
+            unregisterListeners(gazeBegin, gazeEnd, pressStop);
             detector.idleMode();
-            detector.removeBeginListener(gazeBegin);
-            detector.removeEndListener(gazeEnd);
         }
         speech.speakSync("listening.");
         detector.listenMode();
-        stopButton.addEventListener("click", pressStop);
-        detector.addBeginListener(gazeBegin);
-        detector.addEndListener(gazeEnd);
+        registerListeners(gazeBegin, gazeEnd, pressStop);
     }
     that.scan = function() {
         // Kick off by scanning the main menu. If scanning completes, no
