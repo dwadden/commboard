@@ -64,8 +64,7 @@ function scanner(mainMenu, detector, settings) {
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
-                // TODO: This code is repeated verbatim below. Need to refactor.
-                unregisterListeners(gazeBegin, gazeEnd, pressStop);
+                unregister();
                 cb();
             } else if (isEmptyGuess(button)) {
                 // Special edge case for dealing with guess menus.
@@ -114,8 +113,7 @@ function scanner(mainMenu, detector, settings) {
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
-                    // TODO: This is done above. Abstract it out.
-                    unregisterListeners(gazeBegin, gazeEnd, pressStop);
+                    unregister();
                     cb();       // If it was a long gaze, cancel the scan of the current menu and return to caller.
                 }
             }
@@ -150,8 +148,7 @@ function scanner(mainMenu, detector, settings) {
                            cb1);
                 cb2();
             }
-            // TODO: Same pattern that can be abstracted out.
-            unregisterListeners(gazeBegin, gazeEnd, pressStop);
+            unregister();
             if (currentButton === gazeButton) {
                 button.toggle();
             }
@@ -161,13 +158,14 @@ function scanner(mainMenu, detector, settings) {
         function pressStop() {
             clearTimeout(timeout);
             detector.idleMode();
-            // Same pattern that we can abstract out.
-            unregisterListeners(gazeBegin, gazeEnd, pressStop);
+            unregister();
             speech.speakSync("Stopping");
             currentButton.toggle();
         }
+        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
+        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
         // Kick off the function
-        registerListeners(gazeBegin, gazeEnd, pressStop);
+        register();
         loop(0, 0);
     }
 
@@ -185,18 +183,20 @@ function scanner(mainMenu, detector, settings) {
             clearTimeout(longGazeTimeout);
             let elapsed = new Date() - startTime;
             if (elapsed >= LONG_GAZE_TIME) {
-                unregisterListeners(gazeBegin, gazeEnd, pressStop);
+                unregister();
                 that.scan();
             }
         }
         function pressStop() {
             speech.speakSync("Stopping.");
-            unregisterListeners(gazeBegin, gazeEnd, pressStop);
+            unregister();
             detector.idleMode();
         }
+        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
+        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
         speech.speakSync("listening.");
         detector.listenMode();
-        registerListeners(gazeBegin, gazeEnd, pressStop);
+        register();
     }
     that.scan = function() {
         // Kick off by scanning the main menu. If scanning completes, no
