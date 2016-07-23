@@ -61,6 +61,9 @@ function scanner(mainMenu, detector, settings) {
         function isLoopOver(loopIx) {
             return loopIx === N_LOOPS;
         }
+        function getWaitTime(button) {
+            return settings.getScanSpeed() * button.getWaitMultiplier();
+        }
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
@@ -76,23 +79,12 @@ function scanner(mainMenu, detector, settings) {
             currentButton = button;
             button.toggle();
             button.announce();
+            let waitTime = getWaitTime(button);
             let next = function() {
                 button.toggle();
                 loop(nextButton(buttonIx), nextLoop(buttonIx, loopIx));
             };
-            // Fix this.
-            let waitTime = getWaitTime(button.buttonType);
             timeout = setTimeout(next, waitTime);
-        }
-
-
-        function getWaitTime(buttonType) {
-            // Wait twice as long when scanning guess buttons, to give user time.
-            // The wait time should be stored on the button and not on the
-            // scanner. The scanner should get the wait time from the button.
-            const GUESS_MULTIPLIER = 2;
-            let waitTime = settings.getScanSpeed();
-            return buttonType === "guess" ? waitTime * 2 : waitTime;
         }
         function gazeBegin() {
             // Beginning of gaze detected

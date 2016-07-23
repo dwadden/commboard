@@ -63,6 +63,7 @@ function makeGenericButton(spec, my) {
         // Additional fields to be added as shared secrets.
         emitter: new EventEmitter(),
         timeout: null,
+        waitMultiplier: 1,      // When scanning, multiply the wait time by this number.
         finished: () => my.emitter.emit("buttonFinished")
     };
     Object.assign(my, assignments);
@@ -74,6 +75,7 @@ function makeGenericButton(spec, my) {
         setButtonValue: (value) => my.buttonElem.value = value,
         getAnnouncement: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         isEmpty: () => my.buttonElem.value === "",
+        getWaitMultiplier: () => my.waitMultiplier,
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSound()) {
@@ -169,11 +171,16 @@ function makeGuessButton(spec, my) {
     my = my || {};
     let that = makeTextButton(spec, my);
 
-    let assignment = {
+    let myAssignment = {
+        waitMultiplier: 2
+    };
+    Object.assign(my, myAssignment);
+
+    let thatAssignment = {
         getTextCategory: () => "word",
         isEmpty: () => that.getText() === ""
     };
-    Object.assign(that, assignment);
+    Object.assign(that, thatAssignment);
 
     return that;
 }
