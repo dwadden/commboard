@@ -6,9 +6,9 @@
 const util = require("./util.js");
 const speech = require("./speech.js");
 
-module.exports = { makeScanner };
+module.exports = scanner;
 
-function makeScanner(mainMenu, detector, settings) {
+function scanner(mainMenu, detector, settings) {
 
     // Scanning object
     let that = {};

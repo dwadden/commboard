@@ -4,7 +4,7 @@ const menus = require("./menus.js");
 const detector = require("./detector.js");
 const buffer = require("./buffer.js");
 const settings = require("./settings.js");
-const scan = require("./scan.js");
+const scanner = require("./scanner.js");
 
 // This is the top-level script that pulls in all the relevant modules and
 // initializes all objects needed for the program.
@@ -24,5 +24,5 @@ function setup() {
                      settings: s });
 
     // Create the scanner.
-    let scanner = scan.makeScanner(ms["composeMain"], det, s);
+    let sc = scanner(ms["composeMain"], det, s);
 }
