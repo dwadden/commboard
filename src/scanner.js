@@ -14,11 +14,11 @@ function scanner(mainMenu, detector, settings) {
     let that = {};
 
     // Constants
-    const N_LOOPS = 2;          // Loop through a menu twice before exiting.
+    const N_LOOPS = 2;               // Loop through a menu twice before exiting.
     const SHORT_GAZE_TIME = 200;     // A short gaze must last for 200 ms
     const LONG_GAZE_TIME = 2000;     // A long gaze must last for 2 s.
-    const BEEP_DURATION = 250;       // Length of beep informing user that the gaze has lasted 2s
-    const BEEP_FREQ = 300;
+    const BEEP_DURATION = 250;       // Length of beep informing of long gaze detection.
+    const BEEP_FREQ = 300;           // The pitch of said beep.
 
     // Local variables
     let startButton = document.querySelector("input[type=button][value=Start]");
@@ -59,6 +59,9 @@ function scanner(mainMenu, detector, settings) {
                 cb();
             } else if (isEmptyGuess(button)) {
                 // Special edge case for dealing with guess menus.
+                // TODO: This is where I can handle empty email buttons too. Do
+                // this by adding a tag on each button indicating if it's empty
+                // or not.
                 loop(0, loopIx + 1);
             } else {
                 currentButton = button;
@@ -73,10 +76,13 @@ function scanner(mainMenu, detector, settings) {
             }
         }
         function isEmptyGuess(button) {
+            // TODO: Not the right way to do this.
             return button.buttonType === "guess" && button.isEmpty();
         }
         function getWaitTime(buttonType) {
             // Wait twice as long when scanning guess buttons, to give user time.
+            // The wait time should be stored on the button and not on the
+            // scanner. The scanner should get the wait time from the button.
             const GUESS_MULTIPLIER = 2;
             let waitTime = settings.getScanSpeed();
             return buttonType === "guess" ? waitTime * 2 : waitTime;
@@ -98,6 +104,7 @@ function scanner(mainMenu, detector, settings) {
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
+                    // TODO: This is done above. Abstract it out.
                     stopButton.removeEventListener("click", pressStop);
                     detector.removeBeginListener(gazeBegin);
                     detector.removeEndListener(gazeEnd);
@@ -111,11 +118,12 @@ function scanner(mainMenu, detector, settings) {
             function afterCompletion() {
                 // This needs to be cleaned up. For now, here's what's going on.
                 // When we scan a sliding menu, it needs to slide up when it
-                // exists. The way to do that is interecept the callback passed
+                // exits. The way to do that is interecept the callback passed
                 // from the invoking menu, and slide up the dropdown before
                 // invoking that callback.
+                // TODO: Should be able to abstract this into a function decorator.
                 let slidecb;
-                let target = button.getTargetMenu && button.getTargetMenu();
+                let target = button.getTargetMenu && button.getTargetMenu(); // TODO: this can be better.
                 if (target !== undefined && target.getInfo().hide === "dropdown") {
                     slidecb = function() {
                         target.slideUp();
@@ -124,6 +132,7 @@ function scanner(mainMenu, detector, settings) {
                 } else {
                     slidecb = cb;
                 }
+                // TODO: Change this to an object, the map is just clunky
                 const dispatch = new Map([["repeat", function() { scanMenu(menu, slidecb); }],
                                           ["finish", slidecb]]);
                 let scanType = menu.getInfo().scan;
@@ -133,6 +142,7 @@ function scanner(mainMenu, detector, settings) {
                            cb1);
                 cb2();
             }
+            // TODO: Same pattern that can be abstracted out.
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
             stopButton.removeEventListener("click", pressStop);
@@ -145,10 +155,11 @@ function scanner(mainMenu, detector, settings) {
         function pressStop() {
             clearTimeout(timeout);
             detector.idleMode();
+            // Same pattern that we can abstract out.
             detector.removeBeginListener(gazeBegin);
             detector.removeEndListener(gazeEnd);
-            speech.speakSync("Stopping");
             stopButton.removeEventListener("click", pressStop);
+            speech.speakSync("Stopping");
             currentButton.toggle();
         }
         // Kick off the function
