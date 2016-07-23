@@ -63,9 +63,7 @@ function makeGenericButton(spec, my) {
         // Additional fields to be added as shared secrets.
         emitter: new EventEmitter(),
         timeout: null,
-        finished: function() {
-            my.emitter.emit("buttonFinished");
-        }
+        finished: () => my.emitter.emit("buttonFinished")
     };
     Object.assign(my, assignments);
 
@@ -75,6 +73,7 @@ function makeGenericButton(spec, my) {
         getButtonValue: () => my.buttonElem.value,
         setButtonValue: (value) => my.buttonElem.value = value,
         getAnnouncement: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
+        isEmpty: () => my.buttonElem.value === "",
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSound()) {

@@ -66,28 +66,26 @@ function scanner(mainMenu, detector, settings) {
             if (isLoopOver(loopIx)) {
                 unregister();
                 cb();
-            } else if (isEmptyGuess(button)) {
-                // Special edge case for dealing with guess menus.
-                // TODO: This is where I can handle empty email buttons too. Do
-                // this by adding a tag on each button indicating if it's empty
-                // or not.
+            } else if (button.isEmpty()) {
                 loop(0, loopIx + 1);
             } else {
-                currentButton = button;
-                button.toggle();
-                button.announce();
-                let next = function() {
-                    button.toggle();
-                    loop(nextButton(buttonIx), nextLoop(buttonIx, loopIx));
-                };
-                let waitTime = getWaitTime(button.buttonType);
-                timeout = setTimeout(next, waitTime);
+                step(button, buttonIx, loopIx);
             }
         }
-        function isEmptyGuess(button) {
-            // TODO: Not the right way to do this.
-            return button.buttonType === "guess" && button.isEmpty();
+        function step(button, buttonIx, loopIx) {
+            currentButton = button;
+            button.toggle();
+            button.announce();
+            let next = function() {
+                button.toggle();
+                loop(nextButton(buttonIx), nextLoop(buttonIx, loopIx));
+            };
+            // Fix this.
+            let waitTime = getWaitTime(button.buttonType);
+            timeout = setTimeout(next, waitTime);
         }
+
+
         function getWaitTime(buttonType) {
             // Wait twice as long when scanning guess buttons, to give user time.
             // The wait time should be stored on the button and not on the
