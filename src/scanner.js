@@ -104,36 +104,39 @@ function scanner(mainMenu, detector, settings) {
                 }
             }
         }
+
         function pressButton(button) {
             // Press button. After it's been pressed, either resume control of
             // program or pass control to selected menu.
-            function afterCompletion() {
-                // This needs to be cleaned up. For now, here's what's going on.
-                // When we scan a sliding menu, it needs to slide up when it
-                // exits. The way to do that is interecept the callback passed
-                // from the invoking menu, and slide up the dropdown before
-                // invoking that callback.
-                // TODO: Should be able to abstract this into a function decorator.
-                let slidecb;
-                let target = button.getTargetMenu && button.getTargetMenu(); // TODO: this can be better.
-                if (target !== undefined && target.getInfo().hide === "dropdown") {
-                    slidecb = function() {
+
+            function wrapSlide(cb, button) {
+                let wrapped;
+                if (button.selectsDropdownMenu()) {
+                    let target = button.getTargetMenu();
+                    wrapped = function() {
                         target.slideUp();
                         cb();
                     };
-                } else {
-                    slidecb = cb;
                 }
+                else {
+                    wrapped = cb;
+                }
+                return wrapped;
+            }
+
+            function afterCompletion() {
+                let slidecb = wrapSlide(cb, button);
                 // TODO: Change this to an object, the map is just clunky
-                const dispatch = new Map([["repeat", function() { scanMenu(menu, slidecb); }],
-                                          ["finish", slidecb]]);
+                const dispatch = { repeat: () => scanMenu(menu, slidecb),
+                                   finish: slidecb };
                 let scanType = menu.getInfo().scan;
-                let cb1 = dispatch.get(scanType);
+                let cb1 = dispatch[scanType];
                 let cb2 = (button.buttonType === "menuSelector" ?
                            function() { scanMenu(button.getTargetMenu(), cb1); } :
                            cb1);
                 cb2();
             }
+
             unregister();
             if (currentButton === gazeButton) {
                 button.toggle();

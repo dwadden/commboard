@@ -59,23 +59,23 @@ function makeGenericButton(spec, my) {
     my = my || {};
     Object.assign(my, spec);
     util.renameKeys(my, [["elem", "buttonElem"]]);
-    let assignments = {
+    let myAssignments = {
         // Additional fields to be added as shared secrets.
         emitter: new EventEmitter(),
         timeout: null,
         waitMultiplier: 1,      // When scanning, multiply the wait time by this number.
         finished: () => my.emitter.emit("buttonFinished")
     };
-    Object.assign(my, assignments);
+    Object.assign(my, myAssignments);
 
     // Public.
     let that = {
         getMenu: () => my.menu,
         getButtonValue: () => my.buttonElem.value,
         setButtonValue: (value) => my.buttonElem.value = value,
-        getAnnouncement: () => my.buttonElem.value, // By default, the announcement text is just the button's value.
         isEmpty: () => my.buttonElem.value === "",
         getWaitMultiplier: () => my.waitMultiplier,
+        getTargetMenu: () => null, // MenuButtons overwrite this.
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSound()) {
@@ -102,6 +102,13 @@ function makeGenericButton(spec, my) {
             my.emitter.once("buttonFinished", listener);
         }
     };
+    // Need to assign in a separate step since these methods depend on others on "that".
+    let thatAssignments = {
+        getAnnouncement: that.getButtonValue, // By default, the announcement text is just the button's value.
+        selectsDropdownMenu: () => (that.buttonType === "menuSelector" &&
+                                    that.getTargetMenu().getInfo().hide === "dropdown")
+    };
+    Object.assign(that, thatAssignments);
 
     // Initialize and return
     my.buttonElem.onclick = that.pressed;
@@ -241,7 +248,7 @@ function makeMenuSelectorButton(spec, my) {
             my.finished();
         },
         getTargetMenu: function() {
-            // Return a pointer to the target menu
+            // Return a pointer to the target menu.
             let targetName = my.buttonElem.dataset.target;
             let menus = my.menu.getMenus();
             return menus[targetName];
