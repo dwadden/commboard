@@ -10,9 +10,6 @@ module.exports = scanner;
 
 function scanner(mainMenu, detector, settings) {
 
-    // Scanning object
-    let that = {};
-
     // Constants
     const N_LOOPS = 2;               // Loop through a menu twice before exiting.
     const SHORT_GAZE_TIME = 200;     // A short gaze must last for 200 ms
@@ -56,7 +53,6 @@ function scanner(mainMenu, detector, settings) {
                   settings.getScanSpeed() * button.getWaitMultiplier();
         const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
         const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
-
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
@@ -68,7 +64,6 @@ function scanner(mainMenu, detector, settings) {
                 step(button, buttonIx, loopIx);
             }
         }
-
         function step(button, buttonIx, loopIx) {
             currentButton = button;
             button.toggle();
@@ -80,14 +75,12 @@ function scanner(mainMenu, detector, settings) {
             };
             timeout = setTimeout(next, waitTime);
         }
-
         function gazeBegin() {
             // Beginning of gaze detected
             gazeButton = currentButton; // The button that was active at the moment the gaze started
             startTime = new Date();
             longGazeTimeout = setTimeout(signalLongGaze, LONG_GAZE_TIME); // Tell the user when they've gazed long enough
         }
-
         function gazeEnd() {
             clearTimeout(longGazeTimeout);
             let elapsed = new Date() - startTime;
@@ -104,7 +97,6 @@ function scanner(mainMenu, detector, settings) {
                 }
             }
         }
-
         function pressButton(button) {
             unregister();
             if (currentButton === gazeButton) {
@@ -114,7 +106,6 @@ function scanner(mainMenu, detector, settings) {
             button.addFinishedListener(bcb);
             button.pressed();
         }
-
         function makeButtonCallback(button) {
             // This function takes a button and returns the callback that should
             // be invoked after the button is finished executing its actions,
@@ -136,7 +127,6 @@ function scanner(mainMenu, detector, settings) {
                 return bcb;
             }
         }
-
         function pressStop() {
             unregister();
             currentButton.toggle();
@@ -152,9 +142,9 @@ function scanner(mainMenu, detector, settings) {
 
     function listen() {
         // Listen for user input.
-        // TODO: Refactor some of the shared functionality between this and the scanner.
-        // TODO: The refresh rate on the webcam should be lower when we're in this mode.
         let startTime, longGazeTimeout;
+        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
+        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
         function gazeBegin() {
             // Beginning of gaze detected
             startTime = new Date();
@@ -165,7 +155,7 @@ function scanner(mainMenu, detector, settings) {
             let elapsed = new Date() - startTime;
             if (elapsed >= LONG_GAZE_TIME) {
                 unregister();
-                that.scan();
+                scan();
             }
         }
         function pressStop() {
@@ -173,19 +163,21 @@ function scanner(mainMenu, detector, settings) {
             unregister();
             detector.idleMode();
         }
-        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
-        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
         speech.speakSync("listening.");
         detector.listenMode();
         register();
     }
-    that.scan = function() {
+
+    function scan() {
         // Kick off by scanning the main menu. If scanning completes, no
         // callback need be invoked.
         detector.scanMode();
         scanMenu(mainMenu, listen);
     };
-    // register buttons
+
+    // Register buttons and return the object, which exposes a method to scan.
     startButton.addEventListener("click", listen);
+
+    let that = { scan };
     return that;
 }

@@ -297,7 +297,8 @@ function makeEmailButton(spec, my) {
 
     // Private additions.
     let myAssignments = {
-        address: null
+        address: null,
+        waitMultiplier: 2
     };
     Object.assign(my, myAssignments);
 
