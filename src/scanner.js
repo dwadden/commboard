@@ -49,21 +49,14 @@ function scanner(mainMenu, detector, settings) {
         let currentButton, gazeButton, startTime, timeout, longGazeTimeout;
 
         // Procedures
-        function nextButton(ix) {
-            return (ix + 1) % menu.getNButtons();
-        }
-        function isLastButton(buttonIx) {
-            return buttonIx === menu.getNButtons() - 1;
-        }
-        function nextLoop(buttonIx, loopIx) {
-            return isLastButton(buttonIx) ? loopIx + 1 : loopIx;
-        }
-        function isLoopOver(loopIx) {
-            return loopIx === N_LOOPS;
-        }
-        function getWaitTime(button) {
-            return settings.getScanSpeed() * button.getWaitMultiplier();
-        }
+        const nextButton = (ix) => (ix + 1) % menu.getNButtons();
+        const isLastButton = (buttonIx) => buttonIx === menu.getNButtons() - 1;
+        const nextLoop = (buttonIx, loopIx) =>
+                  isLastButton(buttonIx) ? loopIx + 1 : loopIx;
+        const isLoopOver = (loopIx) => loopIx === N_LOOPS;
+        const getWaitTime = (button) =>
+                  settings.getScanSpeed() * button.getWaitMultiplier();
+
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
             if (isLoopOver(loopIx)) {
@@ -75,6 +68,7 @@ function scanner(mainMenu, detector, settings) {
                 step(button, buttonIx, loopIx);
             }
         }
+
         function step(button, buttonIx, loopIx) {
             currentButton = button;
             button.toggle();
@@ -86,20 +80,22 @@ function scanner(mainMenu, detector, settings) {
             };
             timeout = setTimeout(next, waitTime);
         }
+
         function gazeBegin() {
             // Beginning of gaze detected
             gazeButton = currentButton; // The button that was active at the moment the gaze started
             startTime = new Date();
             longGazeTimeout = setTimeout(signalLongGaze, LONG_GAZE_TIME); // Tell the user when they've gazed long enough
         }
+
         function gazeEnd() {
             clearTimeout(longGazeTimeout);
             let elapsed = new Date() - startTime;
             if (elapsed >= SHORT_GAZE_TIME) {
+                clearTimeout(timeout);
                 if (currentButton !== gazeButton) {
                     currentButton.toggle(); // Turn off the current button if it won't be turned off otherwise.
                 }
-                clearTimeout(timeout);
                 if (elapsed < LONG_GAZE_TIME) {
                     pressButton(gazeButton); // If it was a short gaze, press the relevant button
                 } else {
