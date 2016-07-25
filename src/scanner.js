@@ -129,7 +129,7 @@ function scanner(mainMenu, detector, settings) {
                 // TODO: Change this to an object, the map is just clunky
                 const dispatch = { repeat: () => scanMenu(menu, slidecb),
                                    finish: slidecb };
-                let scanType = menu.getInfo().scan;
+                let scanType = menu.getInfo().scanType;
                 let cb1 = dispatch[scanType];
                 let cb2 = (button.buttonType === "menuSelector" ?
                            function() { scanMenu(button.getTargetMenu(), cb1); } :

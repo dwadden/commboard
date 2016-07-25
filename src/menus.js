@@ -171,7 +171,7 @@ function makeGenericMenu(spec, my) {
         getInfo: function() {
             return { menuName: my.menuName,
                      hide: my.hide,
-                     scan: my.scan };
+                     scanType: my.scanType };
         }
     };
     Object.assign(that, thatAssignments);
@@ -184,13 +184,13 @@ function makeGenericMenu(spec, my) {
 }
 // Register menu constructors by building on the "makeGenericMenu" constructor.
 registerConstructor("composeMain", makeGenericMenu, { hide: "commboard",
-                                                      scan: "repeat" });
+                                                      scanType: "repeat" });
 ["compose1", "compose2", "compose3", "compose4", "compose5"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "commboard",
-                                                           scan: "finish" }));
+                                                           scanType: "finish" }));
 ["punctuation", "buffer", "callBell"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "dropdown",
-                                                           scan: "finish" }));
+                                                           scanType: "finish" }));
 
 function makeGuessMenu(spec, my) {
     // Factory function for menus that offer word guesses to the user.
@@ -266,7 +266,7 @@ function makeGuessMenu(spec, my) {
     return that;
 }
 registerConstructor("guess", makeGuessMenu, { hide: "commboard", // register the guess menu constructor.
-                                              scan: "finish" });
+                                              scanType: "finish" });
 
 function makeEmailMenu(spec, my) {
     // Factory function for menus offering email functionality. In addition to
@@ -302,4 +302,4 @@ function makeEmailMenu(spec, my) {
     return that;
 }
 registerConstructor("email", makeEmailMenu, { hide: "dropdown", // register the email menu constructor.
-                                              scan: "finish" });
+                                              scanType: "finish" });
