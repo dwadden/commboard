@@ -25,6 +25,8 @@ function scanner(mainMenu, detector, settings) {
     let stopButton = document.querySelector("input[type=button][value=Stop]");
 
     // Procedures
+    const signalLongGaze = () => speech.beep(BEEP_FREQ, BEEP_DURATION);
+
     function registerListeners(cbBegin, cbEnd, cbClick) {
         detector.addBeginListener(cbBegin);
         detector.addEndListener(cbEnd);
@@ -35,10 +37,6 @@ function scanner(mainMenu, detector, settings) {
         stopButton.removeEventListener("click", cbClick);
         detector.removeBeginListener(cbBegin);
         detector.removeEndListener(cbEnd);
-    }
-
-    function signalLongGaze() {
-        speech.beep(BEEP_FREQ, BEEP_DURATION);
     }
 
     function scanMenu(menu, cb) {
@@ -56,6 +54,8 @@ function scanner(mainMenu, detector, settings) {
         const isLoopOver = (loopIx) => loopIx === N_LOOPS;
         const getWaitTime = (button) =>
                   settings.getScanSpeed() * button.getWaitMultiplier();
+        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
+        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
 
         function loop(buttonIx, loopIx) {
             let button = menu.getButtons()[buttonIx];
@@ -106,53 +106,45 @@ function scanner(mainMenu, detector, settings) {
         }
 
         function pressButton(button) {
-            // Press button. After it's been pressed, either resume control of
-            // program or pass control to selected menu.
-
-            function wrapSlide(cb, button) {
-                let wrapped;
-                if (button.selectsDropdownMenu()) {
-                    let target = button.getTargetMenu();
-                    wrapped = function() {
-                        target.slideUp();
-                        cb();
-                    };
-                }
-                else {
-                    wrapped = cb;
-                }
-                return wrapped;
-            }
-
-            function afterCompletion() {
-                let slidecb = wrapSlide(cb, button);
-                // TODO: Change this to an object, the map is just clunky
-                const dispatch = { repeat: () => scanMenu(menu, slidecb),
-                                   finish: slidecb };
-                let scanType = menu.getInfo().scanType;
-                let cb1 = dispatch[scanType];
-                let cb2 = (button.buttonType === "menuSelector" ?
-                           function() { scanMenu(button.getTargetMenu(), cb1); } :
-                           cb1);
-                cb2();
-            }
-
             unregister();
             if (currentButton === gazeButton) {
                 button.toggle();
             }
-            button.addFinishedListener(afterCompletion);
+            let bcb = makeButtonCallback(button);
+            button.addFinishedListener(bcb);
             button.pressed();
         }
+
+        function makeButtonCallback(button) {
+            // This function takes a button and returns the callback that should
+            // be invoked after the button is finished executing its actions,
+            // and has emitted a signal telling the scanner to continue.
+            let buttonType = button.buttonType;
+            let scanType = menu.getInfo().scanType;
+            let bcb = (scanType === "repeat" ?
+                       () => scanMenu(menu, cb) :
+                       cb);
+            if (buttonType === "menuSelector") {
+                let afterTarget = function() {
+                    if (button.selectsDropdownMenu()) {
+                        button.getTargetMenu().slideUp();
+                    }
+                    bcb();
+                };
+                return () => scanMenu(button.getTargetMenu(), afterTarget);
+            } else {
+                return bcb;
+            }
+        }
+
         function pressStop() {
+            unregister();
+            currentButton.toggle();
             clearTimeout(timeout);
             detector.idleMode();
-            unregister();
             speech.speakSync("Stopping");
-            currentButton.toggle();
         }
-        const register = () => registerListeners(gazeBegin, gazeEnd, pressStop);
-        const unregister = () => unregisterListeners(gazeBegin, gazeEnd, pressStop);
+
         // Kick off the function
         register();
         loop(0, 0);
