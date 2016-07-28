@@ -11,7 +11,7 @@
     "bootstrap": "^3.3.6",
     "electron-prebuilt": "^0.37.8",
     "jquery": "^2.2.4",
-    "jquery-ui": "^1.10.5",
+    "jquery-ui": "1.10.5",
     "nodemailer": "^2.3.0",
     "underscore": "^1.8.3"
   },

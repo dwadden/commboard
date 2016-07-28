@@ -1,6 +1,6 @@
 # Wedjat
 
-Wedjat is an app designed to help individuals with disabilities to interact with a computer. This readme is intended for developers interested in extending Wedjat. If you are a interested in downloading Wedjat and using it, there is more information for you in the docs folder.
+Wedjat is an app designed to help individuals with disabilities to interact with a computer.
 
 ## Installation
 
@@ -14,7 +14,7 @@ Wedjat requires that the following software be installed:
 
 ### Package dependencies
 
-Clone the repository. Change to the installation directory and execute the following to install the requisite packages from npm:
+Clone the repository. Change to the repository directory and execute the following to install the requisite packages from npm:
 
 ```
 npm install
@@ -22,7 +22,7 @@ npm install
 
 ## Running the program
 
-From the main wedjat directory, call:
+From the main wedjat directory, enter:
 
 ```
 node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron .
