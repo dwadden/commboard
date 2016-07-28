@@ -20,8 +20,5 @@
     "prebuild": "npm run lint",
     "build": "electron-zip-packager . wedjat --platform=darwin --arch=x64 --out=dist",
     "clean": "rm -r dist"
-  },
-  "devDependencies": {
-    "devtron": "^1.2.1"
   }
 }
