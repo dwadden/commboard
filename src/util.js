@@ -1,11 +1,14 @@
 "use strict";
 
+const _ = require("underscore");
+
 // Helper procedures
 
 // Exports
 module.exports = { repeat,
                    pad,
                    capitalize,
+                   all,
                    renameKeys };
 
 function repeat(x, n) {
@@ -29,6 +32,11 @@ function pad(xs, fillVal, len) {
 function capitalize(text) {
     // Convert first letter of word to uppercase
     return text[0].toUpperCase() + text.slice(1);
+}
+
+function all(xs) {
+    // Return true if all elements of xs are true.
+    return _.every(xs, (x) => x);
 }
 
 function renameKeys(obj, keys) {

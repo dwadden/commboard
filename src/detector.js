@@ -75,6 +75,40 @@ function makeGenericDetector(my) {
     return that;
 }
 
+// ************************************************************************** //
+
+function makeKeyDetector(my) {
+    // Create a detector that awaits a press of the "shift" key from the
+    // user. For debugging purposes mainly.
+
+    my = my || {};
+    let that = makeGenericDetector(my);
+
+    function emitIfShift(event, signal) {
+        let conditions = [!event.altKey,
+                          !event.ctrlKey,
+                          !event.metaKey,
+                          event.keyIdentifier === "Shift" ];
+        if (util.all(conditions)) {
+            signal();
+        }
+    }
+
+    let myExtensions = {
+        onKeyDown: (e) => emitIfShift(e, my.emitGestureStart),
+        onKeyUp: (e) => emitIfShift(e, my.emitGestureEnd)
+    };
+    Object.assign(my, myExtensions);
+
+    document.addEventListener("keydown", my.onKeyDown);
+    document.addEventListener("keyup", my.onKeyUp);
+
+    return that;
+}
+registerConstructor("key", makeKeyDetector);
+
+// ************************************************************************** //
+
 function makeGazeDetector(my) {
     // Creates a gaze detector. This detector respects the interface of the
     // generic detector. The gesture for which it looks is an upward gaze as
