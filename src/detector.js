@@ -1,20 +1,43 @@
 "use strict";
 
-// The constructor exported by this module creates a detector object. The
-// detector recognizes gazes, currently via template matching. After the "start"
-// button on the UI is pressed, it fires events when it recognizes the beginning
-// or end of an upward gaze.
-
 const EventEmitter = require("events");
 const util = require("./util.js");
 
-module.exports = makeGazeDetector;
+// ************************************************************************** //
+
+// This module exposes a function called detector, which creates a detector
+// object. The implementation of a detector is not specified, but it must
+// expose the following interface:
+// - Methods to register and unregister event handlers that can listen for the
+//   beginning and end of a user gesture (e.g. a gaze or button click).
+// - Methods to toggle the status of the detector between "idle" (not listening
+//   for user input), "listening" (awaiting user cue to begin scanning), and
+//   "scanning" (actively scanning).
+// The only two detectors implemented so far are:
+// - A detector that uses an upward gaze as a gesture from the listener.
+// - A detector (for debugging) that uses a press of the shift key as a gesture.
+
+let constructors = {};
+function registerConstructor(type, constructor) {
+    constructors[type] = constructor;
+}
+
+function detector(type) {
+    // Detector constructor that dispatches on a type tag.
+    return constructors[type]();
+}
+
+module.exports = detector;
+
+// ************************************************************************** //
 
 function makeGenericDetector(my) {
+    // Create an object with data and methods shared by all detectors. As
+    // elsewhere in this program, "my" holds shared secrets while "that" exposes
+    // a public interface.
 
     my = my || {};
     let myData = {
-        state: "rest",
         statusElem: document.getElementById("detectorStatus"),
         emitter: new EventEmitter(),
         status: null
@@ -53,12 +76,9 @@ function makeGenericDetector(my) {
 }
 
 function makeGazeDetector(my) {
-    // Constructor for a detector object that fires events when the gaze state
-    // changes.
-    // To determine whether the user is gazing upward or not, this
-    // implementation computes the L1 distances between the current video frame
-    // and each of the templates, and takes the closer. Many other ideas are
-    // possible, but this one is quite simple and seems to work pleasingly well.
+    // Creates a gaze detector. This detector respects the interface of the
+    // generic detector. The gesture for which it looks is an upward gaze as
+    // detected by a camera.
 
     // Constants
     const REFRESH_RATE_LISTEN = 5; // When listening, check the camera 5 times a second.
@@ -72,6 +92,7 @@ function makeGazeDetector(my) {
         vs: stream,
         rest: makeTemplate("rest", stream),
         gaze: makeTemplate("gaze", stream),
+        state: "rest",
         interval: null
     };
     Object.assign(my, myData);
@@ -116,6 +137,7 @@ function makeGazeDetector(my) {
     // Initialize and return.
     return that;
 }
+registerConstructor("gaze", makeGazeDetector);
 
 function makeVideoStream() {
     // Create an object that wraps the incoming video stream.
