@@ -8,9 +8,51 @@
 const EventEmitter = require("events");
 const util = require("./util.js");
 
-module.exports = detector;
+module.exports = makeGazeDetector;
 
-function detector() {
+function makeGenericDetector(my) {
+
+    my = my || {};
+    let myData = {
+        state: "rest",
+        statusElem: document.getElementById("detectorStatus"),
+        emitter: new EventEmitter(),
+        status: null
+    };
+    Object.assign(my, myData);
+
+    let myMethods = {
+        emitGestureStart: () => my.emitter.emit("gestureBegin"),
+        emitGestureEnd: () => my.emitter.emit("gestureEnd"),
+        setStatus: function(newStatus) {
+            // Update the DOM element indicating detector status.
+            let p = my.statusElem.querySelector("p");
+            let oldStatus = my.status;
+            my.status = newStatus;
+            p.innerHTML = util.capitalize(my.status);
+            if (oldStatus !== undefined) {
+                my.statusElem.classList.toggle(oldStatus);
+            }
+            my.statusElem.classList.toggle(my.status);
+        }
+    };
+    Object.assign(my, myMethods);
+
+    let that = {
+        idleMode: () => my.setStatus("idle"),
+        listenMode: () => my.setStatus("listening"),
+        scanMode: () => my.setStatus("scanning"),
+        addBeginListener: (listener) => my.emitter.addListener("gestureBegin", listener),
+        addEndListener: (listener) => my.emitter.addListener("gestureEnd", listener),
+        removeBeginListener: (listener) => my.emitter.removeListener("gestureBegin", listener),
+        removeEndListener: (listener) => my.emitter.removeListener("gestureEnd", listener)
+    };
+
+    that.idleMode();
+    return that;
+}
+
+function makeGazeDetector(my) {
     // Constructor for a detector object that fires events when the gaze state
     // changes.
     // To determine whether the user is gazing upward or not, this
@@ -19,86 +61,59 @@ function detector() {
     // possible, but this one is quite simple and seems to work pleasingly well.
 
     // Constants
-    const REST = Symbol("rest");
-    const GAZE = Symbol("gaze");
     const REFRESH_RATE_LISTEN = 5; // When listening, check the camera 5 times a second.
     const REFRESH_RATE_SCAN = 20; // When scanning, check 20 times a second.
 
-    // Locals
-    let emitter = new EventEmitter();
-    let vs = makeVideoStream();
-    let rest = makeTemplate("rest", vs);
-    let gaze = makeTemplate("gaze", vs);
-    let state = REST;
-    let statusElem = document.getElementById("detectorStatus");
-    let interval, refreshRate, status;
+    my = my || {};
+    let that = makeGenericDetector(my);
 
-    // Private methods
-    function detect() {
-        // Compares current video frame to templates. Emits events if change occurred.
-        let streamPixels = vs.getPixels();
-        let dRest = l1Distance(streamPixels, rest.getPixels());
-        let dGaze = l1Distance(streamPixels, gaze.getPixels());
-        let newState = (dGaze < dRest) ? GAZE : REST;
-        if (state === REST & newState === GAZE) {
-            emitGazeStart();    // If we went from resting to gazing, then the gaze started.
+    let stream = makeVideoStream();
+    let myData = {
+        vs: stream,
+        rest: makeTemplate("rest", stream),
+        gaze: makeTemplate("gaze", stream),
+        interval: null
+    };
+    Object.assign(my, myData);
+
+    let myMethods = {
+        detect: function() {
+            // Compares current video frame to templates. Emits events if change occurred.
+            let streamPixels = my.vs.getPixels();
+            let dRest = l1Distance(streamPixels, my.rest.getPixels());
+            let dGaze = l1Distance(streamPixels, my.gaze.getPixels());
+            let newState = (dGaze < dRest) ? "gaze" : "rest";
+            if (my.state === "rest" & newState === "gaze") {
+                my.emitGestureStart();    // If we went from resting to gazing, then the gaze started.
+            }
+            if (my.state === "gaze" & newState === "rest") {
+                my.emitGestureEnd();      // If we went from gaze to rest, then the gaze ended.
+            }
+            my.state = newState;
         }
-        if (state === GAZE & newState === REST) {
-            emitGazeEnd();      // If we went from gaze to rest, then the gaze ended.
-        }
-        state = newState;
-    }
-    const emitGazeStart = () => emitter.emit("gazeBegin");
-    const emitGazeEnd = () => emitter.emit("gazeEnd");
-    function start() {
-        // Listen for detections.
-        let intervalTime = 1000 / refreshRate;
-        interval = window.setInterval(detect, intervalTime);
-    }
-    function stop() {
-        // Stop listening.
-        window.clearInterval(interval);
-        interval = null;
-    }
-    function setStatus(newStatus) {
-        // Update the DOM element indicating detector status.
-        let p = statusElem.querySelector("p");
-        let oldStatus = status;
-        status = newStatus;
-        p.innerHTML = util.capitalize(status);
-        if (oldStatus !== undefined) {
-            statusElem.classList.toggle(oldStatus);
-        }
-        statusElem.classList.toggle(status);
-    }
+    };
+    Object.assign(my, myMethods);
 
     // The returned object
-    let that = {
+    let thatAssignments = {
         idleMode: function() {
-            // Detector is idle.
-            setStatus("idle");
-            window.clearInterval(interval);
+            my.setStatus("idle");
+            window.clearInterval(my.interval);
         },
         listenMode: function() {
-            // When user isn't scanning, listen for input 5 times a second.
-            setStatus("listening");
-            window.clearInterval(interval);
-            interval = window.setInterval(detect, 1000 / REFRESH_RATE_LISTEN);
+            my.setStatus("listening");
+            window.clearInterval(my.interval);
+            my.interval = window.setInterval(my.detect, 1000 / REFRESH_RATE_LISTEN);
         },
         scanMode: function() {
-            // When user is scanning, listen for input 20 times a second.
-            setStatus("scanning");
-            window.clearInterval(interval);
-            interval = window.setInterval(detect, 1000 / REFRESH_RATE_SCAN);
-        },
-        addBeginListener: (listener) => emitter.addListener("gazeBegin", listener),
-        addEndListener: (listener) => emitter.addListener("gazeEnd", listener),
-        removeBeginListener: (listener) => emitter.removeListener("gazeBegin", listener),
-        removeEndListener: (listener) => emitter.removeListener("gazeEnd", listener)
+            my.setStatus("scanning");
+            window.clearInterval(my.interval);
+            my.interval = window.setInterval(my.detect, 1000 / REFRESH_RATE_SCAN);
+        }
     };
+    Object.assign(that, thatAssignments);
 
     // Initialize and return.
-    that.idleMode();
     return that;
 }
 
