@@ -19,7 +19,7 @@ const util = require("./util.js");
 // The exported detector constructor creates an object that encapsulates a
 // specific detector type. When the user selects a new detector type from the
 // dropdown, the constructor for that specific detector is called, and the newly
-// created object is set as the prototype for the wraooer object created by
+// created object is set as the prototype for the wrapper object created by
 // "detector".
 
 let constructors = {};
