@@ -13,8 +13,7 @@ window.onload = setup;
 
 function setup() {
     // Top-level setup to initialize the objects of the program.
-
-    let det = detector("gaze");
+    let det = detector();
     let buf = buffer();
     let s = settings();
 

@@ -6,25 +6,61 @@ const util = require("./util.js");
 // ************************************************************************** //
 
 // This module exposes a function called detector, which creates a detector
-// object. The implementation of a detector is not specified, but it must
-// expose the following interface:
-// - Methods to register and unregister event handlers that can listen for the
-//   beginning and end of a user gesture (e.g. a gaze or button click).
-// - Methods to toggle the status of the detector between "idle" (not listening
-//   for user input), "listening" (awaiting user cue to begin scanning), and
-//   "scanning" (actively scanning).
-// The only two detectors implemented so far are:
-// - A detector that uses an upward gaze as a gesture from the listener.
-// - A detector (for debugging) that uses a press of the shift key as a gesture.
+// object. Since different users will have different needs and abilities, this
+// object can be set to detect different types of gestures.
+// At present two gestures are implemented: a detector recognizing an upward
+// gaze can be constructed using makeGazeDetector, while a detector for
+// recognizing the pressing of the "shift" key can be constructed using
+// makeKeyDetector. This detector is of most use for debugging.
+// New detector constructors can be registered using registerConstructor.
+// The UI presents a dropdown menu allowing for the selection of a detection
+// mode. It generates that menu based on all available constructors in the
+// global "constructors" table.
+// The exported detector constructor creates an object that encapsulates a
+// specific detector type. When the user selects a new detector type from the
+// dropdown, the constructor for that specific detector is called, and the newly
+// created object is set as the prototype for the wraooer object created by
+// "detector".
 
 let constructors = {};
 function registerConstructor(type, constructor) {
+    // Register a detector constructor.
     constructors[type] = constructor;
 }
 
-function detector(type) {
-    // Detector constructor that dispatches on a type tag.
-    return constructors[type]();
+function detector() {
+    // Create the detector object exposed to the rest of the program. This
+    // object is merely a wrapper around an object created by one of the
+    // constructors below. The prototype associated with this object changes
+    // when the user selects a new detector; this means that, to the rest of the
+    // program, nothing changes. It can interact with the same wrapper,
+    // regardless of the implementation chosen by the user.
+    let DEFAULT_MODE = "gaze";
+    let detElem = document.querySelector("select[name=detector]");
+    let that = Object.create(constructors[DEFAULT_MODE]());
+
+    function populateOptions() {
+        // Initialize the dropdown list of available detectors.
+        function each(key) {
+            let opt = document.createElement("option");
+            opt.value = key;
+            opt.text = util.capitalize(key);
+            detElem.add(opt);
+        }
+        Object.keys(constructors).forEach(each);
+        detElem.value = DEFAULT_MODE;
+    }
+
+    function change(e) {
+        // To be executed when the user selects a different detector.
+        let key = e ? e.target.value : DEFAULT_MODE;
+        let activeDetector = constructors[key]();
+        Object.setPrototypeOf(that, activeDetector);
+    }
+
+    populateOptions();
+    detElem.onchange = change;
+    return that;
 }
 
 module.exports = detector;
