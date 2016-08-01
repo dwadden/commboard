@@ -1,7 +1,6 @@
 "use strict";
 
 // File imports
-const util = require("./util.js");
 const speech = require("./speech.js");
 
 // ************************************************************************** //
