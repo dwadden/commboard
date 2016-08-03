@@ -46,6 +46,10 @@ function buffer() {
 
     // Constants
     const CURSOR = "_";          // Cursor character. Could be |, for instance.
+    const BEEP_DURATION = 1000;  // Length in ms of beep signalling speech.
+    const AFTER_BEEP_WAIT = 1000; // Time after beep before reading buffer text.
+    const BEEP_FREQ = 350;       // Beep to announce buffer reading.
+    const AFTER_READ_WAIT = 2000; // After reading buffer text, wait 2s before scanning.
 
     // Procedure dispatch tables.
     let writers = {};
@@ -152,7 +156,12 @@ function buffer() {
     }
     registerAction("delete", deleteText);
 
-    const readBuffer = (cb) => speech.speakAsync(getText(), cb, bufferElem);
+    function readBuffer(cb) {
+        let afterBeep = () => speech.speakAsync(getText(), cb,
+                                                bufferElem, AFTER_READ_WAIT);
+        speech.beep(BEEP_FREQ, BEEP_DURATION);
+        setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
+    }
     registerAction("read", readBuffer);
 
     function clearBuffer(cb) {
