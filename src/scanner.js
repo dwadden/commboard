@@ -254,7 +254,7 @@ function scanner(mainMenu, detector, settings) {
         // Scan the main menu.
         detector.scanMode();
         scanMenu(mainMenu, listen);
-    };
+    }
 
     // Register buttons and return the object, which exposes a method to scan.
     startButton.addEventListener("click", listen);

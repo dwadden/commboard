@@ -225,7 +225,7 @@ function makeGuessMenu(spec, my) {
             success: success,
             error: failure
         });
-    };
+    }
 
     function guessWord(inputText, cb) {
         // Wraps the API call and extracts the results.
@@ -246,7 +246,7 @@ function makeGuessMenu(spec, my) {
             // Add a wildcard so guesses will be retrieved even if "text" is a completed word.
             wordnik(text + "*", success, failure);
         }
-    };
+    }
 
     function update() {
         // Invoked when the buffer changes. Retrieves guesses and updates buttons appropriately.
@@ -256,7 +256,7 @@ function makeGuessMenu(spec, my) {
         };
         let inputText = my.buffer.getText();
         guessWord(inputText, callback);
-    };
+    }
 
     let myAssignments = { wordnik, guessWord, update };
     my = Object.assign(my, myAssignments);

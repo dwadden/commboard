@@ -23,5 +23,5 @@ function setup() {
                      settings: s });
 
     // Create the scanner.
-    let sc = scanner(ms["composeMain"], det, s);
+    let sc = scanner(ms.composeMain, det, s);
 }
