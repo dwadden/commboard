@@ -27,3 +27,7 @@ From the main wedjat directory, enter:
 ```
 node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron .
 ```
+
+## The Wedjat Wiki
+
+Health care providers interested in using Wedjat for their patients are welcome to check out the (Wedjat Wiki)[https://github.com/dwadden/wedjat/wiki]. It provides a quick-start guide for non-programmers.
