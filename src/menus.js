@@ -17,8 +17,8 @@ const util = require("./util.js");
 // The "menus" procedure invokes the "menu" procedure, which in turn creates a
 // single menu based on a menu name and a spec. The name of the menu identifies
 // all DOM button elements that are members of the menu; so, for instance,
-// calling menu("compose1", spec) creates a menu object handling all buttons
-// with data-menu=c"compose1"
+// calling menu("letter1", spec) creates a menu object handling all buttons
+// with data-menu="letter1"
 //
 // The "menu" procedure does its work by looking up the actual constructor to
 // call in the table "constructors", which is keyed by the menu's
@@ -185,7 +185,7 @@ function makeGenericMenu(spec, my) {
 // Register menu constructors by building on the "makeGenericMenu" constructor.
 registerConstructor("composeMain", makeGenericMenu, { hide: "commboard",
                                                       scanType: "repeat" });
-["compose1", "compose2", "compose3", "compose4", "composeExtras"].forEach(
+["letter1", "letter2", "letter3", "letter4", "extras"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "commboard",
                                                            scanType: "finish" }));
 ["punctuation", "buffer"].forEach(
