@@ -185,10 +185,10 @@ function makeGenericMenu(spec, my) {
 // Register menu constructors by building on the "makeGenericMenu" constructor.
 registerConstructor("composeMain", makeGenericMenu, { hide: "commboard",
                                                       scanType: "repeat" });
-["compose1", "compose2", "compose3", "compose4", "compose5"].forEach(
+["compose1", "compose2", "compose3", "compose4", "composeExtras"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "commboard",
                                                            scanType: "finish" }));
-["punctuation", "buffer", "callBell"].forEach(
+["punctuation", "buffer"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "dropdown",
                                                            scanType: "finish" }));
 
