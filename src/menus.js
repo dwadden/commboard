@@ -119,7 +119,7 @@ function makeGenericMenu(spec, my) {
     };
     Object.assign(my, myData1);
     let myMethods = {
-        initButtons : function() { // Pass type tag and spec to menu button constructor.
+        initButtons: function() { // Pass type tag and spec to menu button constructor.
             // Note on design: in principle, could just pass the spec and have
             // the constructor get the type from the DOM element attached to the
             // spec.  In general, however, we want to be able to dispatch on
@@ -185,12 +185,41 @@ function makeGenericMenu(spec, my) {
 // Register menu constructors by building on the "makeGenericMenu" constructor.
 registerConstructor("composeMain", makeGenericMenu, { hide: "commboard",
                                                       scanType: "repeat" });
-["letter1", "letter2", "letter3", "letter4", "extras"].forEach(
-    (name) => registerConstructor(name, makeGenericMenu, { hide: "commboard",
-                                                           scanType: "finish" }));
+registerConstructor("extras", makeGenericMenu, { hide: "commboard",
+                                                 scanType: "finish" });
 ["punctuation", "buffer"].forEach(
     (name) => registerConstructor(name, makeGenericMenu, { hide: "dropdown",
                                                            scanType: "finish" }));
+
+function makeLetterMenu(spec, my) {
+    // TODO: Add documentation and clean up after handling of custom layouts is complete.
+    my = my || {};
+    let that = makeGenericMenu(spec, my);
+
+
+    let myMethods1 = {
+        getRow: () => parseInt(my.menuName.slice(-1))
+    };
+    Object.assign(my, myMethods1);
+
+    let myMethods2 = {
+        setButtons: function() {
+            const each = ([button, letter]) => button.setText(letter);
+            let row = my.getRow();
+            let letters = my.settings.getLayout().getLetters(row);
+            _.zip(my.buttons, letters).forEach(each);
+        }
+    };
+    Object.assign(my, myMethods2);
+
+    my.setButtons();
+    my.settings.getLayout().addChangeListener(my.setButtons);
+    return that;
+}
+["letter1", "letter2", "letter3", "letter4"].forEach(
+    (name) => registerConstructor(name, makeLetterMenu, { hide: "commboard",
+                                                          scanType: "finish" }));
+
 
 function makeGuessMenu(spec, my) {
     // Factory function for menus that offer word guesses to the user.

@@ -4,6 +4,8 @@
 const jQuery = require("jquery");
 require("jquery-ui");
 const EventEmitter = require("events");
+const util = require("./util");
+const _ = require("underscore");
 
 // This module exposes the procedure "settings", the constructor for the
 // settings object. The settings object exposes the settings passed in from the
@@ -24,20 +26,20 @@ function settings() {
     // Private variables
     let soundElem = document.querySelector("input[type=checkbox][value=sound]");
     let showElem = document.querySelector("input[type=checkbox][value=showMenu]");
-    let layoutElem = document.querySelector("select[name=layout]");
     let languageElem = document.querySelector("select[name=language]");
     let slider = makeSlider();
     let emailSettings = makeEmailSettings();
+    let layout = makeLayoutSettings();
 
     // The public object.
     let that = {
         useSound: () => soundElem.checked,
-        getLayout: () => layoutElem.value,
         getLanguage: () => languageElem.value,
         getScanSpeed: () => slider.getms(),
         addShowMenuListener: (listener) =>
             showElem.addEventListener("change", listener),
-        getEmailSettings: () => emailSettings
+        getEmailSettings: () => emailSettings,
+        getLayout: () => layout
     };
 
     return that;
@@ -133,5 +135,60 @@ function makeEmailSettings() {
     // Initialize and return.
     addButton.onclick = emitAddRecipient;
     storeButton.onclick = store;
+    return that;
+}
+
+function makeLayoutSettings() {
+    // TODO: Clean up and document this entire function once it's clear how I'm
+    // going to handle custom layouts.
+    const NCOLS = 7;            // 7 columns (i.e. 7 letters) per row.
+    const EMPTY_LETTER = "";    // How to fill a button if there's no letter for it.
+
+
+    // function parseLayout(path) {
+    //     let text = fs.readFileSync(path, "utf8");
+    //     let lines = text.split("\n");
+    //     console.log(lines);
+    //     if (_.last(lines) === "") {
+    //         lines.pop();
+    //     }
+    //     return lines.map((line) => line.split(" "));
+    // }
+    let layoutElem = document.querySelector("select[name=layout]");
+
+    const builtins = {
+        AGNT: [["a", "b", "c", "d", "e", "f"],
+               ["g", "h", "i", "j", "k", "l", "m"],
+               ["n", "o", "p", "q", "r", "s"],
+               ["t", "u", "v", "w", "x", "y", "z"]],
+        Fast: [["e", "t", "o", "s", "l", "w", "p"],
+               ["a", "i", "h", "c", "f", "b", "j"],
+               ["n", "r", "u", "g", "v", "x"],
+               ["d", "m", "y", "k", "q", "z"]]
+    };
+
+    function initLayouts() {
+        function each(layoutName) {
+            let opt = document.createElement("option");
+            opt.value = layoutName;
+            opt.text = layoutName;
+            layoutElem.add(opt);
+        }
+        Object.keys(builtins).forEach(each);
+    }
+
+    let that = {
+        addChangeListener: function(listener) {
+            layoutElem.addEventListener("change", listener);
+        },
+        getLetters: function(row) {
+            // TODO: Change this to deal with custom layouts.
+            let layout = builtins[layoutElem.value];
+            return util.pad(layout[row-1], EMPTY_LETTER, NCOLS); // The rows names for the commboard are 1-indexed.
+        }
+
+    };
+
+    initLayouts();
     return that;
 }

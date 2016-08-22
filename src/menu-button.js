@@ -137,6 +137,7 @@ function makeTextButton(spec, my) {
 
     // Additional public data.
     let thatAssignments1 = {
+        setText: (text) => that.setButtonValue(text.toUpperCase()),
         getText: () => that.getButtonValue().toLowerCase(),
         getTextCategory: () => that.buttonType
     };
