@@ -192,16 +192,19 @@ registerConstructor("extras", makeGenericMenu, { hide: "commboard",
                                                            scanType: "finish" }));
 
 function makeLetterMenu(spec, my) {
-    // TODO: Add documentation and clean up after handling of custom layouts is complete.
+    // Factory function for menu objects containing letter buttons.
+    // These menus must be able to update themselves when the user selects a new
+    // layout from the relevant dropdown menu. They do that by listening for an
+    // event from the layout object.
+
     my = my || {};
     let that = makeGenericMenu(spec, my);
 
-
+    // Private methods.
     let myMethods1 = {
         getRow: () => parseInt(my.menuName.slice(-1))
     };
     Object.assign(my, myMethods1);
-
     let myMethods2 = {
         setButtons: function() {
             const each = ([button, letter]) => button.setText(letter);
@@ -212,6 +215,7 @@ function makeLetterMenu(spec, my) {
     };
     Object.assign(my, myMethods2);
 
+    // Initialize and return.
     my.setButtons();
     my.settings.getLayout().addChangeListener(my.setButtons);
     return that;

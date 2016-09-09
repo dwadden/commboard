@@ -139,24 +139,21 @@ function makeEmailSettings() {
 }
 
 function makeLayoutSettings() {
-    // TODO: Clean up and document this entire function once it's clear how I'm
-    // going to handle custom layouts.
+    // Constructor for an object which controls the commboard layout. This user
+    // allows the user to select a layout from the corresponding dropdown menu,
+    // and updates the arrangement of the commboard buttons accordingly.
+    // To make a new layout available to the user, simply add the layout to the
+    // "layouts" object below. A new layout should be represented as a list of
+    // lists, where the letters in the ith list will appear on the ith row of
+    // the commboard.
+
+    // Constants.
     const NCOLS = 7;            // 7 columns (i.e. 7 letters) per row.
     const EMPTY_LETTER = "";    // How to fill a button if there's no letter for it.
 
-
-    // function parseLayout(path) {
-    //     let text = fs.readFileSync(path, "utf8");
-    //     let lines = text.split("\n");
-    //     console.log(lines);
-    //     if (_.last(lines) === "") {
-    //         lines.pop();
-    //     }
-    //     return lines.map((line) => line.split(" "));
-    // }
+    // Internal variables and methods.
     let layoutElem = document.querySelector("select[name=layout]");
-
-    const builtins = {
+    const layouts = {
         AGNT: [["a", "b", "c", "d", "e", "f"],
                ["g", "h", "i", "j", "k", "l", "m"],
                ["n", "o", "p", "q", "r", "s"],
@@ -166,29 +163,32 @@ function makeLayoutSettings() {
                ["n", "r", "u", "g", "v", "x"],
                ["d", "m", "y", "k", "q", "z"]]
     };
-
     function initLayouts() {
+        // Invoked on object creation to make all layouts available in UI menu.
         function each(layoutName) {
             let opt = document.createElement("option");
             opt.value = layoutName;
             opt.text = layoutName;
             layoutElem.add(opt);
         }
-        Object.keys(builtins).forEach(each);
+        Object.keys(layouts).forEach(each);
     }
 
+    // Returned object.
     let that = {
         addChangeListener: function(listener) {
+            // Allows menus to register event handlers that update their buttons
+            // when the uesr selects a new layout.
             layoutElem.addEventListener("change", listener);
         },
         getLetters: function(row) {
-            // TODO: Change this to deal with custom layouts.
-            let layout = builtins[layoutElem.value];
+            // Get the letters for row i, given the current layout.
+            let layout = layouts[layoutElem.value];
             return util.pad(layout[row-1], EMPTY_LETTER, NCOLS); // The rows names for the commboard are 1-indexed.
         }
-
     };
 
+    // Initialize and return.
     initLayouts();
     return that;
 }
