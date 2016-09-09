@@ -32,7 +32,7 @@ function speakAsync(text, cb, element, delay = 1000) {
         setTimeout(cb, delay);
     }
     let utterance = speakSync(text);
-    utterance.onend = afterRead;
+    utterance.addEventListener("end", afterRead);
     element.utterance = utterance;
 }
 
@@ -55,8 +55,8 @@ function initVoices() {
     voices = window.speechSynthesis.getVoices().filter(inEnglish);
     voices.forEach(each);
     updateVoice();
-    voiceElem.onchange = updateVoice;                    // Update voice when selection made.
-    demoElem.onclick = demo;                             // Speak current voice as demo.
+    voiceElem.addEventListener("change", updateVoice);   // Update voice when selection made.
+    demoElem.addEventListener("click", demo);            // Speak current voice as demo.
 }
 
 function updateVoice() {
@@ -82,4 +82,4 @@ function beep(freq, duration) {
 }
 
 // Initialize once voices are loaded.
-window.speechSynthesis.onvoiceschanged = initVoices;
+window.speechSynthesis.addEventListener("voiceschanged", initVoices);

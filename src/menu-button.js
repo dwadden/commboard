@@ -111,7 +111,7 @@ function makeGenericButton(spec, my) {
     Object.assign(that, thatAssignments);
 
     // Initialize and return
-    my.buttonElem.onclick = that.pressed;
+    my.buttonElem.addEventListener("click", that.pressed);
     return that;
 }
 

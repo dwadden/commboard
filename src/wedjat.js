@@ -9,7 +9,7 @@ const scanner = require("./scanner.js");
 // This is the top-level script that pulls in all the relevant modules and
 // initializes all objects needed for the program.
 
-window.onload = setup;
+window.addEventListener("load", setup);
 
 function setup() {
     // Top-level setup to initialize the objects of the program.

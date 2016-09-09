@@ -133,8 +133,8 @@ function makeEmailSettings() {
     };
 
     // Initialize and return.
-    addButton.onclick = emitAddRecipient;
-    storeButton.onclick = store;
+    addButton.addEventListener("click", emitAddRecipient);
+    storeButton.addEventListener("click", store);
     return that;
 }
 

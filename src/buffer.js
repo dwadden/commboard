@@ -99,7 +99,7 @@ function buffer() {
         let size = fontSizeElem.value + "px";
         bufferElem.style.fontSize = size;
     }
-    fontSizeElem.onchange = updateFontSize; // Listen for font size changes and update as needed.
+    fontSizeElem.addEventListener("change", updateFontSize); // Listen for font size changes and update as needed.
 
     // ********************************************************************** //
 

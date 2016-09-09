@@ -59,7 +59,7 @@ function detector() {
     }
 
     populateOptions();
-    detElem.onchange = change;
+    detElem.addEventListener("change", change);
     return that;
 }
 
@@ -259,7 +259,7 @@ function makeVideoStream() {
     };
 
     // Bind event handlers, initialize, return
-    sourceElem.onchange = initStream;
+    sourceElem.addEventListener("change", initStream);
     initStream();
     return that;
 }
@@ -286,7 +286,7 @@ function makeTemplate(name, videoStream) {
     };
 
     // Bind event handler and return.
-    button.onclick = capture;
+    button.addEventListener("click", capture);
     return that;
 }
 
