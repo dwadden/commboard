@@ -201,13 +201,21 @@ function makeLanguageSettings() {
         // Update all DOM elements for the new language.
         let lang = languageElem.value;
         updateButtons(lang);
+        updateText(lang);
     }
 
     function updateButtons(lang) {
         // Update all buttons for the new language.
-        let buttons = document.querySelectorAll("[data-languages]");
+        let buttons = document.querySelectorAll("input[type=button][data-languages]");
         buttons.forEach(
             (button) => button.value = JSON.parse(button.dataset.languages)[lang]
+        );
+    }
+
+    function updateText(lang) {
+        let elems = document.querySelectorAll("[data-languages]:not(input)");
+        elems.forEach(
+            (elem) => elem.innerText = JSON.parse(elem.dataset.languages)[lang]
         );
     }
 
