@@ -204,41 +204,39 @@
             <!-- General settings. Sound, layout, scan speed, etc. -->
             <div id="generalSettings" class="padSurround borderLine borderRight floatLeft">
               <h4>Settings</h4>
-              <input type="checkbox" checked=true value="sound"> Sound
-              <p></p>
-              <input type="checkbox" checked=true value="showMenu"> Show Menu
-              <p></p>
               <p>
-                Layout:
-                <select name="layout">
-                </select>
+                <input type="checkbox" checked=true value="sound">
+                <span>Sound</span>
               </p>
-              <p></p>
               <p>
-                Language:
+                <input type="checkbox" checked=true value="showMenu">
+                <span>Show Menu</span>
+              </p>
+              <p>
+                <span>Layout</span>
+                <select name="layout"></select>
+              </p>
+              <p>
+                <span>Language</span>
                 <select name="language">
                   <option value="en-US">English</option>
                 </select>
               </p>
-              <p></p>
               <p>
-                Voice:
+                <span>Voice</span>
                 <select name="voice"></select>
                 <input type="button" value="Demo">
               </p>
-              <p></p>
               <p>
-                Font size:
+                <span>Font size</span>
                 <input type="number" name="fontSize" value="40">
               </p>
-              <p></p>
               <p>
-                Detector:
+                <span>Detector</span>
                 <select name="detector"></select>
               </p>
-              <p></p>
               <p>
-                Scan speed:
+                <span>Scan speed</span>
                 <div id="sliderContainer">
                   <div id="sliderValue"></div>
                   <div id="slider"></div>
@@ -250,32 +248,29 @@
               <div id ="userConfig">
                 <h4>Configure Email</h4>
                 <p>
-                  Signature:
+                  <span>Signature</span>
                   <input type="text" name="signature" class="floatRight">
                 </p>
-                <p></p>
                 <p>
-                  Address:
+                  <span>Address</span>
                   <input type="text" name="address" class="floatRight">
                 </p>
                 <p>
-                  Password:
+                  <span>Password</span>
                   <input type="password" name="password" class="floatRight">
                 </p>
-                <p></p>
                 <input type="button" value="Store" class="floatRight">
               </div>
               <div id="addRecipient">
                 <h4>Add Recipient</h4>
                 <p>
-                  Name:
+                  <span>Name</span>
                   <input type="text" name="recipientName" class="floatRight">
                 </p>
                 <p>
-                  Address(es):
+                  <span>Address(es)</span>
                   <input type="text" name="recipientAddress" class="floatRight">
                 </p>
-                <p></p>
                 <input type="button" value="Add" class="floatRight">
               </div>
             </div>
