@@ -37,7 +37,7 @@ function speakAsync(text, cb, element, delay = 1000) {
 }
 
 const getVoiceElem = () => document.querySelector("select[name=voice]");
-const getDemoElem = () => document.querySelector("input[type=button][value=Demo]");
+const getDemoElem = () => document.querySelector("input[type=button][name=demo]");
 
 function initVoices() {
     // Update the voice dropdown menu.

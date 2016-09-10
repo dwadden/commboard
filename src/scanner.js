@@ -32,8 +32,8 @@ function scanner(mainMenu, detector, settings) {
     const BEEP_FREQ = 300;           // The pitch of said beep.
 
     // Local variables
-    let startButton = document.querySelector("input[type=button][value=Start]");
-    let stopButton = document.querySelector("input[type=button][value=Stop]");
+    let startButton = document.querySelector("input[type=button][name=start]");
+    let stopButton = document.querySelector("input[type=button][name=stop]");
 
     // Procedures
     const signalLongGaze = () => speech.beep(BEEP_FREQ, BEEP_DURATION);

@@ -168,14 +168,14 @@ table {
 #startStop {
   font-size: 150%;
 }
-#startStop input[type=button][value=Start] {
+#startStop input[type=button][name=start] {
   color: var(--green);
 }
-#startStop input[type=button][value=Stop] {
+#startStop input[type=button][name=stop] {
   color: var(--magenta);
 }
 #detectorStatus {
-  font-size: 150%;
+  font-size: 125%;
 }
 #detectorStatus.scanning {
   color: var(--green);

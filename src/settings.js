@@ -100,10 +100,10 @@ function makeEmailSettings() {
     let signatureField = document.querySelector("input[type=text][name=signature]");
     let addressField = document.querySelector("input[type=text][name=address]");
     let passwordField = document.querySelector("input[type=password][name=password]");
-    let storeButton = document.querySelector("input[type=button][value=Store]");
+    let storeButton = document.querySelector("input[type=button][name=store]");
     let recipientNameField = document.querySelector("input[type=text][name=recipientName]");
     let recipientAddressField = document.querySelector("input[type=text][name=recipientAddress]");
-    let addButton = document.querySelector("input[type=button][value=Add]");
+    let addButton = document.querySelector("input[type=button][name=add]");
     let emitter = new EventEmitter();
 
     const emitAddRecipient = () => emitter.emit("addRecipient");
