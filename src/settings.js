@@ -26,10 +26,10 @@ function settings() {
     // Private variables
     let soundElem = document.querySelector("input[type=checkbox][value=sound]");
     let showElem = document.querySelector("input[type=checkbox][value=showMenu]");
-    let languageElem = document.querySelector("select[name=language]");
     let slider = makeSlider();
     let emailSettings = makeEmailSettings();
     let layout = makeLayoutSettings();
+    let language = makeLanguageSettings();
 
     // The public object.
     let that = {
@@ -191,4 +191,28 @@ function makeLayoutSettings() {
     // Initialize and return.
     initLayouts();
     return that;
+}
+
+function makeLanguageSettings() {
+    // TODO: Document this and clean it up.
+    let languageElem = document.querySelector("select[name=language]");
+
+    function update() {
+        // Update all DOM elements for the new language.
+        let lang = languageElem.value;
+        updateButtons(lang);
+    }
+
+    function updateButtons(lang) {
+        // Update all buttons for the new language.
+        let buttons = document.querySelectorAll("[data-languages]");
+        buttons.forEach(
+            (button) => button.value = JSON.parse(button.dataset.languages)[lang]
+        );
+    }
+
+    languageElem.addEventListener("change", update);
+
+    let that = { update };
+
 }
