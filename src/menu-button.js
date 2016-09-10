@@ -209,7 +209,7 @@ function makeBufferActionButton(spec, my) {
 
     // Private additions.
     let myAssignments = {
-        getActionName: () => that.getButtonValue().toLowerCase()
+        getActionName: () => my.buttonElem.dataset.bufferAction
     };
     Object.assign(my, myAssignments);
 
