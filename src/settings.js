@@ -196,13 +196,13 @@ function makeLayoutSettings() {
 function makeLanguageSettings() {
     // Constructor for an object which controls the language used by the
     // program.
-
+    //
     // The most important job of this object is to update all relevant DOM
     // elements when the user switches languages. This is accomplished as
-    // follows. All DOM elements that are multilingual are endowed with a
-    // special data attribute called "data-languages". This DOM attribute is a
-    // JSON representation of a map from languages to text, indicating the text
-    // that should be assigned to the element for each language the user might
+    // follows. All DOM elements whose appearances should change with language
+    // have an attribute called "data-languages". This attribute is a JSON
+    // representation of a map from languages to text, indicating the text that
+    // should be assigned to the element for each language the user might
     // select. When the user selects a language, all such elements are
     // identified and updated accordingly.
     //
@@ -213,10 +213,17 @@ function makeLanguageSettings() {
     // To add more languages, one can add another key-value pair to all the JSON
     // objects in the index.html file.
     //
+    // Similarly, all elememnts whose display will not change but whose verbal
+    // announcement will change have a special field called
+    // data-announcement. At present the only elements in this category are
+    // punctuation buttons. These elements do not need to be updated by the
+    // language settings object, but they are mentioned here for reference.
+    //
     // In addition, there are a few other places throughout the program where
     // text for different languages is given - for instance, for various
-    // announcements. To find all these places it should suffice to grep for the
-    // string "en: ", which is the key for English language text values.
+    // announcements not linked to DOM elements. To find all these places it
+    // should suffice to grep for the string "en: ", which is the key for
+    // English language text values.
     //
     // The object returned by this constructor exposes a method to ask for the
     // current language, and to register callbacks to be invoked if the language

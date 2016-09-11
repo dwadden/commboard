@@ -103,7 +103,13 @@ function makeGenericButton(spec, my) {
     };
     // Need to assign in a separate step since these methods depend on others on "that".
     let thatAssignments = {
-        getAnnouncement: that.getButtonValue, // By default, the announcement text is just the button's value.
+        getAnnouncement: function() {
+            // If the button has announcement text in its dataset, use it. Otherwise just use the button value.
+            let announcement = my.buttonElem.dataset.announcement;
+            return (announcement !== undefined ?
+                    JSON.parse(announcement) :
+                    that.getButtonValue());
+        },
         selectsDropdownMenu: () => (that.buttonType === "menuSelector" &&
                                     that.getTargetMenu().getInfo().hide === "dropdown")
     };
@@ -152,24 +158,15 @@ function makeTextButton(spec, my) {
     return that;
 }
 // Register a letter button, which works like a text button but is named more specifically.
-registerConstructor("letter", makeTextButton); //
+registerConstructor("letter", makeTextButton);
+registerConstructor("nonTerminalPunctuation", makeTextButton);
+registerConstructor("terminalPunctuation", makeTextButton);
 
 function makeSpaceButton(spec, my) { // Writes a space to the buffer.
     return Object.assign(makeTextButton(spec, my || {}),
                          { getText: () => " " });
 }
 registerConstructor("space", makeSpaceButton);
-
-function makePunctuationButton(spec, my) {
-    // General constructor for punctuation characters. Invoked by more specific
-    // constructors.
-    my = my || {};          // Need to assign "my" first since "getAnnouncement" needs access to it.
-    return Object.assign(makeTextButton(spec, my),
-                         { getAnnouncement: () => my.buttonElem.dataset.announcement });
-}
-// Register terminal and non-terminal punctuation buttons. The buffer handles differently based on their tag.
-registerConstructor("nonTerminalPunctuation", makePunctuationButton);
-registerConstructor("terminalPunctuation", makePunctuationButton);
 
 function makeGuessButton(spec, my) {
     // Constructor for buttons that handle guesses retrieved from web API or
