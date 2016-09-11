@@ -16,15 +16,14 @@ app.on("window-all-closed", function() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on("ready", function() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({x: 800, y: 300, width: 1600, height: 1200});
-    // mainWindow = new BrowserWindow({width: 1200, height: 800});
+    // Create the browser
+    mainWindow = new BrowserWindow({width: 1200, height: 800});
 
     // and load the index.html of the app.
     mainWindow.loadURL("file://" + __dirname + "/index.html");
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function() {
