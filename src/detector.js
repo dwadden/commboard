@@ -257,11 +257,11 @@ function makeVideoStream() {
     let video = document.querySelector("video");
     let cc = makeCanvasContainer("video");
     let sourceElem = getVideoSource();
-    let stream = null;
+    let stream;
 
     function stopCurrentStream() {
         // When a camera switch happens, stop getting data from the old camera.
-        if (stream !== null) {
+        if (stream !== undefined) {
             stream.getTracks()[0].stop();
         }
     }
