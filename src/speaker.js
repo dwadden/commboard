@@ -23,7 +23,8 @@ function speaker(settings) {
 
     // Private variables
     const audioContext = new window.AudioContext();
-    let voice = null;           // The current voice being used by the speaker.
+    let voice;           // The current voice being used by the speaker.
+    let voices;          // All available voices for the current language.
     let voiceElem = document.querySelector("select[name=voice]");
     let demoElem = document.querySelector("input[type=button][name=demo]");
 
@@ -61,11 +62,11 @@ function speaker(settings) {
         }
         const correctLanguage = (voice) => voice.lang.includes(getLanguage());
         clearVoices();
-        let voices = window.speechSynthesis.getVoices().filter(correctLanguage);
+        voices = window.speechSynthesis.getVoices().filter(correctLanguage);
         voices.forEach(each);
         setVoice(voices);
     }
-    function setVoice(voices) {
+    function setVoice() {
         // Call this whenever the user changes the voice button.
         let ix = parseInt(voiceElem.value);
         voice = voices[ix];
