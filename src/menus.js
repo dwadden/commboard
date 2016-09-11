@@ -264,6 +264,7 @@ function makeGuessMenu(spec, my) {
 
     function guessWord(inputText, cb) {
         // Wraps the API call and extracts the results.
+        let language = my.settings.getLanguageSettings().getLanguage();
         let success = function(data, status) {
             let guesses = (data.searchResults.slice(1).
                            map((o) => o.word));
@@ -275,7 +276,7 @@ function makeGuessMenu(spec, my) {
         };
 
         let text = inputText.split(" ").slice(-1)[0];
-        if (text === "") {          // If no text, no guesses.
+        if (text === "" || language !== "en") {          // If no text or if we're not in English, no guesses.
             cb(util.repeat("", N_GUESSES));
         } else {
             // Add a wildcard so guesses will be retrieved even if "text" is a completed word.
@@ -293,10 +294,16 @@ function makeGuessMenu(spec, my) {
         guessWord(inputText, callback);
     }
 
+    function clear() {
+        // Clear all guesses. For use when the language changes from English to something else.
+        my.buttons.forEach((button) => button.setButtonValue(""));
+    }
+
     let myAssignments = { wordnik, guessWord, update };
     my = Object.assign(my, myAssignments);
 
     // Initialization
+    my.settings.getLanguageSettings().addChangeListener(clear);
     my.buffer.addChangeListener(my.update);
     return that;
 }
