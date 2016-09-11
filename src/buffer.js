@@ -5,7 +5,6 @@ const EventEmitter = require("events");
 
 // File imports
 const util = require("./util.js");
-const speech = require("./speech.js");
 
 // This module exposes the procedure "buffer", the constructor for the buffer
 // object. The buffer object all interactions with the text buffer. It typically
@@ -41,7 +40,7 @@ const speech = require("./speech.js");
 // Exports
 module.exports = buffer;
 
-function buffer() {
+function buffer(speaker) {
     // Constructor for text buffer.
 
     // Constants
@@ -157,9 +156,9 @@ function buffer() {
     registerAction("delete", deleteText);
 
     function readBuffer(cb) {
-        let afterBeep = () => speech.speakAsync(getText(), cb,
-                                                bufferElem, AFTER_READ_WAIT);
-        speech.beep(BEEP_FREQ, BEEP_DURATION);
+        let afterBeep = () => speaker.speakAsync(getText(), cb,
+                                                 bufferElem, AFTER_READ_WAIT);
+        speaker.beep(BEEP_FREQ, BEEP_DURATION);
         setTimeout(afterBeep, BEEP_DURATION + AFTER_BEEP_WAIT);
     }
     registerAction("read", readBuffer);

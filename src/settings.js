@@ -34,7 +34,7 @@ function settings() {
     // The public object.
     let that = {
         useSound: () => soundElem.checked,
-        getLanguage: () => language,
+        getLanguageSettings: () => language,
         getScanSpeed: () => slider.getms(),
         addShowMenuListener: (listener) =>
             showElem.addEventListener("change", listener),
@@ -219,8 +219,14 @@ function makeLanguageSettings() {
         );
     }
 
+    function getLanguage() {
+        return languageElem.value;
+    }
+
     languageElem.addEventListener("change", update);
+    languageElem.value = "en";
+    update();
 
-    let that = { update };
-
+    let that = { getLanguage };
+    return that;
 }

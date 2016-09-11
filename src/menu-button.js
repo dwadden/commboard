@@ -8,7 +8,6 @@ const nodemailer = require("nodemailer");
 
 // File imports
 const util = require("./util.js");
-const speech = require("./speech.js");
 
 // ************************************************************************** //
 
@@ -79,7 +78,7 @@ function makeGenericButton(spec, my) {
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSound()) {
-                speech.speakSync(that.getAnnouncement());
+                my.speaker.speakSync(that.getAnnouncement());
             }
         },
         toggle: function() {
@@ -92,7 +91,7 @@ function makeGenericButton(spec, my) {
             // method is "abstract" in the sense that "that.action" must be
             // implemented on a descendant.
             if (my.settings.useSound()) {
-                speech.speakAsync(that.getAnnouncement(), that.action, my.buttonElem, 0);
+                my.speaker.speakAsync(that.getAnnouncement(), that.action, my.buttonElem, 0);
             } else {
                 that.action();
             }
@@ -276,7 +275,7 @@ function makeCallBellButton(spec, my) {
     // Additional methods.
     let assignments = {
         action: function() {
-            speech.beep(BEEP_FREQ, BEEP_DURATION);
+            my.speaker.beep(BEEP_FREQ, BEEP_DURATION);
             setTimeout(my.finished, BEEP_DURATION + AFTER_BEEP_WAIT);
         }
     };
@@ -325,11 +324,11 @@ function makeEmailButton(spec, my) {
                 // Callback to invoke after message has been sent.
                 if (error) {
                     // If something goes wrong, inform user and dump the error info.
-                    speech.speakAsync("An error ocurred.", my.finished, my.buttonElem);
+                    my.speaker.speakAsync("An error ocurred.", my.finished, my.buttonElem);
                     console.log(error);
                 } else {
                     // Otherwise, inform user of success and continue program.
-                    speech.speakAsync(`Message sent to ${that.getButtonValue()}`,
+                    my.speaker.speakAsync(`Message sent to ${that.getButtonValue()}`,
                                       my.finished,
                                       my.buttonElem);
                 }
@@ -367,7 +366,7 @@ function makeNotImplementedButton(spec, my) {
     // Public additions.
     let assignment = {
         action: function() {
-            speech.speakAsync("Not implemented.", my.finished, my.buttonElem, PAUSE);
+            my.speaker.speakAsync("Not implemented.", my.finished, my.buttonElem, PAUSE);
         }
     };
     Object.assign(that, assignment);

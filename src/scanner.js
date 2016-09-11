@@ -1,8 +1,5 @@
 "use strict";
 
-// File imports
-const speech = require("./speech.js");
-
 // ************************************************************************** //
 
 // This module exports a single function called "scanner". The function creates
@@ -18,7 +15,7 @@ const speech = require("./speech.js");
 
 module.exports = scanner;
 
-function scanner(mainMenu, detector, settings) {
+function scanner(mainMenu, detector, settings, speaker) {
     // Constructor for scanner objects. The returned object exposes a single
     // method called scan(), which in turn relies upon the scanMenu function to
     // do its work. The scanMenu function is a bit tricky, and itself includes a
@@ -36,7 +33,7 @@ function scanner(mainMenu, detector, settings) {
     let stopButton = document.querySelector("input[type=button][name=stop]");
 
     // Procedures
-    const signalLongGaze = () => speech.beep(BEEP_FREQ, BEEP_DURATION);
+    const signalLongGaze = () => speaker.beep(BEEP_FREQ, BEEP_DURATION);
 
     function registerListeners(cbBegin, cbEnd, cbClick) {
         // During scanning, the scanner must listen for three different inputs
@@ -145,7 +142,7 @@ function scanner(mainMenu, detector, settings) {
             currentButton.toggle();
             clearTimeout(timeout);
             detector.idleMode();
-            speech.speakSync("Stopping");
+            speaker.speakSync("Stopping");
         }
         function pressButton(button) {
             // Invoke the action of a given button. Create a callback to execute
@@ -241,11 +238,11 @@ function scanner(mainMenu, detector, settings) {
         }
         function pressStop() {
             // If an assistant pressed the stop button, tell the detector to stop listening for input.
-            speech.speakSync("Stopping.");
+            speaker.speakSync("Stopping.");
             unregister();
             detector.idleMode();
         }
-        speech.speakSync("listening.");
+        speaker.speakSync("listening.");
         detector.listenMode();
         register();
     }

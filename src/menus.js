@@ -92,9 +92,12 @@ module.exports = menus;
 
 // These constructors do the actual work of implementing the menu functionality.
 
-function makeGenericMenu(spec, my) {
+function makeGenericMenu(menuSpec, my) {
     // The factory function for menu objects not requiring extra functionality.
     //
+    // The first argument is called menuSpec to distinguish from specs
+    // constructed for the individual buttons.
+
     // The object "my" contains shared data required by menus further down the
     // hierarchy but not exposed externally. It is created by three separate
     // Object.assign's. The first retrieves data from the DOM. The second
@@ -111,7 +114,7 @@ function makeGenericMenu(spec, my) {
     let that = {};
 
     // Initialize shared secrets.
-    Object.assign(my, spec);
+    Object.assign(my, menuSpec);
     let myData1 = {             // Menu and button objects from the DOM
         menuElem: document.getElementById(my.menuName),
         buttonElems: document.querySelectorAll(
@@ -124,19 +127,18 @@ function makeGenericMenu(spec, my) {
             // the constructor get the type from the DOM element attached to the
             // spec.  In general, however, we want to be able to dispatch on
             // button type if it came from a different source.
-            function initButton(spec) {
-                return menuButton(spec.elem.dataset.buttonType, spec);
+            function initButton(buttonSpec) {
+                return menuButton(buttonSpec.elem.dataset.buttonType, buttonSpec);
             }
-            let makeSpec = function(buttonElem) { // Create a spec passed to a single button constructor.
-                return { elem: buttonElem,
-                         menu: that,
-                         detector: my.detector,
-                         buffer: my.buffer,
-                         settings: my.settings
-                       };
+            let makeButtonSpec = function(buttonElem) {
+                // Create a spec passed to a single button.
+                // Pass through all info given to the menu, and augment by the button's element and menu.
+                let assignments = { elem: buttonElem,
+                                    menu: that };
+                return Object.assign(assignments, menuSpec);
             };
-            let specs = [].map.call(my.buttonElems, makeSpec);
-            return specs.map(initButton);
+            let buttonSpecs = [].map.call(my.buttonElems, makeButtonSpec);
+            return buttonSpecs.map(initButton);
         }
     };
     Object.assign(my, myMethods);
