@@ -100,7 +100,7 @@ function makeGenericDetector(spec, my) {
             // Update the actual text in the DOM indicating the detector status.
             let p = my.statusElem.querySelector("p");
             let statusName = my.statusMap[my.status][language];
-            p.innerHTML = util.capitalize(statusName);
+            p.textContent = util.capitalize(statusName);
         }
     };
     Object.assign(my, myMethods1);
