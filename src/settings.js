@@ -96,7 +96,7 @@ function makeEmailSettings() {
     // imagine, I think this should be fine.
 
     // Internal data and methods.
-    let signature, address, password = null;
+    let signature, address, password;
     let signatureField = document.querySelector("input[type=text][name=signature]");
     let addressField = document.querySelector("input[type=text][name=address]");
     let passwordField = document.querySelector("input[type=password][name=password]");
