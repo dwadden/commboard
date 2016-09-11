@@ -324,13 +324,16 @@ function makeEmailButton(spec, my) {
                 // Callback to invoke after message has been sent.
                 if (error) {
                     // If something goes wrong, inform user and dump the error info.
-                    my.speaker.speakAsync("An error ocurred.", my.finished, my.buttonElem);
+                    my.speaker.speakAsync({ en: "An error ocurred.",
+                                            fr: "une erreur est survenue" },
+                                          my.finished, my.buttonElem);
                     console.log(error);
                 } else {
                     // Otherwise, inform user of success and continue program.
-                    my.speaker.speakAsync(`Message sent to ${that.getButtonValue()}`,
-                                      my.finished,
-                                      my.buttonElem);
+                    my.speaker.speakAsync({ en: `Message sent to ${that.getButtonValue()}`,
+                                            fr: `Message envoyé à ${that.getButtonValue()}`},
+                                          my.finished,
+                                          my.buttonElem);
                 }
             }
             const transporter = nodemailer.createTransport({  // For details, see https://nodemailer.com/
@@ -366,7 +369,9 @@ function makeNotImplementedButton(spec, my) {
     // Public additions.
     let assignment = {
         action: function() {
-            my.speaker.speakAsync("Not implemented.", my.finished, my.buttonElem, PAUSE);
+            my.speaker.speakAsync({en: "Not implemented.",
+                                   fr: "Pas mis en œuvre"},
+                                  my.finished, my.buttonElem, PAUSE);
         }
     };
     Object.assign(that, assignment);
