@@ -28,7 +28,7 @@ function registerConstructor(type, constructor) {
     constructors[type] = constructor;
 }
 
-function detector() {
+function detector(spec) {
     // Create the detector object exposed to the rest of the program. This
     // object is merely a wrapper around an object created by one of the
     // constructors below. The prototype associated with this object changes
@@ -37,7 +37,7 @@ function detector() {
     // regardless of the implementation chosen by the user.
     let DEFAULT_MODE = "gaze";
     let detElem = document.querySelector("select[name=detector]");
-    let that = Object.create(constructors[DEFAULT_MODE]());
+    let that = Object.create(constructors[DEFAULT_MODE](spec));
 
     function populateOptions() {
         // Initialize the dropdown list of available detectors.
@@ -54,7 +54,7 @@ function detector() {
     function change(e) {
         // To be executed when the user selects a different detector.
         let key = e ? e.target.value : DEFAULT_MODE;
-        let activeDetector = constructors[key]();
+        let activeDetector = constructors[key](spec);
         Object.setPrototypeOf(that, activeDetector);
     }
 
@@ -67,36 +67,66 @@ module.exports = detector;
 
 // ************************************************************************** //
 
-function makeGenericDetector(my) {
+function makeGenericDetector(spec, my) {
     // Create an object with data and methods shared by all detectors. As
     // elsewhere in this program, "my" holds shared secrets while "that" exposes
     // a public interface.
 
     my = my || {};
+    Object.assign(my, spec);
+    // Private data. Two items warrent further explanation.
+    //  status: A state variable containing the current status of the
+    //      detector. This state variable is always in English.
+    //  statusMap: A map whose keys are state variables. For each key, the value
+    //      is a map from language to the text that should be displayed in the
+    //      actual status area. Doing things this way separates the way the
+    //      status is stored internal to the object from the way it is
+    //      represented outside.
     let myData = {
         statusElem: document.getElementById("detectorStatus"),
         emitter: new EventEmitter(),
-        status: null
+        status: null,
+        statusMap: { idle: {en: "idle", fr: "repos"},
+                     listening: {en: "listening", fr: "écoute"},
+                     scanning: {en: "scanning", fr: "balayage"} }
     };
     Object.assign(my, myData);
 
-    let myMethods = {
+    // Private methods.
+    let myMethods1 = {
         emitGestureStart: () => my.emitter.emit("gestureBegin"),
         emitGestureEnd: () => my.emitter.emit("gestureEnd"),
-        setStatus: function(newStatus) {
-            // Update the DOM element indicating detector status.
+        setStatusText: function(status, language) {
+            // Update the actual text in the DOM indicating the detector status.
             let p = my.statusElem.querySelector("p");
+            let statusName = my.statusMap[my.status][language];
+            p.innerHTML = util.capitalize(statusName);
+        }
+    };
+    Object.assign(my, myMethods1);
+    // More private methods, which rely on those above.
+    let myMethods2 = {
+        setStatus: function(newStatus) {
+            // Update the status of the detector object.
             let oldStatus = my.status;
+            let language = my.settings.getLanguageSettings().getLanguage();
             my.status = newStatus;
-            p.innerHTML = util.capitalize(my.status);
+            my.setStatusText(my.status, language);
             if (oldStatus !== undefined) {
                 my.statusElem.classList.toggle(oldStatus);
             }
             my.statusElem.classList.toggle(my.status);
+        },
+        translateStatus: function() {
+            // Translate the detector status without changing it. To be invoked
+            // when the user changes languages/
+            let newLanguage = my.settings.getLanguageSettings().getLanguage();
+            my.setStatusText(my.status, newLanguage);
         }
     };
-    Object.assign(my, myMethods);
+    Object.assign(my, myMethods2);
 
+    // Public objects.
     let that = {
         idleMode: () => my.setStatus("idle"),
         listenMode: () => my.setStatus("listening"),
@@ -107,18 +137,20 @@ function makeGenericDetector(my) {
         removeEndListener: (listener) => my.emitter.removeListener("gestureEnd", listener)
     };
 
+    // Add listeners, initialize, and return.
+    my.settings.getLanguageSettings().addChangeListener(my.translateStatus);
     that.idleMode();
     return that;
 }
 
 // ************************************************************************** //
 
-function makeKeyDetector(my) {
+function makeKeyDetector(spec, my) {
     // Create a detector that awaits a press of the "shift" key from the
     // user. For debugging purposes mainly.
 
     my = my || {};
-    let that = makeGenericDetector(my);
+    let that = makeGenericDetector(spec, my);
 
     function emitIfShift(event, signal) {
         let conditions = [!event.altKey,
@@ -145,7 +177,7 @@ registerConstructor("key", makeKeyDetector);
 
 // ************************************************************************** //
 
-function makeGazeDetector(my) {
+function makeGazeDetector(spec, my) {
     // Creates a gaze detector. This detector respects the interface of the
     // generic detector. The gesture for which it looks is an upward gaze as
     // detected by a camera.
@@ -155,7 +187,7 @@ function makeGazeDetector(my) {
     const REFRESH_RATE_SCAN = 20; // When scanning, check 20 times a second.
 
     my = my || {};
-    let that = makeGenericDetector(my);
+    let that = makeGenericDetector(spec, my);
 
     let stream = makeVideoStream();
     let myData = {
@@ -185,19 +217,24 @@ function makeGazeDetector(my) {
     };
     Object.assign(my, myMethods);
 
+    // Store methods from the parent class so that they can be invoked by
+    // newline defined functions of the child class sharing the same name.
+    let supers = { idleMode: that.idleMode,
+                   listenMode: that.listenMode,
+                   scanMode: that.scanMode };
     // The returned object
     let thatAssignments = {
         idleMode: function() {
-            my.setStatus("idle");
+            supers.idleMode();
             window.clearInterval(my.interval);
         },
         listenMode: function() {
-            my.setStatus("listening");
+            supers.listenMode();
             window.clearInterval(my.interval);
             my.interval = window.setInterval(my.detect, 1000 / REFRESH_RATE_LISTEN);
         },
         scanMode: function() {
-            my.setStatus("scanning");
+            supers.scanMode();
             window.clearInterval(my.interval);
             my.interval = window.setInterval(my.detect, 1000 / REFRESH_RATE_SCAN);
         }

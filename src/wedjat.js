@@ -14,8 +14,8 @@ window.addEventListener("load", setup);
 
 function setup() {
     // Top-level setup to initialize the objects of the program.
-    let det = detector();
     let st = settings();
+    let det = detector({ settings: st });
     let sp = speaker(st);
     let buf = buffer(sp);
 
