@@ -194,16 +194,45 @@ function makeLayoutSettings() {
 }
 
 function makeLanguageSettings() {
-    // TODO: Document this and clean it up.
+    // Constructor for an object which controls the language used by the
+    // program.
+
+    // The most important job of this object is to update all relevant DOM
+    // elements when the user switches languages. This is accomplished as
+    // follows. All DOM elements that are multilingual are endowed with a
+    // special data attribute called "data-languages". This DOM attribute is a
+    // JSON representation of a map from languages to text, indicating the text
+    // that should be assigned to the element for each language the user might
+    // select. When the user selects a language, all such elements are
+    // identified and updated accordingly.
+    //
+    // For buttons, the value attribute of the object is assigned the proper
+    // text.
+    // For text, the innerText attribute of the object is similarly assigned.
+    //
+    // To add more languages, one can add another key-value pair to all the JSON
+    // objects in the index.html file.
+    //
+    // In addition, there are a few other places throughout the program where
+    // text for different languages is given - for instance, for various
+    // announcements. To find all these places it should suffice to grep for the
+    // string "en: ", which is the key for English language text values.
+    //
+    // The object returned by this constructor exposes a method to ask for the
+    // current language, and to register callbacks to be invoked if the language
+    // changes.
+
+    // Private variables
     let languageElem = document.querySelector("select[name=language]");
 
+    // Private methods
     function update() {
-        // Update all DOM elements for the new language.
+        // Update all DOM elements for the new language. This invokes two helper
+        // functions that update buttons and text.
         let lang = languageElem.value;
         updateButtons(lang);
         updateText(lang);
     }
-
     function updateButtons(lang) {
         // Update all buttons for the new language.
         let buttons = document.querySelectorAll("input[type=button][data-languages]");
@@ -211,22 +240,24 @@ function makeLanguageSettings() {
             (button) => button.value = JSON.parse(button.dataset.languages)[lang]
         );
     }
-
     function updateText(lang) {
+        // Update all text (anything that isn't a button) for the new language.
         let elems = document.querySelectorAll("[data-languages]:not(input)");
         elems.forEach(
             (elem) => elem.innerText = JSON.parse(elem.dataset.languages)[lang]
         );
     }
 
-    function getLanguage() {
-        return languageElem.value;
-    }
+    // The public interface.
+    let that = {
+        addChangeListener: (listener) => languageElem.addEventListener("change", listener),
+        getLanguage: () => languageElem.value
+    };
 
+    // Register event handlers, initialize, and return.
     languageElem.addEventListener("change", update);
     languageElem.value = "en";
     update();
 
-    let that = { getLanguage };
     return that;
 }
