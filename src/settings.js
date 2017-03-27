@@ -243,14 +243,16 @@ function makeLanguageSettings() {
     function updateButtons(lang) {
         // Update all buttons for the new language.
         let buttons = document.querySelectorAll("input[type=button][data-languages]");
-        buttons.forEach(
+        [].forEach.call(
+            buttons,
             (button) => button.value = JSON.parse(button.dataset.languages)[lang]
         );
     }
     function updateText(lang) {
         // Update all text (anything that isn't a button) for the new language.
         let elems = document.querySelectorAll("[data-languages]:not(input)");
-        elems.forEach(
+        [].forEach.call(
+            elems,
             (elem) => elem.innerText = JSON.parse(elem.dataset.languages)[lang]
         );
     }
