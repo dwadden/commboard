@@ -238,7 +238,7 @@ function makeGuessMenu(spec, my) {
     let that = makeGenericMenu(spec, my);
 
     // internal constants
-    const N_GUESSES = 8;        // Number of guesses to be offered to user
+    const N_GUESSES = 7;        // Number of guesses to be offered to user
     const MIN_COUNT = 1000;     // Min number of ocurrences in wordnik corpus
     const BASE_URL = "http:api.wordnik.com:80/v4/words.json/search/";
     const API_KEY = "a8a677e1378da5d7a03532c7b57083a570bdd1254c16f6af3"; // This could be set by user instead.

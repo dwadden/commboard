@@ -75,6 +75,7 @@ function makeGenericButton(spec, my) {
         isEmpty: () => my.buttonElem.value === "",
         getWaitMultiplier: () => my.waitMultiplier,
         getTargetMenu: () => null, // MenuButtons overwrite this.
+        buttonElem: my.buttonElem,
         announce: function() {
             // Have the button state its name.
             if (my.settings.useSound()) {
@@ -176,7 +177,7 @@ function makeGuessButton(spec, my) {
     let that = makeTextButton(spec, my);
 
     let myAssignment = {
-        waitMultiplier: 2
+        waitMultiplier: 1
     };
     Object.assign(my, myAssignment);
 

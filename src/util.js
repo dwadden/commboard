@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("underscore");
+const format = require("number-format.js");
 
 // Helper procedures
 
@@ -9,7 +10,10 @@ module.exports = { repeat,
                    pad,
                    capitalize,
                    all,
-                   renameKeys };
+                   renameKeys,
+                   format,
+                   setDebug
+                 };
 
 function repeat(x, n) {
     // Return an array consisting of element x repeated n times.
@@ -31,6 +35,9 @@ function pad(xs, fillVal, len) {
 
 function capitalize(text) {
     // Convert first letter of word to uppercase
+    if( text == undefined ) {
+        return "";
+    } else 
     return text[0].toUpperCase() + text.slice(1);
 }
 
@@ -49,4 +56,8 @@ function renameKeys(obj, keys) {
     }
     keys.forEach(each);
     return obj;
+}
+
+function setDebug(m) {
+    document.getElementById("debug").innerHTML = m;
 }

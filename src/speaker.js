@@ -33,7 +33,8 @@ function speaker(settings) {
     function demo() {
         // Speak a demo with the current voice.
         const msg = { en: `Hello, my name is ${voice.name}`,
-                      fr: `Bonjour, mon nom est ${voice.name}`};
+                      fr: `Bonjour, mon nom est ${voice.name}`,
+                      es: `Hola, me llamo ${voice.name}`};
         speakSync(msg[getLanguage()], voice);
     }
     function clearVoices() {
@@ -81,6 +82,10 @@ function speaker(settings) {
         //           text. The speaker asks the settings object for the current
         //           language and looks up the correct text for this langauge.
         let toSpeak = _.isString(text) ? text : text[getLanguage()];
+        
+        if( toSpeak == "undefined" ) {
+            toSpeak = text["en"];
+        }
         let utterance = new window.SpeechSynthesisUtterance(toSpeak.toLowerCase());
         utterance.lang = getLanguage();
         utterance.voice = voice;
@@ -111,6 +116,31 @@ function speaker(settings) {
         setTimeout(() => oscillator.stop(), duration);
     }
 
+    let risingTone = new Audio('rise.mp3');
+    let tonePlaying = false;
+    let timeout;
+
+    //Ryan Campbell 2/27/2017
+    //Start playing the rising tone and end with a beep after duration ms.
+    function toneStart(duration) {
+        const fudge = 50;
+
+        if(!tonePlaying) {
+            timeout = setTimeout(() => {toneStop(); beep(600, 100);}, duration - fudge);
+            risingTone.play();
+            tonePlaying = true;
+        }
+    }
+
+    //Ryan Campbell 2/27/2017
+    //Silence the rising tone.
+    function toneStop() {
+        clearTimeout(timeout);
+        risingTone.pause();
+        risingTone.currentTime = 0;
+        tonePlaying = false;
+    }
+
     // Register event listeners.
     settings.getLanguageSettings().addChangeListener(updateVoices); // If the user changes the language, change the voices.
     window.speechSynthesis.addEventListener("voiceschanged", initVoices); // Initialize voices once the page has loaded them.
@@ -118,5 +148,7 @@ function speaker(settings) {
     // Return an object with the relevant methods
     return { speakSync,
              speakAsync,
-             beep };
+             beep,
+             toneStart,
+             toneStop };
 }

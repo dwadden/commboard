@@ -94,19 +94,27 @@ table {
 #menuContainer input[type=button] {
   height: 100%;
   width: 100%;
-  font-size: 150%;
+  font-size: 200%;
   font-weight: bold;
-}
-.buttonOn { /* Active button. */
-  color: var(--orange);
 }
 .buttonOff { /* Inactive button. */
   color: var(--blue);
 }
+.commandButton {
+  background-color: var(--red);
+  color: #ffffff;
+}
+.buttonOn { /* Active button. */
+  background-color: var(--blue);
+  color: #ffffff;
+}
+.rowHighlight {
+  background-color: var(--red);
+}
 
 /* IO styling */
 #io {
-  height: 625px;
+  height: 725px;
   width: 1190px;
 }
 #bufferContainer {
@@ -142,7 +150,7 @@ table {
   font-size: 125%;
 }
 #controls {
-  height: 390px;
+  height: 490px;
   width: 690px;
 }
 #generalSettings {
@@ -156,7 +164,7 @@ table {
   width: 200px;
 }
 #emailSettings {
-  height: 330px;
+  height: 430px;
   width: 340px;
 }
 #userConfig {

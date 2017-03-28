@@ -86,9 +86,9 @@ function makeGenericDetector(spec, my) {
         statusElem: document.getElementById("detectorStatus"),
         emitter: new EventEmitter(),
         status: null,
-        statusMap: { idle: {en: "idle", fr: "repos"},
-                     listening: {en: "listening", fr: "écoute"},
-                     scanning: {en: "scanning", fr: "balayage"} }
+        statusMap: { idle: {en: "idle", fr: "repos", es: "inactivo"},
+                     listening: {en: "waiting", fr: "attendre", es: "a la espera"},
+                     scanning: {en: "scanning", fr: "balayage", es: "barrido"} }
     };
     Object.assign(my, myData);
 
@@ -213,6 +213,7 @@ function makeGazeDetector(spec, my) {
                 my.emitGestureEnd();      // If we went from gaze to rest, then the gaze ended.
             }
             my.state = newState;
+            util.setDebug( "dRest: " + util.format("# ### ###.", dRest) + "   dGaze: " + util.format("# ### ###.", dGaze) );
         }
     };
     Object.assign(my, myMethods);

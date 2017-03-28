@@ -1,0 +1,50 @@
+ Coding & Documentation Standards
+
+Comment/document the Main and all functions as follows ;
+
+/*
+*	 Function ( or Main) Name:                            
+* 	Author:		                         
+*       Date:	    	
+*	Purpose:
+*	Updates: (date)   Purpose: 
+*	Inputs:                                 // include all variables passed and returned	   
+*	Outputs:		         // including , globals, arrays, libraries 
+*/
+
+Include block comments as follows:
+/*  
+*      This is an example block comment explaining purpose the following code
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Coding and Documentation Requirements    Updated 7/12/2015 jwm
+
