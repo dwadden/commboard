@@ -6,6 +6,7 @@ require("jquery-ui");
 const EventEmitter = require("events");
 const util = require("./util");
 const _ = require("underscore");
+const fs = require('fs');
 
 // This module exposes the procedure "settings", the constructor for the
 // settings object. The settings object exposes the settings passed in from the
@@ -14,6 +15,11 @@ const _ = require("underscore");
 // assortment of "getter" functions. The top-level settings object encapsulates
 // an object to handle the scan speed (which is controlled by a jquery UI
 // slider), and an object that handles email settings.
+
+/*
+ *   Updates: (28/03/2017)   Purpose: Implementation of the functionality
+ *   to save the scan speed and blink speed settings locally.
+ */
 
 // Exports
 module.exports = settings;
@@ -55,8 +61,12 @@ function makeSlider(vmin, vmax, vinit, name) {
     // Constants
     const SCALE = 100;
 
+    //Read local preferences
+    //It will be used only in the construction of the slider
+    let preferences = readPreferences();
+
     // Internal variables and methods.
-    let sliderValue = vinit;
+    let sliderValue = preferences[name] || vinit; //If this did not have the property 'name' use 'vinit'
     let containerElem = document.getElementById(name + "SliderContainer");
     let sliderElem = document.getElementById(name + "Slider");
     let valueElem = document.getElementById(name + "SliderValue");
@@ -74,6 +84,31 @@ function makeSlider(vmin, vmax, vinit, name) {
         sliderValue = parseFloat(v) / SCALE;
         let stringValue = sliderValue.toString();
         valueElem.textContent = `${stringValue} s`;
+        savePreferences();
+    }
+    /*
+     *      This allows the user to save some preferences
+     */
+    function savePreferences() {
+        //Read local preferences
+        let preferences = readPreferences();
+        preferences[name] = sliderValue;
+        try {
+            fs.writeFileSync("./preferences.json", JSON.stringify(preferences));
+        } catch (e) {
+
+        }
+    }
+    /*
+     *      This restores user preferences already saved
+     */
+    function readPreferences() {
+        try {
+            let data = fs.readFileSync("./preferences.json");
+            return JSON.parse(data);
+        } catch (e) {
+            return {};
+        }
     }
 
     // The returned object.

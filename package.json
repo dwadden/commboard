@@ -13,8 +13,8 @@
     "jquery": "^2.2.4",
     "jquery-ui": "1.10.5",
     "nodemailer": "^2.3.0",
-    "number-format.js": "^1.1.11",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "number-format.js": "^1.1.11"
   },
   "scripts": {
     "lint": "jshint src/*.js",
@@ -22,5 +22,8 @@
     "build": "electron-zip-packager . wedjat --platform=darwin,linux,win32 --arch=all --out=dist",
     "build-win32": "electron-zip-packager . wedjat --platform=win32 --arch=all --out=dist",
     "clean": "rm -r dist"
+  },
+  "devDependencies": {
+    "electron": "^1.6.2"
   }
 }
