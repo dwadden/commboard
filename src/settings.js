@@ -33,7 +33,7 @@ function settings() {
     let soundElem = document.querySelector("input[type=checkbox][value=sound]");
     let showElem = document.querySelector("input[type=checkbox][value=showMenu]");
     let slider = makeSlider(0, 3, 1.5, "scan");
-    let gazeSlider = makeSlider(0, 1, .6, "gaze");
+    let gazeSlider = makeSlider(0, 1, .1, "gaze");
     let emailSettings = makeEmailSettings();
     let layout = makeLayoutSettings();
     let language = makeLanguageSettings();

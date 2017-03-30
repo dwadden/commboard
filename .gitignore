@@ -1,6 +1,7 @@
 node_modules
 dist
 tags
+preferences.json
 .jshintrc
 .tern-project
 .tern-port
