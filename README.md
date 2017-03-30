@@ -29,9 +29,9 @@ From the main wedjat directory, enter:
 ```
 \node_modules\electron-prebuilt\dist\electron.exe path-to-your-app
 
-'path-to-your-app' - the path to the Gaze Detector directory. 
+'path-to-your-app' - the path to the wedjat directory. 
 
-Alternatively you can drag the Gaze Detector folder into the electron.exe file which will also open up the app
+Alternatively you can drag the wedjat folder into the electron.exe file which will also open up the app
 ```
 #### on Mac OSX
 
